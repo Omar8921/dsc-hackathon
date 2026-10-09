@@ -6,15 +6,14 @@ _Last updated: 2026-10-09 (Day 1), ideation session 2._
 
 ## Status
 - Phase: **ideation**, no code. Branch `ideation/research`.
-- History: round 1 (A–F) rejected → round 2 Najm (H) set aside → round 3 learning studio (L) → round 4 top 5 ([06-top-5.md](docs/06-top-5.md); lead M = Farz ED triage) → **round 5: problems first.**
-- **Round 5:** the team wants big, obvious Jordan problems (Impact = 25%) before any solution → [docs/07-jordan-big-problems.md](docs/07-jordan-big-problems.md). 15 problems, rated on big/obvious, single-solution dent, AI fit, simplicity, sector.
-  - Top by filters: **unmanaged chronic disease** (≈1.1M diabetics, 18.6% undiagnosed; half of hypertensives untreated; obesity 32%), **smoking** (men 55–66%), ED overcrowding, early-grade reading, online scams.
-  - Unemployment, water and traffic are the biggest problems but fail the sector, single-product or crowding filters.
-- L's Impact was revised 4 → 3 (headline stat is early-grade *reading*; the product was science sims; weak device reach). Weighted 4.00.
+- History: R1 (A–F) rejected → R2 Najm (H) set aside → R3 learning studio (L) → R4 top 5 ([06](docs/06-top-5.md)) → R5 big problems ([07](docs/07-jordan-big-problems.md)) → **R6: solutions for smoking, reading, traffic → [docs/08-solutions-smoking-reading-traffic.md](docs/08-solutions-smoking-reading-traffic.md).**
+- R6 scores: C2 Najm (traffic angle) 4.50 · **B1 Ismaa'ni 4.40** (teacher's phone records each child reading for 60 s → AI words correct/min + error tags → class grouped by level, TaRL method) · **A1 Bala Dukhan 4.15** (WhatsApp AI quit coach + 31 MoH clinics) · A2 3.85 · C1 AI signals 3.85 · B2 3.70 · C3 3.30.
+- Key findings: MoH quit clinics reach ~10k smokers/yr (<1% of ~2M+); RAMP: only 19% of early-grade pupils met the oral fluency benchmark (2018); GAM already has 5,600 counting cameras plus smart-signal pilots; Google Read Along Arabic already exists.
 
 ## Next actions
-1. Team picks 1–2 problems from 07.
-2. Then design one simple AI solution per problem and score it.
+1. Team picks from 08 (recommendation for a new direction: B1; second: A1).
+2. If B1: test Arabic ASR on read-aloud with forced alignment early (biggest technical risk); write 5 leveled passages.
+3. Then the build plan.
 
 ## Business model for H
 See [docs/ideas/H2-najm-ai-and-business-model.md](docs/ideas/H2-najm-ai-and-business-model.md). In short: fault % is the hook for drivers. Damage estimation and fraud scoring are what insurers pay for, because motor claims are ≈96% of motor premiums (JD 261M of JD 272M in 2024). Phases: insurer per-claim pilot → PSD×JIF remote-kroka pilot → per-policy levy (Najm switched from per-accident to per-policy because per-accident fees reward more accidents).

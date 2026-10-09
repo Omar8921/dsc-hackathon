@@ -144,6 +144,19 @@ All accessed 2026-10-09. Search-engine summaries were used for some figures. **O
 - Breast screening — https://www.dovepress.com/knowledge-attitude-and-practice-around-breast-cancer-and-mammography-s-peer-reviewed-fulltext-article-BCTT ; https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10956363/
 - Domestic violence complaints — https://www.jordannews.jo/Section-106/Features/Complaints-of-domestic-violence-on-the-rise-19925
 
+## Round 6 solutions (08)
+- txt2stop — https://researchonline.lshtm.ac.uk/id/eprint/303/ ; impact case — https://impact.ref.ac.uk/casestudies/CaseStudy.aspx?Id=43699
+- WHO Florence — https://www.who.int/europe/news/item/14-02-2021-meet-florence-who-s-digital-health-worker-who-can-help-you-quit-tobacco
+- Jordan quit clinics: 21k cases / 2 yrs, 15% success, 31 clinics — https://www.petra.gov.jo/en/news/tobacco-consumption-in-jordan-balancing-economic-and-public-health-implications ; JD700k expansion — https://www.jordannews.jo/Section-109/News/Health-ministry-allocates-JD700-000-to-expand-quit-smoking-clinics-28640 ; WHO EMRO (23 clinics, ~50% tried quitting) — https://www.emro.who.int/jor/jordan-news/world-no-tobacco-day-2021-commit-to-quit.html , https://www.emro.who.int/tfi/news/jordan-successfully-bans-waterpipes-adapts-smoking-cessation-services-and-establishes-partnerships-during-covid-19.html
+- Pharmacy cessation Cochrane — https://cochranelibrary.com/cdsr/doi/10.1002/14651858.CD003698.pub2 ; physician advice Cochrane — https://www.cochrane.org/CD000165
+- RAMP 2018 LQAS (ORF 13% → 19%) — https://shared.rti.org/node/715
+- TaRL J-PAL — https://www.povertyactionlab.org/evaluation/using-learning-camps-improve-basic-learning-outcomes-primary-school-children-india ; Pratham — https://www.pratham.org/guided-tour-of-teaching-at-the-right-level/
+- Amira (Evidence for ESSA) — https://evidenceforessa.org/?p=665
+- Google Read Along Arabic — https://english.ahram.org.eg/WorldCup/News/379544.aspx ; results — https://blog.google/products-and-platforms/products/education/celebrate-international-literacy-day-read-along/
+- Surtrac — https://www.itskrs.its.dot.gov/2013-b00820 , https://www.fortune.com/2015/07/13/swarming-traffic-lights ; Maricopa 2025 — https://www.itskrs.its.dot.gov/2025-b02021
+- GAM 5,600 cameras / 200+ intersections — https://www.jordannews.jo/Section-109/News/GAM-5-600-Traffic-Monitoring-Cameras-in-Operation-Only-25-Dedicated-to-Traffic-Violations-50992 ; smart signal pilots — https://www.jordannews.jo/Section-109/News/Smart-Traffic-Signals-Installed-at-Four-Amman-Sites-54743
+- Private primary enrolment 32.7% — https://tradingeconomics.com/jordan/school-enrollment-primary-private-percent-of-total-primary-wb-data.html ; school-season traffic — https://www.jordannews.jo/Section-109/News/Comprehensive-Traffic-Security-Plan-for-the-New-School-Year-44249
+
 ## CPR (Idea I)
 - Singapore myResponder 2025 — https://pubmed.ncbi.nlm.nih.gov/40383504/
 - Singapore 2021 (mixed) — https://www.annals.edu.sg/pdf/50VolNo3Mar2021/V50N3p212.pdf

@@ -2,7 +2,18 @@
 
 Scores are 1–5 per criterion, weighted by the official judging weights. They are our own judgment. **Re-score as a team**; the point is to argue about the numbers.
 
-## Round 5 (current): problems first → [07-jordan-big-problems.md](07-jordan-big-problems.md)
+## Round 6 (current): solutions for smoking, reading, traffic → [08-solutions-smoking-reading-traffic.md](08-solutions-smoking-reading-traffic.md)
+| Solution | Problem | **Weighted** |
+|---|---|---|
+| C2 Najm for Jordan (congestion angle) | Traffic | **4.50** |
+| ⭐ B1 Ismaa'ni: 3-min AI reading check + level groups (TaRL) | Reading | **4.40** |
+| A1 Bala Dukhan: WhatsApp AI quit coach + MoH clinics | Smoking | **4.15** |
+| A2 Quit-clinic & pharmacy copilot | Smoking | 3.85 |
+| C1 Ishara: AI signal timing from GAM cameras | Traffic | 3.85 |
+| B2 Home read-aloud buddy | Reading | 3.70 |
+| C3 School-run pooling | Traffic | 3.30 |
+
+## Round 5: problems first → [07-jordan-big-problems.md](07-jordan-big-problems.md)
 Team asked for big, obvious Jordan problems only (no ideas yet), because Impact = 25%. Top problems by the filters: unmanaged chronic disease, smoking, ED overcrowding, early-grade reading, online scams.
 
 ## Round 4: top 5 → see [06-top-5.md](06-top-5.md)

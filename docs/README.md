@@ -16,6 +16,7 @@ Phase: **ideation**. Nothing is built yet, on purpose.
 | [ideas/L-adaptive-learning-studio.md](ideas/L-adaptive-learning-studio.md) | ⭐ Round 3: teammate's learning-roadmap idea, polished → classroom "Lovable for learning" |
 | [06-top-5.md](06-top-5.md) | ⭐ **Current top 5** with problem / uniqueness / MVP / profit for each |
 | [07-jordan-big-problems.md](07-jordan-big-problems.md) | ⭐ **Round 5: 15 big, obvious Jordan problems (problems only), rated by our filters** |
+| [08-solutions-smoking-reading-traffic.md](08-solutions-smoking-reading-traffic.md) | ⭐ **Round 6: 7 solutions for smoking / reading / traffic, scored on the 6 criteria** |
 | [sources.md](sources.md) | Every source used, grouped by topic |
 
 ## Idea file template
