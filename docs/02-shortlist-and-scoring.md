@@ -2,7 +2,9 @@
 
 Scores are 1–5 per criterion, weighted by the official judging weights. They are our own judgment. **Re-score as a team**; the point is to argue about the numbers.
 
-## Round 6 (current): solutions for smoking, reading, traffic → [08-solutions-smoking-reading-traffic.md](08-solutions-smoking-reading-traffic.md)
+## Round 7 (current): H re-scored with the "AI draws the kroka" wow → **4.70** ([H3](ideas/H3-najm-wow-revenue-training.md)). Developer roadmap: 3.65 as society / 4.15 if a mentor approves the crossover ([L §7c](ideas/L-adaptive-learning-studio.md)).
+
+## Round 6: solutions for smoking, reading, traffic → [08-solutions-smoking-reading-traffic.md](08-solutions-smoking-reading-traffic.md)
 | Solution | Problem | **Weighted** |
 |---|---|---|
 | C2 Najm for Jordan (congestion angle) | Traffic | **4.50** |

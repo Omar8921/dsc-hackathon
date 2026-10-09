@@ -6,14 +6,15 @@ _Last updated: 2026-10-09 (Day 1), ideation session 2._
 
 ## Status
 - Phase: **ideation**, no code. Branch `ideation/research`.
-- History: R1 (A–F) rejected → R2 Najm (H) set aside → R3 learning studio (L) → R4 top 5 ([06](docs/06-top-5.md)) → R5 big problems ([07](docs/07-jordan-big-problems.md)) → **R6: solutions for smoking, reading, traffic → [docs/08-solutions-smoking-reading-traffic.md](docs/08-solutions-smoking-reading-traffic.md).**
-- R6 scores: C2 Najm (traffic angle) 4.50 · **B1 Ismaa'ni 4.40** (teacher's phone records each child reading for 60 s → AI words correct/min + error tags → class grouped by level, TaRL method) · **A1 Bala Dukhan 4.15** (WhatsApp AI quit coach + 31 MoH clinics) · A2 3.85 · C1 AI signals 3.85 · B2 3.70 · C3 3.30.
-- Key findings: MoH quit clinics reach ~10k smokers/yr (<1% of ~2M+); RAMP: only 19% of early-grade pupils met the oral fluency benchmark (2018); GAM already has 5,600 counting cameras plus smart-signal pilots; Google Read Along Arabic already exists.
+- History: R1 rejected → R2 Najm (H) → R3 learning studio (L) → R4 top 5 → R5 big problems (07) → R6 solutions for smoking/reading/traffic (08; team not convinced they're "hackathon-winning") → **R7: Najm deep-dive → [docs/ideas/H3-najm-wow-revenue-training.md](docs/ideas/H3-najm-wow-revenue-training.md).**
+- **Current lead: H (Najm for Jordan) = 4.70**, with the wow feature **"AI draws the kroka"**: photos + two dialect voice statements + GPS → animated reconstruction on the real OpenStreetMap street + auto-drawn sketch + contradiction detection + fault split with law citation; the officer approves. Template-based (8 scenarios), not physics.
+- Revenue: insurers pay per processed case → later a per-policy levy (Najm's own path; SAR 750M in 2021); plus repair/towing network commissions, analytics, regional licensing (Palestinian CMA studied E-Kroka in May 2026). Jordan alone ≈ JD 2–4M/yr.
+- Training: hackathon = YOLOv8-seg fine-tuned on CarDD (4k imgs) / VehiDE (13.9k) / HITL CC0 (1.8k), report test mAP; production = JIF E-Kroka archive since 2013 (photos + sketches + fault + settlements) under data-sharing. Fault % = law retrieval + LLM (TrafficRAG-style), not trained on photos.
+- Roadmap planner: helps Jordan through jobs (7,000 ICT grads/yr, ~3,000 employed; $200M YTJ project), but that's the **economy** sector → 3.65 as society, 4.15 if a mentor approves the crossover.
 
 ## Next actions
-1. Team picks from 08 (recommendation for a new direction: B1; second: A1).
-2. If B1: test Arabic ASR on read-aloud with forced alignment early (biggest technical risk); write 5 leveled passages.
-3. Then the build plan.
+1. Team decides: H (with reconstruction) vs others.
+2. If H: mentor check on sector fit; Day-1 parallel tracks: (a) YOLOv8-seg training, (b) two-phone flow + Supabase, (c) reconstruction templates + OSM, (d) LLM statements/contradictions/fault RAG + test scenarios.
 
 ## Business model for H
 See [docs/ideas/H2-najm-ai-and-business-model.md](docs/ideas/H2-najm-ai-and-business-model.md). In short: fault % is the hook for drivers. Damage estimation and fraud scoring are what insurers pay for, because motor claims are ≈96% of motor premiums (JD 261M of JD 272M in 2024). Phases: insurer per-claim pilot → PSD×JIF remote-kroka pilot → per-policy levy (Najm switched from per-accident to per-policy because per-accident fees reward more accidents).

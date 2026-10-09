@@ -157,6 +157,15 @@ All accessed 2026-10-09. Search-engine summaries were used for some figures. **O
 - GAM 5,600 cameras / 200+ intersections — https://www.jordannews.jo/Section-109/News/GAM-5-600-Traffic-Monitoring-Cameras-in-Operation-Only-25-Dedicated-to-Traffic-Violations-50992 ; smart signal pilots — https://www.jordannews.jo/Section-109/News/Smart-Traffic-Signals-Installed-at-Four-Amman-Sites-54743
 - Private primary enrolment 32.7% — https://tradingeconomics.com/jordan/school-enrollment-primary-private-percent-of-total-primary-wb-data.html ; school-season traffic — https://www.jordannews.jo/Section-109/News/Comprehensive-Traffic-Security-Plan-for-the-New-School-Year-44249
 
+## Round 7 (H3 + L §7c)
+- Liablix (photo → 3D reconstruction) — https://www.startupbusiness.it/en/wp-json/wp/v2/posts/148639 , https://webcatalog.io/en/apps/liablix
+- Nexar reconstruction — https://data.getnexar.com/blog/nexar-releases-first-ever-ai-vision-technology-to-reconstruct-car-accident-scenes
+- SkyeBrowse — https://www.skyebrowse.com/crush-claims
+- TrafficRAG — https://arxiv.org/pdf/2606.01737 ; AITP — https://arxiv.org/pdf/2604.20878 ; responsibility % benchmark — https://arxiv.org/abs/2607.03591
+- VehiDE dataset — https://doaj.org/article/6e0eb600059440b390431a42dfe8d138 ; HITL CC0 dataset — https://humansintheloop.org/resources/datasets/car-parts-and-car-damages-dataset/ ; Pixemantic-29 — https://ieee-dataport.org/documents/pixemantic-vehicle-damage-29
+- ICT grads 7,000/yr, ~3,000 employed — https://intaj.net/?p=20938 ; skills gap — https://jordantimes.com/node/261579
+- Youth Technology & Jobs project — https://modee.gov.jo/EN/Pages/Youth_Technology_and_Jobs_Project ; 31.7% disbursed — https://www.jordannews.jo/Section-112/Economy/World-Bank-31-7-of-Youth-Technology-and-Jobs-Project-Funding-Disbursed-46248
+
 ## CPR (Idea I)
 - Singapore myResponder 2025 — https://pubmed.ncbi.nlm.nih.gov/40383504/
 - Singapore 2021 (mixed) — https://www.annals.edu.sg/pdf/50VolNo3Mar2021/V50N3p212.pdf

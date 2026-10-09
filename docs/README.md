@@ -17,6 +17,7 @@ Phase: **ideation**. Nothing is built yet, on purpose.
 | [06-top-5.md](06-top-5.md) | ⭐ **Current top 5** with problem / uniqueness / MVP / profit for each |
 | [07-jordan-big-problems.md](07-jordan-big-problems.md) | ⭐ **Round 5: 15 big, obvious Jordan problems (problems only), rated by our filters** |
 | [08-solutions-smoking-reading-traffic.md](08-solutions-smoking-reading-traffic.md) | ⭐ **Round 6: 7 solutions for smoking / reading / traffic, scored on the 6 criteria** |
+| [ideas/H3-najm-wow-revenue-training.md](ideas/H3-najm-wow-revenue-training.md) | ⭐ **Round 7: Najm wow feature (AI draws the kroka), revenue model, training data** |
 | [sources.md](sources.md) | Every source used, grouped by topic |
 
 ## Idea file template

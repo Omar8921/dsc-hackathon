@@ -101,6 +101,20 @@ Rubric: *"A real problem with a clear group of people in Jordan who benefit."*
 
 **What would raise it to 4–5:** narrow the target to **early-grade Arabic reading** (Grades 2–4, where learning poverty is measured); make it work on **one shared device or a parent's phone** (voice: the child reads aloud and AI checks fluency and errors); **measure before/after on day one** with a small reading probe; and name a distribution channel (MoE early-grade reading programmes, donor-funded education programmes). That's a different product from the "Lovable for lessons" studio.
 
+## 7c. How the *developer roadmap* version helps Jordan (round 7)
+It does help Jordan, but through **jobs and skills**, not public services:
+- **Tech graduates:** over **7,000 a year**, but only **~3,000 were registered as employed** with Social Security in 2020. Total ICT-sector employment is ~26,000. ([int@j](https://intaj.net/?p=20938)) An earlier int@j figure: under 40% of ICT grads find jobs in their field.
+- **Employers say the gap is practical skills, English and soft skills.** 75% of ICT employers reported difficulty finding well-educated staff (older assessment). ([int@j](https://intaj.net/?p=20938), [Jordan Times](https://jordantimes.com/node/261579))
+- **The government is already paying for this:** the **$200M World Bank "Youth, Technology & Jobs" project** (MoDEE) targeted 30,000 youth for digital skills but had trained ~8,000, with only 31.7% of funds disbursed by Oct 2025, running to Feb 2027. ([MoDEE](https://modee.gov.jo/EN/Pages/Youth_Technology_and_Jobs_Project), [Jordan News](https://www.jordannews.jo/Section-112/Economy/World-Bank-31-7-of-Youth-Technology-and-Jobs-Project-Funding-Disbursed-46248))
+- **Story:** "Jordan produces 7,000 tech grads a year and employers still can't hire. Our roadmap reads what each grad actually built, closes *their* gap with projects on *their own code*, and gives employers evidence of real skill." The payer is the YTJ programme, bootcamps (DigiSkills) and universities.
+
+**The catch:** this is the **economy sector's** stated topic ("Jobs, skills & the future of work… skills-gap analysis, career guidance"). Judged by the society panel, Impact is ~2. The rules allow crossing sectors **only after checking with a mentor**. If a mentor approves, Impact would be ~4 (clear group: tech grads; clear Jordan number; clear payer). If not, use the society-sector reading version instead (see 08, idea B1).
+
+| Version | Impact | Innov. | Feas. | Tech | UX | Pitch | Weighted |
+|---|---|---|---|---|---|---|---|
+| Developer roadmap, judged as society | 2 | 4 | 4 | 5 | 4 | 4 | 3.65 |
+| Developer roadmap, if a mentor approves the crossover | 4 | 4 | 4 | 5 | 4 | 4 | 4.15 |
+
 ## 8. Risks / open questions
 - **Student devices:** phones may not be allowed in public classrooms. Mitigations: teacher-projector mode plus printed QR for homework on a parent's phone, and a low-bandwidth web app (no install).
 - **Generation quality on stage:** pre-test on 5–10 real textbook pages; keep a cached "golden" output as a fallback; be honest about it.
