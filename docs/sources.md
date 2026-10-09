@@ -131,6 +131,19 @@ All accessed 2026-10-09. Search-engine summaries were used for some figures. **O
 - Kaiser AI scribes 15,791 hours — https://www.ama-assn.org/practice-management/digital-health/ai-scribes-save-15000-hours-and-restore-human-side-medicine
 - MoH 1,245 PHC centres — https://en.wikipedia.org/wiki/Health_in_Jordan
 
+## Big Jordan problems (07)
+- Smoking: WHO FCTC Jordan report — https://extranet.who.int/fctcapps/sites/default/files/2023-04/Jordan_2020_WHOFCTCreport.pdf ; GSTHR — https://gsthr.org/countries/profile/jor/cigarettes/ ; Jordan Times survey — https://jordantimes.com/news/local/national-survey-reveals-high-tobacco-use-among-jordanians-urges-stronger-anti-smoking
+- Unemployment Q2 2026 — https://www.jordannews.jo/Section-109/News/Jordanian-Unemployment-Rate-Falls-to-21-in-Q2-2026-54976 ; JLMPS youth/women — https://www.theigc.org/sites/default/files/2026-05/Assaad-Krafft-Abushehab-Policy-Brief-March-2026.pdf
+- Drugs 2025 — https://www.thestar.com.my/news/world/2026/09/16/jordan-sees-34-pct-drop-in-drug-related-crimes-in-2025 ; https://www.jordannews.jo/Section-109/News/Drug-Trafficking-Crimes-in-Jordan-Declined-by-18-69-Last-Year-50900
+- Obesity (STEPS 2019) — https://applications.emro.who.int/docs/WHOEMNUT296E-eng.pdf ; STEPS results — https://www.emro.who.int/jordan/news/results-of-jordan-national-stepwise-survey-steps-of-noncommunicable-diseases-and-their-risk-factors-2019.html ; IDF Diabetes Atlas — https://diabetesatlas.org/data-by-location/country/jordan/
+- Poverty 35% (WB Atlas 2023) — https://jordannews.jo/Section-109/News/More-than-one-third-of-Jordanians-live-below-poverty-line-report-finds-29697 ; ERF brief — https://erf.org.eg/app/uploads/2024/12/1734943008_620_498794_pb143.pdf
+- Waste/recycling — https://edama.jo/wp-content/uploads/2024/10/3-Factsheet_Recycling_in_Jordan.pdf ; https://idom.com/en/?p=45911 ; https://www.africancleancities.org/sites/default/files/2024-11/IMPROVING_DISPOSAL_SITE_OPERATION_Amman%20Jordan.pdf
+- Water 60 m³ / 50% NRW — https://jordantimes.com/news/local/public-urged-ration-water-storage-dams-stands-15 ; https://agwkp.unescwa.org/sites/default/files/2023-10/National_Water_Strategy_2023-2040_Summary-English_-ver2-%20Jordan.pdf
+- Congestion JD 1–1.5bn — https://www.jordannews.jo/Section-106/Features/Traffic-congestion-losses-amount-to-JD1-5-billion-annually-963 ; PT share 13% — https://www.codatu.org/en/planning-sustainable-mobility-in-the-amman-metropolitan-area-jordan/
+- Mental health — https://www.frontiersin.org/journals/psychiatry/articles/10.3389/fpsyt.2019.00556/full ; https://www.ecoi.net/file_upload/1788_1308390842_mh-aims-report-jordan-jan-2011-en.pdf ; https://nursing.duke.edu/news/phd-alumna-dardas-silva-noonan-and-simmons-publish-article-public-health-nursing
+- Breast screening — https://www.dovepress.com/knowledge-attitude-and-practice-around-breast-cancer-and-mammography-s-peer-reviewed-fulltext-article-BCTT ; https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10956363/
+- Domestic violence complaints — https://www.jordannews.jo/Section-106/Features/Complaints-of-domestic-violence-on-the-rise-19925
+
 ## CPR (Idea I)
 - Singapore myResponder 2025 — https://pubmed.ncbi.nlm.nih.gov/40383504/
 - Singapore 2021 (mixed) — https://www.annals.edu.sg/pdf/50VolNo3Mar2021/V50N3p212.pdf

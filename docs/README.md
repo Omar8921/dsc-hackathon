@@ -15,6 +15,7 @@ Phase: **ideation**. Nothing is built yet, on purpose.
 | [05-what-wins-hackathons.md](05-what-wins-hackathons.md) | Podium projects from TreeHacks, Cal Hacks, HackMIT etc. and the patterns behind them |
 | [ideas/L-adaptive-learning-studio.md](ideas/L-adaptive-learning-studio.md) | ⭐ Round 3: teammate's learning-roadmap idea, polished → classroom "Lovable for learning" |
 | [06-top-5.md](06-top-5.md) | ⭐ **Current top 5** with problem / uniqueness / MVP / profit for each |
+| [07-jordan-big-problems.md](07-jordan-big-problems.md) | ⭐ **Round 5: 15 big, obvious Jordan problems (problems only), rated by our filters** |
 | [sources.md](sources.md) | Every source used, grouped by topic |
 
 ## Idea file template

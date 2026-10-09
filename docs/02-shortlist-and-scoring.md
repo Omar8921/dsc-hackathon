@@ -2,11 +2,14 @@
 
 Scores are 1–5 per criterion, weighted by the official judging weights. They are our own judgment. **Re-score as a team**; the point is to argue about the numbers.
 
-## Round 4 (current): top 5 → see [06-top-5.md](06-top-5.md)
+## Round 5 (current): problems first → [07-jordan-big-problems.md](07-jordan-big-problems.md)
+Team asked for big, obvious Jordan problems only (no ideas yet), because Impact = 25%. Top problems by the filters: unmanaged chronic disease, smoking, ED overcrowding, early-grade reading, online scams.
+
+## Round 4: top 5 → see [06-top-5.md](06-top-5.md)
 | # | Idea | **Weighted** |
 |---|---|---|
 | 1 | [M — Farz: ED triage copilot (Guardian for Jordan)](ideas/M-ed-triage-copilot.md) | **4.50** |
-| 2 | [L — Adaptive Learning Studio (incl. roadmap builder)](ideas/L-adaptive-learning-studio.md) | **4.25** |
+| 2 | [L — Adaptive Learning Studio (incl. roadmap builder)](ideas/L-adaptive-learning-studio.md) | **4.00** (Impact revised to 3) |
 | 3 | [I — Nabd: CPR coach + responders](ideas/I-cpr-responder-and-coach.md) | **4.25** |
 | 4 | [N — Katib: Arabic clinic scribe](ideas/N-arabic-clinic-scribe.md) | **4.20** |
 | 5 | [K — Mish Mazbout: scam checker](ideas/K-scam-message-checker.md) | **4.10** |

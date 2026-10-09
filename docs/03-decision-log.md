@@ -13,4 +13,6 @@ Format: `YYYY-MM-DD — decision — why — who`
 - 2026-10-09 — **Team set H (Najm) aside**: they want a stronger wow factor and a fast, hackathon-style demo. — team
 - 2026-10-09 — Teammate proposed a GitHub-based personalised learning roadmap with interactive modules. Researched → [ideas/L](ideas/L-adaptive-learning-studio.md). The generic roadmap generator is crowded and the developer focus mismatches the society sector, so it was reshaped into L2 (classroom studio, same engine). — research
 - 2026-10-09 — Team shared "Guardian" (1st place, AI Hackathon Hamburg 2026: NHS ED assistant). Adapted for Jordan → [ideas/M](ideas/M-ed-triage-copilot.md), with the twist of family-facing wait transparency against ED violence. Also added N (Arabic clinic scribe). Top 5 compiled → [06-top-5.md](06-top-5.md). — team + research
-- 2026-10-09 — **Idea not yet chosen.** Recommendation: M (Farz); second: L. — pending team vote
+- 2026-10-09 — Re-checked L on "Impact on Jordan": the headline stat (early-grade reading) doesn't match the product (science sims), and device reach is weak. Impact revised 4 → 3, weighted 4.25 → 4.00. — research
+- 2026-10-09 — Team switched to **problems first**: big, obvious Jordan problems only → [07-jordan-big-problems.md](07-jordan-big-problems.md) (15 problems, rated by 5 filters). — team request
+- 2026-10-09 — **Idea not yet chosen.** Team to pick a problem, then design one simple AI solution for it. — pending

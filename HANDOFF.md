@@ -6,14 +6,15 @@ _Last updated: 2026-10-09 (Day 1), ideation session 2._
 
 ## Status
 - Phase: **ideation**, no code. Branch `ideation/research`.
-- History: round 1 (A–F) rejected → round 2 Najm (H) set aside for lack of wow → round 3 learning studio (L) → **round 4: top 5 in [docs/06-top-5.md](docs/06-top-5.md).**
-- **Top 5:** 1 Farz ED triage copilot (M, 4.50; adapted from "Guardian", the Hamburg 2026 winner) · 2 Adaptive Learning Studio incl. GitHub roadmap builder (L, 4.25) · 3 Nabd CPR coach (I, 4.25) · 4 Katib Arabic clinic scribe (N, 4.20) · 5 Mish Mazbout scam checker (K, 4.10).
-- Recommendation: **M (Farz)**. Its Jordan twist is a family-facing wait-transparency screen, because 61% of patients don't know triage exists and most violence against doctors happens in EDs. Safety rule: the LLM extracts, rules score, and the AI may only escalate.
+- History: round 1 (A–F) rejected → round 2 Najm (H) set aside → round 3 learning studio (L) → round 4 top 5 ([06-top-5.md](docs/06-top-5.md); lead M = Farz ED triage) → **round 5: problems first.**
+- **Round 5:** the team wants big, obvious Jordan problems (Impact = 25%) before any solution → [docs/07-jordan-big-problems.md](docs/07-jordan-big-problems.md). 15 problems, rated on big/obvious, single-solution dent, AI fit, simplicity, sector.
+  - Top by filters: **unmanaged chronic disease** (≈1.1M diabetics, 18.6% undiagnosed; half of hypertensives untreated; obesity 32%), **smoking** (men 55–66%), ED overcrowding, early-grade reading, online scams.
+  - Unemployment, water and traffic are the biggest problems but fail the sector, single-product or crowding filters.
+- L's Impact was revised 4 → 3 (headline stat is early-grade *reading*; the product was science sims; weak device reach). Weighted 4.00.
 
 ## Next actions
-1. Team votes on the top 5.
-2. If M: ask a doctor/mentor which triage scale Jordanian EDs use (CTAS/ESI/local); collect ~40 triage vignettes for validation.
-3. Then write the build plan (roles, scope, what's mocked, demo script).
+1. Team picks 1–2 problems from 07.
+2. Then design one simple AI solution per problem and score it.
 
 ## Business model for H
 See [docs/ideas/H2-najm-ai-and-business-model.md](docs/ideas/H2-najm-ai-and-business-model.md). In short: fault % is the hook for drivers. Damage estimation and fraud scoring are what insurers pay for, because motor claims are ≈96% of motor premiums (JD 261M of JD 272M in 2024). Phases: insurer per-claim pilot → PSD×JIF remote-kroka pilot → per-policy levy (Najm switched from per-accident to per-policy because per-accident fees reward more accidents).

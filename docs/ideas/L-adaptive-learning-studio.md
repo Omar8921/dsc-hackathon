@@ -85,6 +85,22 @@ Keep it as the **"same engine, second market"** slide: "the same studio reads a 
 | L1 — Developer learning OS from GitHub | 2 | 4 | 4 | 5 | 4 | 4 | **3.65** (sector mismatch hurts impact) |
 | **L2 — Classroom studio (curriculum page → interactive adaptive lesson)** | 4 | 4 | 4 | 5 | 4 | 5 | **4.25** |
 
+## 7b. Honest check: how does it score on "Impact on Jordan" (25%)? (added in round 5)
+Rubric: *"A real problem with a clear group of people in Jordan who benefit."*
+
+**What's strong:** the problem is real and huge (learning poverty 52% → 60%+, PISA math 361, 826 double-shift schools).
+
+**What's weak:**
+1. **Mismatch between headline stat and product.** Learning poverty measures *10-year-olds who can't read a simple Arabic text*. Our demo (a science simulation from a Grade-8 page) doesn't touch that number. A sharp domain judge will notice.
+2. **Reach goes through teachers and devices.** The kids most affected (double-shift public schools, poorer families) are the least likely to have phones in class or data at home. "Does your app actually reach them?" is the exact question this sector's panel is told to ask.
+3. **The evidence is small or foreign:** Google Learn Your Way (60 US students, Google-funded); tutoring-system meta-analyses g≈0.27–0.42. Promising, not proof for Jordan.
+4. **"Clear group" is fuzzy:** "teachers and students" is everyone. Impact scores reward a narrowly defined group.
+5. **Crowding:** "AI for teachers" will appear at other tables.
+
+**Honest Impact score: 3/5, not 4.** Revised weighted total: 0.75 + 0.8 + 0.8 + 0.75 + 0.4 + 0.5 = **4.00**. The developer/GitHub version: **1–2/5** on Impact (developers aren't left out, and it's the economy sector).
+
+**What would raise it to 4–5:** narrow the target to **early-grade Arabic reading** (Grades 2–4, where learning poverty is measured); make it work on **one shared device or a parent's phone** (voice: the child reads aloud and AI checks fluency and errors); **measure before/after on day one** with a small reading probe; and name a distribution channel (MoE early-grade reading programmes, donor-funded education programmes). That's a different product from the "Lovable for lessons" studio.
+
 ## 8. Risks / open questions
 - **Student devices:** phones may not be allowed in public classrooms. Mitigations: teacher-projector mode plus printed QR for homework on a parent's phone, and a low-bandwidth web app (no install).
 - **Generation quality on stage:** pre-test on 5–10 real textbook pages; keep a cached "golden" output as a fallback; be honest about it.
