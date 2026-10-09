@@ -87,6 +87,35 @@ All accessed 2026-10-09. Search-engine summaries were used for some figures. **O
 - GDV ~10% suspicious, half motor — https://xprimm.com/GDV-Costs-of-fraudulent-claims-is-increasing-in-line-with-the-increasing-benefits-in-P-C-insurance-articol-124-21762.htm
 - Jordan registered vehicles ≈1.79M (2021) — https://www.ceicdata.com/en/indicator/jordan/number-of-registered-vehicles
 
+## What wins hackathons (05)
+- TreeHacks 2025 — https://stanforddaily.com/2025/02/18/treehacks-awards-200000-in-prizes-to-students-from-around-the-world/
+- TreeHacks 2026 — https://stanforddaily.com/2026/02/15/12th-annual-treehacks/
+- Cal Hacks 11.0 winner Duet — https://stanforddaily.com/2024/11/20/stanford-students-win-cal-hacks/
+- SnackSnap 3rd at Cal Hacks — https://blogs.sjsu.edu/cob/?p=648
+- HackMIT 2025 track wins — https://www.khoury.northeastern.edu/khoury-undergrads-win-three-categories-at-prestigious-mit-hackathon
+- Gloo AI hackathon 2026 — https://www.stocktitan.net/news/GLOO/gloo-ai-hackathon-winners-announced-showing-what-applied-ai-can-do-pqmo7nepljpj.html
+- AI Hackathon Hamburg 2026 — https://ai-beavers.com/hackathon/winners
+- lablab "How to win" — https://lablab.ai/guide/how-to-win-an-ai-hackathon
+
+## Learning studio (Idea L)
+- Google Learn Your Way blog — https://research.google/blog/learn-your-way-reimagining-textbooks-with-generative-ai/
+- Learn Your Way paper — https://arxiv.org/pdf/2509.18664
+- Retention 77% vs 68% — https://www.maginative.com/article/learn-your-way-googles-new-ai-transforms-static-textbooks-into-interactive-personalized-lessons/
+- Existing roadmap generators — https://dev.to/nk2552003/introducing-mindroute-your-personalized-ai-learning-roadmap-generator-kp , https://community.deeplearning.ai/t/deeplearning-ai-course-roadmap-tool-personalized-study-plans/885591 , https://github.com/habeebmoosa/getroadmaps
+- Jordan learning poverty 52.5% → 60%+ — https://jordannews.jo/Section-109/News/Learning-poverty-surges-from-52-5-to-over-60-post-COVID-Mahafzah-34800
+- World Bank Jordan learning poverty brief — https://documents1.worldbank.org/curated/en/403191624871019778/pdf/Jordan-Learning-Poverty-Brief-2021.pdf
+- PISA 2022 Jordan — https://www.oecd.org/en/publications/pisa-2022-results-volume-i-and-ii-country-notes_ed6fbcc5-en/jordan_d1c865b3-en.html
+- Double-shift schools 826 — https://jordantimes.com/node/270364
+- Class sizes 45+ — https://blogs.nature.com/blog/schooling-syrias-refugees/
+- Jordan Compact education fund — https://www.albawaba.com/business/donors-commit-975m-jordan-compact-education-fund-876052
+- MagicSchool funding/users — https://app.dealroom.co/news/feed/magic-school-raises-45m-relocates
+- Khanmigo free for teachers — https://blog.khanacademy.org/ai-for-teachers-khanmigo-vs-the-rest-why-khanmigo-wins
+- Diffit pricing — https://web.diffit.me/why-diffit-1
+- Lovable ARR — https://en.wikipedia.org/wiki/Lovable_(company) , https://www.techdogs.com/tech-news/td-newsdesk/lovable-hits-400m-arr-in-february-adds-100m-in-a-month-with-146-employees
+- Gamma $100M ARR profitable — https://techcrunch.com/?p=3066533
+- Replit ARR (Sacra) — https://sacra.com/research/replit
+- Cognitive Tutor RAND / ITS evidence — https://arxiv.org/pdf/1802.08616 , https://evidenceforessa.org/?p=637
+
 ## CPR (Idea I)
 - Singapore myResponder 2025 — https://pubmed.ncbi.nlm.nih.gov/40383504/
 - Singapore 2021 (mixed) — https://www.annals.edu.sg/pdf/50VolNo3Mar2021/V50N3p212.pdf

@@ -5,23 +5,23 @@ Rolling "where are we" note. Read this first and **update it at the end of every
 _Last updated: 2026-10-09 (Day 1), ideation session 2._
 
 ## Status
-- Phase: **ideation**. No code written (intentional). The team is **still gathering ideas, no rush to commit yet.**
+- Phase: **ideation**. No code written (intentional). The team is still exploring.
 - Branch: `ideation/research` (planning docs). `main` only has `.gitignore` + an empty `README.md`.
-- **Round 1 (ideas A–F) was rejected by the team.** The "common ideas to avoid" list was accepted.
-- **Round 2:** a teammate's idea **"Najm for Jordan"** was researched and evaluated → [docs/ideas/H-najm-for-jordan.md](docs/ideas/H-najm-for-jordan.md). Score **4.50**, the current lead.
-- A global scan of proven-abroad solutions added I (CPR coach, 4.25), K (scam checker, 4.10) and J (old buildings, 3.70). See [docs/04-global-scan.md](docs/04-global-scan.md).
+- Round 1 (A–F) rejected. Round 2: Najm-for-Jordan (H, 4.50) plus business model (H2), **now set aside by the team** in favour of more wow factor.
+- **Round 3 (current):** a teammate's idea of a personalised learning roadmap from GitHub with interactive modules → [docs/ideas/L-adaptive-learning-studio.md](docs/ideas/L-adaptive-learning-studio.md).
+  - The generic "AI roadmap generator" is crowded, and developer-focused learning is the *economy* sector's example, so it was reshaped into **L2: a classroom studio**. A teacher photographs a textbook page → a playable adaptive lesson in Arabic → a live class map plus per-student maps and remedial modules. Same engine as the teammate's idea. Score 4.25.
+  - Anti-slop principle: **one learner model (concept graph + mastery + mistake log), one loop (diagnose → generate → practice → update → re-plan).** Every feature is a view on it. The LLM only fills typed module schemas.
+- Hackathon-winner patterns: [docs/05-what-wins-hackathons.md](docs/05-what-wins-hackathons.md).
+
+## Next actions
+1. Team decides between L2 (classroom), L1 (developer version; needs a mentor OK to cross into economy), H, or I.
+2. If L2: pick one subject and grade, and pre-test generation on 5–10 real textbook pages; choose 4 module types.
 
 ## Business model for H
 See [docs/ideas/H2-najm-ai-and-business-model.md](docs/ideas/H2-najm-ai-and-business-model.md). In short: fault % is the hook for drivers. Damage estimation and fraud scoring are what insurers pay for, because motor claims are ≈96% of motor premiums (JD 261M of JD 272M in 2024). Phases: insurer per-claim pilot → PSD×JIF remote-kroka pilot → per-policy levy (Najm switched from per-accident to per-policy because per-accident fees reward more accidents).
 
 ## Key insight from round 2
 Jordan **already has an electronic kroka (E-Kroka, JIF + PSD, since 2013)**, but an **officer still has to attend every minor accident in person**. Our gap is that "last physical step". The pitch is *not* "digitise the kroka"; it's "remote, AI-pre-assessed, officer-approved kroka for minor accidents", as done by Najm (KSA), Dubai Police and China's 12123.
-
-## Next actions
-1. Team reads H and decides whether it's the one (or keeps exploring; see "not yet explored" in 04-global-scan.md).
-2. If H: **mentor check on sector fit** (it touches insurance, so confirm it counts as society/public service).
-3. If H: collect "data on the day": ask ~20 people how long they last waited for a kroka and what it cost (no personal data, anonymous).
-4. Then write a build plan: roles, scope (2 cars, no injuries, 6–8 scenarios), what's mocked, demo script.
 
 ## Open questions
 - Is a PSD/JIF remote-kroka pilot already planned? (Search found none.)

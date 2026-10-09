@@ -2,7 +2,15 @@
 
 Scores are 1–5 per criterion, weighted by the official judging weights. They are our own judgment. **Re-score as a team**; the point is to argue about the numbers.
 
-## Round 2 (current): team idea + global scan
+## Round 3 (current): wow factor + "Lovable for X"
+| Idea | Impact 25% | Innov. 20% | Feas. 20% | Tech 15% | UX 10% | Pitch 10% | **Weighted** |
+|---|---|---|---|---|---|---|---|
+| ⭐ [L2 — Classroom Adaptive Learning Studio (textbook page → playable adaptive lesson + per-student maps)](ideas/L-adaptive-learning-studio.md) | 4 | 4 | 4 | 5 | 4 | 5 | **4.25** |
+| [L1 — Developer learning OS from GitHub (teammate's original)](ideas/L-adaptive-learning-studio.md) | 2 | 4 | 4 | 5 | 4 | 4 | **3.65** |
+
+Team asked to set Najm (H) aside in favour of something with a stronger wow factor and hackathon-style demo. H stays documented. What wins hackathons: [05-what-wins-hackathons.md](05-what-wins-hackathons.md).
+
+## Round 2: team idea + global scan
 | Idea | Impact 25% | Innov. 20% | Feas. 20% | Tech 15% | UX 10% | Pitch 10% | **Weighted** |
 |---|---|---|---|---|---|---|---|
 | ⭐ [H — "Najm for Jordan": remote minor-accident reporting + AI pre-assessment](ideas/H-najm-for-jordan.md) | 5 | 4 | 4 | 5 | 4 | 5 | **4.50** |

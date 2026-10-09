@@ -28,6 +28,7 @@ Rule for us: **if an idea fits in one line that every LLM gives, either drop it 
 | 18 | Job / skills-gap matcher for graduates | Economy sector's own example. |
 | 19 | Complaint-routing AI for municipalities | Common "classify text → department" demo. |
 | 20 | Smart-city "digital twin" dashboard | Too big; slides-only risk. |
+| 21 | **AI personalised learning roadmap generator** ("tell me your level, get a plan") | Dozens of hobby versions (DevAtlas, Coders.sh, MindRoute, DeepLearning.AI tool…). Almost all are self-reported and text output. See [ideas/L](ideas/L-adaptive-learning-studio.md) for the non-generic version. |
 
 ## Patterns that make an idea generic
 - "**Chatbot for X**", where the LLM is the whole product.
