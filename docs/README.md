@@ -11,6 +11,7 @@ Phase: **ideation**. Nothing is built yet, on purpose.
 | [03-decision-log.md](03-decision-log.md) | Team decisions, with date and reason (append-only) |
 | [04-global-scan.md](04-global-scan.md) | Round 2: proven solutions abroad mapped to Jordan gaps |
 | [ideas/H-najm-for-jordan.md](ideas/H-najm-for-jordan.md) | ⭐ Current lead: team idea "Najm for Jordan", researched and evaluated |
+| [ideas/H2-najm-ai-and-business-model.md](ideas/H2-najm-ai-and-business-model.md) | Where the AI earns money for H + revenue model + unit economics |
 | [sources.md](sources.md) | Every source used, grouped by topic |
 
 ## Idea file template

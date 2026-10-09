@@ -79,6 +79,14 @@ All accessed 2026-10-09. Search-engine summaries were used for some figures. **O
 - Staged accidents warning (Aug 2024) — https://jordantimes.com/node/306165 , https://en.royanews.tv/news/53644
 - CarDD dataset — https://arxiv.org/pdf/2211.00945
 
+## Business model (Idea H2)
+- Jordan 2024 motor GWP JD 272M, motor paid claims JD 261.4M — https://meinsurancereview.com/Magazine/ReadMagazineArticle?aid=49237
+- Jordan 2025 premiums/claims (revised 2024) — https://meinsurancereview.com/News/ViewNewsLetterArticle/id/94779/Type/MiddleEast/Jordan-Insurance-premiums-climb-by-nearly-10-in-2025
+- Najm per-accident → per-policy revenue switch, SAR 750M 2021, 7% margin — https://argaam.com/en/article/articledetail/id/1592427 , https://www.okaz.com.sa/economy/na/2248518
+- Fraud up to ~10% of claims (Insurance Europe) — https://www.insuranceeurope.eu/mediaitem/2bf88e16-0fe2-4476-8512-7492f5007f3c/Insurance%20fraud%20-%20not%20a%20victimless%20crime.pdf
+- GDV ~10% suspicious, half motor — https://xprimm.com/GDV-Costs-of-fraudulent-claims-is-increasing-in-line-with-the-increasing-benefits-in-P-C-insurance-articol-124-21762.htm
+- Jordan registered vehicles ≈1.79M (2021) — https://www.ceicdata.com/en/indicator/jordan/number-of-registered-vehicles
+
 ## CPR (Idea I)
 - Singapore myResponder 2025 — https://pubmed.ncbi.nlm.nih.gov/40383504/
 - Singapore 2021 (mixed) — https://www.annals.edu.sg/pdf/50VolNo3Mar2021/V50N3p212.pdf

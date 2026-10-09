@@ -11,6 +11,9 @@ _Last updated: 2026-10-09 (Day 1), ideation session 2._
 - **Round 2:** a teammate's idea **"Najm for Jordan"** was researched and evaluated → [docs/ideas/H-najm-for-jordan.md](docs/ideas/H-najm-for-jordan.md). Score **4.50**, the current lead.
 - A global scan of proven-abroad solutions added I (CPR coach, 4.25), K (scam checker, 4.10) and J (old buildings, 3.70). See [docs/04-global-scan.md](docs/04-global-scan.md).
 
+## Business model for H
+See [docs/ideas/H2-najm-ai-and-business-model.md](docs/ideas/H2-najm-ai-and-business-model.md). In short: fault % is the hook for drivers. Damage estimation and fraud scoring are what insurers pay for, because motor claims are ≈96% of motor premiums (JD 261M of JD 272M in 2024). Phases: insurer per-claim pilot → PSD×JIF remote-kroka pilot → per-policy levy (Najm switched from per-accident to per-policy because per-accident fees reward more accidents).
+
 ## Key insight from round 2
 Jordan **already has an electronic kroka (E-Kroka, JIF + PSD, since 2013)**, but an **officer still has to attend every minor accident in person**. Our gap is that "last physical step". The pitch is *not* "digitise the kroka"; it's "remote, AI-pre-assessed, officer-approved kroka for minor accidents", as done by Najm (KSA), Dubai Police and China's 12123.
 
