@@ -12,4 +12,5 @@ Format: `YYYY-MM-DD — decision — why — who`
 - 2026-10-09 — Business model for H written (H2). — Answer "who pays". — research
 - 2026-10-09 — **Team set H (Najm) aside**: they want a stronger wow factor and a fast, hackathon-style demo. — team
 - 2026-10-09 — Teammate proposed a GitHub-based personalised learning roadmap with interactive modules. Researched → [ideas/L](ideas/L-adaptive-learning-studio.md). The generic roadmap generator is crowded and the developer focus mismatches the society sector, so it was reshaped into L2 (classroom studio, same engine). — research
-- 2026-10-09 — **Idea not yet chosen.** Current front-runner: L2. Alternatives: H, I. — pending team vote
+- 2026-10-09 — Team shared "Guardian" (1st place, AI Hackathon Hamburg 2026: NHS ED assistant). Adapted for Jordan → [ideas/M](ideas/M-ed-triage-copilot.md), with the twist of family-facing wait transparency against ED violence. Also added N (Arabic clinic scribe). Top 5 compiled → [06-top-5.md](06-top-5.md). — team + research
+- 2026-10-09 — **Idea not yet chosen.** Recommendation: M (Farz); second: L. — pending team vote

@@ -2,7 +2,16 @@
 
 Scores are 1–5 per criterion, weighted by the official judging weights. They are our own judgment. **Re-score as a team**; the point is to argue about the numbers.
 
-## Round 3 (current): wow factor + "Lovable for X"
+## Round 4 (current): top 5 → see [06-top-5.md](06-top-5.md)
+| # | Idea | **Weighted** |
+|---|---|---|
+| 1 | [M — Farz: ED triage copilot (Guardian for Jordan)](ideas/M-ed-triage-copilot.md) | **4.50** |
+| 2 | [L — Adaptive Learning Studio (incl. roadmap builder)](ideas/L-adaptive-learning-studio.md) | **4.25** |
+| 3 | [I — Nabd: CPR coach + responders](ideas/I-cpr-responder-and-coach.md) | **4.25** |
+| 4 | [N — Katib: Arabic clinic scribe](ideas/N-arabic-clinic-scribe.md) | **4.20** |
+| 5 | [K — Mish Mazbout: scam checker](ideas/K-scam-message-checker.md) | **4.10** |
+
+## Round 3: wow factor + "Lovable for X"
 | Idea | Impact 25% | Innov. 20% | Feas. 20% | Tech 15% | UX 10% | Pitch 10% | **Weighted** |
 |---|---|---|---|---|---|---|---|
 | ⭐ [L2 — Classroom Adaptive Learning Studio (textbook page → playable adaptive lesson + per-student maps)](ideas/L-adaptive-learning-studio.md) | 4 | 4 | 4 | 5 | 4 | 5 | **4.25** |

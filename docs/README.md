@@ -14,6 +14,7 @@ Phase: **ideation**. Nothing is built yet, on purpose.
 | [ideas/H2-najm-ai-and-business-model.md](ideas/H2-najm-ai-and-business-model.md) | Where the AI earns money for H + revenue model + unit economics |
 | [05-what-wins-hackathons.md](05-what-wins-hackathons.md) | Podium projects from TreeHacks, Cal Hacks, HackMIT etc. and the patterns behind them |
 | [ideas/L-adaptive-learning-studio.md](ideas/L-adaptive-learning-studio.md) | ⭐ Round 3: teammate's learning-roadmap idea, polished → classroom "Lovable for learning" |
+| [06-top-5.md](06-top-5.md) | ⭐ **Current top 5** with problem / uniqueness / MVP / profit for each |
 | [sources.md](sources.md) | Every source used, grouped by topic |
 
 ## Idea file template

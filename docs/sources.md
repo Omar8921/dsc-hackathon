@@ -116,6 +116,21 @@ All accessed 2026-10-09. Search-engine summaries were used for some figures. **O
 - Replit ARR (Sacra) — https://sacra.com/research/replit
 - Cognitive Tutor RAND / ITS evidence — https://arxiv.org/pdf/1802.08616 , https://evidenceforessa.org/?p=637
 
+## ED triage (Idea M) and scribe (Idea N)
+- Guardian, 1st place AI Hackathon Hamburg 2026 — https://ai-beavers.com/hackathon/winners
+- Jordan ED visits 2018–2023 (9.16M, 6.37% admitted) — https://intjem.biomedcentral.com/articles/10.1186/s12245-025-00952-x
+- 113k ED visits in 36 days — https://www.jordannews.jo/Section-109/News/113-000-patients-visited-Jordan-emergency-departments-in-36-days-25702
+- Triage awareness 61.3% unaware (verify) — https://doaj.org/article/dc81b2be5e494c32be30250c09fbc796
+- Violence vs doctors in Amman 63.1% — https://doaj.org/article/f06528e985304743b4fb0589610c0df7
+- Violence 33% physical / 53% verbal — https://www.mdpi.com/1660-4601/20/4/3675
+- Assaults concentrated in EDs — https://www.jordannews.jo/Section-109/News/Assaults-on-Medical-Staff-Drop-by-Half-Since-2016-But-Doctors-Say-Problem-Persists-54922 , https://www.jordannews.jo/Section-109/News/12-cases-of-assault-on-doctors-and-nurses-in-2023-30662
+- KATE ESI accuracy — https://arxiv.org/pdf/2004.05184
+- AI triage systematic review — https://www.ncbi.nlm.nih.gov/pmc/articles/PMC12241827/
+- ChatGPT triage unsafe (meta-analysis) — https://www.medrxiv.org/content/10.1101/2024.05.20.24307543.full.pdf
+- Hakeem 482 facilities — https://www.petra.gov.jo/en/news/hakeem-system-expands-to-cover-482-healthcare-facilities-so-far-ceo
+- Kaiser AI scribes 15,791 hours — https://www.ama-assn.org/practice-management/digital-health/ai-scribes-save-15000-hours-and-restore-human-side-medicine
+- MoH 1,245 PHC centres — https://en.wikipedia.org/wiki/Health_in_Jordan
+
 ## CPR (Idea I)
 - Singapore myResponder 2025 — https://pubmed.ncbi.nlm.nih.gov/40383504/
 - Singapore 2021 (mixed) — https://www.annals.edu.sg/pdf/50VolNo3Mar2021/V50N3p212.pdf
