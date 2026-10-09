@@ -1,6 +1,6 @@
 # Engineering Guide (for humans and AI assistants)
 
-**These rules apply to every task and every prompt, big or small.** If you're an AI assistant: read this before writing code, and follow the workflow in §1 every time.
+**These rules apply to every task and every prompt, big or small, whatever language, framework or tools we end up using.** Tool names below are only examples. Use the equivalent in our chosen stack. If you're an AI assistant: read this before writing code, and follow the workflow in §1 every time.
 
 ---
 
@@ -12,7 +12,7 @@ Before writing anything:
 - **Read the relevant code first.** Find the files, functions, types, components and DB tables that touch this feature.
 - **Search for something that already does it** (or almost does it): utilities, hooks, components, API wrappers, DB functions, schemas. Extend it; don't duplicate it.
 - **Check the conventions in use:** folder structure, naming, the error-handling style, the state management, how API calls and DB access are done. New code must look like the code around it.
-- **Check the installed dependencies** before adding a new one. Prefer what's already there; prefer the platform (e.g. Supabase auth, storage and realtime) over custom code.
+- **Check the installed dependencies** before adding a new one. Prefer what's already there; prefer the platform's built-in features (e.g. its auth, storage, realtime) over custom code.
 
 ### 1.2 Ask yourself the questions before deciding
 Answer these, in writing if the task is non-trivial. If an answer is unknown and it changes the design, **ask the team** instead of guessing.
@@ -28,7 +28,7 @@ Answer these, in writing if the task is non-trivial. If an answer is unknown and
 ### 1.3 Plan before executing
 Write a short plan before coding:
 1. Files to create or change (and why each one).
-2. Data/schema changes (tables, columns, RLS policies).
+2. Data/schema changes (tables, fields, access rules).
 3. The main functions/components and how they connect.
 4. Error cases and how each is handled.
 5. How it will be tested.
@@ -56,7 +56,7 @@ Use the simplest structure that fits the problem. Don't apply patterns for their
 | **KISS** | The straightforward solution is the default. Add complexity only when a real requirement demands it. |
 | **YAGNI** | Don't build for imagined future needs: no unused options, flags or "just in case" layers. |
 | **DRY (with judgement)** | Extract shared code when the *same logic* appears for the *same reason*. Rule of thumb: once is fine, twice note it, three times extract it. Don't merge code that only *looks* similar. |
-| **Separation of concerns** | Keep UI, business logic, data access and external services in separate layers. UI doesn't talk to the DB directly; business logic doesn't know about React. |
+| **Separation of concerns** | Keep UI, business logic, data access and external services in separate layers. UI doesn't talk to the DB directly; business logic doesn't depend on the UI framework. |
 | **Single responsibility** | Each function, component or module does one thing and is named for it. If you need "and" to describe it, split it. |
 | **Single source of truth** | Types, constants, config, DB schema, prompts and UI strings live in one place and are imported everywhere else. |
 | **Pure core, thin edges** | Put logic (calculations, scoring, validation, transformations) in pure functions that are easy to test. Side effects (DB, network, AI calls) stay at the edges. |
@@ -65,8 +65,8 @@ Use the simplest structure that fits the problem. Don't apply patterns for their
 | Feature type | Appropriate design |
 |---|---|
 | External APIs (LLM, maps, payments, SMS) | An **adapter/client module** per service: one place for keys, timeouts, retries, parsing and errors. The rest of the app calls *our* function, not the vendor SDK. Makes it swappable and mockable. |
-| AI / LLM features | Prompts in their own files; **structured output (JSON) validated against a schema** (e.g. Zod/Pydantic); a deterministic fallback when the model fails; numbers come from code/DB, never invented by the model. |
-| Database access | A data-access layer (queries in one module per entity). Use typed clients and generated types. Put **access rules in RLS**, not only in the frontend. |
+| AI / LLM features | Prompts in their own files; **structured output (JSON) validated against a schema** (using the stack's schema-validation library); a deterministic fallback when the model fails; numbers come from code/DB, never invented by the model. |
+| Database access | A data-access layer (queries in one module per entity). Use typed clients/models where available. Enforce **access rules on the server or in the database** (e.g. row-level security, if the database supports it), not only in the frontend. |
 | Multi-step workflows / statuses | An explicit **state machine** (an enum of states + allowed transitions) instead of scattered booleans. |
 | Forms & user input | One schema used for both client and server validation. |
 | UI | Small reusable components; a page = composition of components; **design tokens from the one theme file defined by the brand sheet ([04](04-brand-and-design.md)), with no hard-coded colours or fonts**; **RTL-aware layout and all text in a strings/i18n file** (Arabic + English). |
@@ -79,10 +79,10 @@ Use the simplest structure that fits the problem. Don't apply patterns for their
 - **Readable over clever.** Clear names (`calculateFare`, not `calc2`), small functions, early returns instead of deep nesting.
 - **Match the surrounding code:** naming, formatting, file layout, comment density, and the idioms in use.
 - **Comments explain *why*, not *what*.** If code needs a comment to explain what it does, rename or simplify it first.
-- **Types everywhere** (TypeScript strict / Python type hints). No `any` unless justified in a comment.
+- **Use types where the language supports them** (static typing / type hints). Avoid "anything goes" types unless justified in a comment.
 - **No dead code:** no commented-out blocks, unused exports or leftover debug logs. Git remembers history.
 - **No magic numbers or strings:** name them as constants or config.
-- **Format and lint automatically** (Prettier/ESLint, Ruff/Black). Don't argue about style; let the tool decide.
+- **Format and lint automatically** with the standard tools for the chosen language. Don't argue about style; let the tool decide.
 
 ### Don't write unnecessary code
 - **Before writing a function, search for an existing one** in the codebase, the standard library, or an already-installed dependency.
@@ -96,7 +96,7 @@ Use the simplest structure that fits the problem. Don't apply patterns for their
 ## 4. Handling failure: never swallow errors
 **The rule: every error is either handled meaningfully or passed up, never silently ignored.**
 
-❌ Never:
+❌ Never (pseudo-code; the same applies in any language):
 ```ts
 try { await save(data) } catch (e) {}          // silent: the bug disappears
 try { ... } catch (e) { console.log(e) }       // "handled" but nobody acts; flow continues as if it worked
@@ -111,7 +111,7 @@ const result = data?.items ?? []               // hides that data failed to load
 - **The user always knows what happened:** loading, success and error states on every action. Never a frozen button or a blank screen.
 - **External calls (LLM, APIs) get:** a timeout, limited retries with backoff for transient errors, response validation, and a fallback path.
 - **Log useful details** (what failed, with which IDs and inputs, minus secrets/PII) to the console or server logs, so problems are debuggable.
-- **Supabase/fetch calls return errors as values.** Always check `error` before using `data`.
+- **If a library returns errors as values** (instead of throwing), always check the error before using the result.
 - If you deliberately ignore an error, **write a comment explaining why** it's safe.
 
 ---
@@ -137,8 +137,8 @@ Testing rules:
 
 ## 6. Security basics (non-negotiable)
 - **Secrets:** API keys and service keys live in environment variables only. **Never commit them**; keep `.env` in `.gitignore`, and commit a `.env.example` with placeholder values. If a key leaks, rotate it immediately.
-- **Server vs client:** the Supabase **service-role key and LLM API keys never go to the browser.** Call LLMs and privileged operations from server code / edge functions only.
-- **Row Level Security ON for every Supabase table**, with explicit policies. The frontend's checks are UX, not security.
+- **Server vs client:** **admin/service keys and AI API keys never go to the browser or the mobile app.** Call AI services and privileged operations from server code only.
+- **Access control on the server/database for every piece of data**, with explicit rules (e.g. row-level security policies if the database supports them). The frontend's checks are UX, not security.
 - **Authorise on the server:** check that the user is allowed to do *this action on this record*, every time.
 - **Validate and sanitise all input** on the server (schema validation, length limits, allowed values). Use parameterised queries or the query builder; never build SQL from strings.
 - **Treat AI output as untrusted input:** validate it against a schema, never execute it, never render it as raw HTML, and never let it decide permissions. Watch for prompt injection from user-provided text.
@@ -151,23 +151,23 @@ Testing rules:
 ---
 
 ## 7. Modular, reusable structure
-Organise by feature, with shared code in one obvious place. Example layout (adapt it to the framework in use):
+Organise by feature, with shared code in one obvious place. Example layout. **It's illustrative only, so adapt the names to the language and framework we choose:**
 ```
-src/
-  features/<feature>/      # everything for one feature: components, hooks, logic, tests
-  components/ui/           # shared UI building blocks (Button, Card, Map, ...)
-  lib/                     # shared logic: validation schemas, utils, formatting
-  services/                # adapters for external services: llm.ts, maps.ts, payments.ts
-  db/                      # data-access functions, generated types, migrations
-  config/                  # typed env/config, constants
-  i18n/                    # UI strings (ar, en)
-  prompts/                 # LLM prompts + their output schemas
-tests/                     # or co-located *.test.ts next to the code
+<source root>/
+  features/<feature>/   # everything for one feature: UI, logic, tests
+  ui/                   # shared UI building blocks (buttons, cards, map, ...)
+  lib/                  # shared logic: validation, utils, formatting
+  services/             # one adapter per external service (AI model, maps, payments, messaging)
+  data/                 # data-access functions, models, migrations
+  config/               # typed env/config, constants
+  i18n/                 # UI strings (ar, en)
+  prompts/              # AI prompts + their output schemas
+tests/                  # or tests next to the code, per the stack's convention
 ```
 - **One way to do each thing:** one LLM client, one DB access pattern, one error format, one fetch wrapper, one date format. Reuse it everywhere.
 - **Clear module boundaries:** each module exposes a small public API; others import only that.
-- **Components take props, don't fetch their own unrelated data**, and don't hard-code text (use i18n).
-- **Before creating a new helper/component, check `lib/`, `components/ui/` and `services/`.** If something similar exists, extend it (carefully, without breaking current users).
+- **UI components receive their data as inputs, don't fetch their own unrelated data**, and don't hard-code text (use i18n).
+- **Before creating a new helper/component, check the shared folders (`lib/`, `ui/`, `services/` or their equivalents).** If something similar exists, extend it (carefully, without breaking current users).
 
 ---
 
@@ -194,7 +194,7 @@ tests/                     # or co-located *.test.ts next to the code
 - [ ] It works end-to-end, including the main failure cases
 - [ ] No error is swallowed; users see clear states (loading / success / error), in Arabic where relevant
 - [ ] Tests added or updated and passing; lint and type-check clean
-- [ ] Security basics hold: no secrets in code, RLS/permissions, input validation, AI output validated
+- [ ] Security basics hold: no secrets in code, server-side permissions, input validation, AI output validated
 - [ ] No unnecessary code: no duplicates, dead code, debug logs or unused dependencies
 - [ ] Follows the existing structure and conventions; shared code lives in the shared place
 - [ ] UI uses only the brand's theme tokens, fonts, names and terms ([04](04-brand-and-design.md))
@@ -206,4 +206,4 @@ tests/                     # or co-located *.test.ts next to the code
 ## 11. Reusable instruction block for AI assistants
 Paste this at the start of any coding prompt (or keep it in `CLAUDE.md`):
 
-> Before writing code: (1) read the relevant existing code and search for anything that already does this; (2) list your questions and assumptions, and ask me if an answer changes the design; (3) give me a short plan: files to change, data changes, error cases, tests. Then implement in small steps that match the existing conventions. Reuse existing utilities/components; don't add unnecessary code or dependencies. Never swallow errors: handle them meaningfully or propagate them with context. Validate inputs and AI outputs; keep secrets server-side; respect RLS/permissions. Add or update tests for the logic you change and run them. Finish with a summary of what changed, how you verified it, and anything mocked, skipped or still broken.
+> Before writing code: (1) read the relevant existing code and search for anything that already does this; (2) list your questions and assumptions, and ask me if an answer changes the design; (3) give me a short plan: files to change, data changes, error cases, tests. Then implement in small steps that match the existing conventions. Reuse existing utilities/components; don't add unnecessary code or dependencies. Never swallow errors: handle them meaningfully or propagate them with context. Validate inputs and AI outputs; keep secrets server-side; enforce permissions on the server. Add or update tests for the logic you change and run them. Finish with a summary of what changed, how you verified it, and anything mocked, skipped or still broken.

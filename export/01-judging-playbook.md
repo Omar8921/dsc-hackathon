@@ -1,6 +1,6 @@
 # Judging Playbook
 
-How to score high on each criterion, what each judge will ask, and how to grade ourselves honestly before we pitch.
+How to score high on each criterion, and what each judge will ask.
 
 ## 1. Criterion by criterion
 
@@ -66,25 +66,3 @@ Judges want problem, demo, impact and next step, within time.
 8. Where does the data come from in production? What about privacy and consent?
 9. What's the first pilot, with whom, and what metric proves it works?
 10. How does it scale beyond Amman / beyond Jordan?
-
-## 4. Grading ourselves (do this before the pitch)
-- Score each criterion **1–5**, then:
-  **Weighted = 0.25 × Impact + 0.20 × Innovation + 0.20 × Feasibility + 0.15 × Technical + 0.10 × UX + 0.10 × Pitch**
-- Each person scores alone first, then compare. Argue about the gaps, not the averages.
-- **Be equally strict on every part.** Write down the weakest 5 points a judge could attack, and a one-line answer to each.
-- Any criterion at **≤ 3** is where the next hour of work should go.
-
-| Score | Meaning |
-|---|---|
-| 5 | A judge would point to it as the best in the room on this criterion |
-| 4 | Clearly strong, with one minor gap |
-| 3 | OK but generic, or with an unanswered question |
-| 2 | Weak; a judge will likely push on it |
-| 1 | Missing |
-
-## 5. Lessons from Jordanian student-app judging
-From the winners of Jordan's Crown Prince Award for Best Government Services Application (judged by government officials):
-- **AI is now expected.** Most recent winners use AI; the older winners didn't. Plain apps look dated.
-- **The top prizes solve two problems at once** (e.g. one match that serves two groups).
-- **"Report it to the authorities" apps place, but rank low.** The product should *resolve* something, not just forward it.
-- Judges may already know similar Jordanian projects. Be ready with "how we're different" in one sentence.

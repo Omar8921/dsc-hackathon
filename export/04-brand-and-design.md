@@ -5,7 +5,7 @@
 ## 1. Rules
 1. **Define the brand once, early** (§2, in the first hours) and treat it as the **single source of truth**. Nobody invents colours, fonts or names on the fly.
 2. **Everything pulls from that source:**
-   - **Frontend:** design tokens (colours, fonts, spacing, radius, shadows) live in one theme file (CSS variables / Tailwind config / theme object). Components use tokens only; no hard-coded hex values or one-off font sizes.
+   - **Frontend:** design tokens (colours, fonts, spacing, radius, shadows) live in one theme file (whatever the chosen framework uses for theming). Components use tokens only; no hard-coded hex values or one-off font sizes.
    - **Pitch deck:** the same logo, colours, fonts, icon style and product name as the app. Screenshots in the deck must match the current UI.
    - **Demo:** the demo data, sample names and copy use the same tone and terminology as the app and the deck.
    - **Docs and README:** the same product name, tagline and logo.

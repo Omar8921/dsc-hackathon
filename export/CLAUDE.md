@@ -15,13 +15,16 @@ Full brief: [00-hackathon-brief.md](00-hackathon-brief.md). How to score well: [
 ## Team
 4 people: 3 AI / data-science students (one is an AI researcher; two have industry experience at PwC and Amazon) + 1 computer-science student / software engineer.
 
-## Tentative stack
-- Frontend: web app or mobile. Must support **Arabic / RTL**.
-- Backend: **Supabase** (Postgres, auth, storage, realtime, edge functions).
-- AI: LLM API and/or agents, plus ML models where needed. **The AI must do something a plain form or website can't.**
+## Stack
+**Not decided yet.** Whatever we choose must:
+- Support **Arabic / RTL** in the user interface.
+- Let us ship a working demo fast (prefer managed services and well-known tools the team already knows).
+- Keep the AI meaningful: **it must do something a plain form or website can't.**
+
+Once the stack is chosen, record it here (frontend, backend, database, AI/ML, hosting) so every assistant uses the same tools.
 
 ## How to write code
-**Follow [03-engineering-guide.md](03-engineering-guide.md) for every coding task.** In short: read the existing code first and reuse what's there, ask the key questions, plan before executing, build in small verified steps, never swallow errors, test what you change, keep secrets server-side with RLS on, and report honestly what's done and what's mocked.
+**Follow [03-engineering-guide.md](03-engineering-guide.md) for every coding task.** In short: read the existing code first and reuse what's there, ask the key questions, plan before executing, build in small verified steps, never swallow errors, test what you change, keep secrets server-side and enforce permissions on the server, and report honestly what's done and what's mocked.
 
 ## Brand & design
 **Follow [04-brand-and-design.md](04-brand-and-design.md) for anything visual or written for users:** frontend, pitch deck, demo, docs, images. Use only the brand sheet's colours, fonts, logo, product name and terms (design tokens in one theme file, no hard-coded one-off values). Keep the app, the deck and the docs consistent in both Arabic and English.
