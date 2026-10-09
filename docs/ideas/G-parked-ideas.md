@@ -19,5 +19,10 @@ Kept here for context, with the reason each one was parked.
 - Exclusion issues are documented: an algorithm with 57 indicators, rural access barriers. ([HRW](https://www.hrw.org/news/2023/07/04/jordan-should-take-social-protection-all-way))
 - **Why parked:** it's a "government-procedure chatbot" in disguise (crowded), politically sensitive, and the eligibility algorithm isn't public.
 
+## G6 — Round-2 parked (global scan)
+- **AI check-in calls for elderly living alone** (Naver CLOVA CareCall, Korea: 70+ local governments, ~15k households; no independent outcome data). Jordan fit is weak: no data on elderly living alone, and strong family structures. ([EU Futurium](https://futurium.ec.europa.eu/hu/node/12561))
+- **Medicine stock map / Wasfaty-style dispensing** (KSA Wasfaty, Taiwan mask map). Jordan chronic-medicine shortages are reported but disputed, and there's no stock data. ([Jordan News](https://jordannews.jo/Section-109/News/Medicine-for-chronic-diseases-in-short-supply-at-public-healthcare-establishments-14206))
+- **AI procurement risk flags** (Ukraine DoZorro, Brazil "Rosie"). The Audit Bureau finds thousands of violations a year, but we found no award-level open tender data. ([TI Ukraine](https://ti-ukraine.org/en/news/dozorro-artificial-intelligence-to-find-violations-in-prozorro-how-it-works/), [Jordan News](https://jordannews.jo/Section-109/News/2-776-violations-committed-in-2021-Audit-Bureau-says-in-annual-report-24708))
+
 ## G5 — Emergency addressing, sign language, appointment no-shows
 - Jordan already has E9-1-1 with caller location. Sign language is crowded. No-show reduction lacks Jordanian data (KAUH study exists, 65k appointments). Parked.

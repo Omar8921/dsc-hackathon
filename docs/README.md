@@ -9,6 +9,8 @@ Phase: **ideation**. Nothing is built yet, on purpose.
 | [02-shortlist-and-scoring.md](02-shortlist-and-scoring.md) | Scoring matrix for shortlisted ideas + recommendation |
 | [ideas/](ideas/) | One file per idea: problem facts, who's left out, proof abroad, MVP, risks |
 | [03-decision-log.md](03-decision-log.md) | Team decisions, with date and reason (append-only) |
+| [04-global-scan.md](04-global-scan.md) | Round 2: proven solutions abroad mapped to Jordan gaps |
+| [ideas/H-najm-for-jordan.md](ideas/H-najm-for-jordan.md) | ⭐ Current lead: team idea "Najm for Jordan", researched and evaluated |
 | [sources.md](sources.md) | Every source used, grouped by topic |
 
 ## Idea file template
