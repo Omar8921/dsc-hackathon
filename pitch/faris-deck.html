@@ -257,6 +257,11 @@ td.v{font-weight:600}
   <p class="muted" style="margin-top:14px;font-size:24px">محاكاة SUMO حيّة لممر فيه <span class="num">3</span> تقاطعات</p>
 </section>
 
+<!-- 8b. Video -->
+<section class="slide" data-title="فيديو" style="padding:60px;justify-content:center;align-items:center">
+  <video class="deck-video" src="annotated.mp4" playsinline preload="auto" style="max-width:100%;max-height:100%;border-radius:20px;background:#000"></video>
+</section>
+
 <!-- 9. Result -->
 <section class="slide" data-title="النتيجة">
   <div class="kicker">النتيجة بالمحاكاة · زحمة الشارع الرئيسي · حركة ما شافها فارس بالتدريب</div>
@@ -416,6 +421,10 @@ td.v{font-weight:600}
     i=Math.max(0,Math.min(slides.length-1,n));
     slides.forEach(function(s,k){s.classList.toggle('on',k===i);s.classList.toggle('past',k<i);});
     restartLogo(slides[i]);
+    document.querySelectorAll('.deck-video').forEach(function(v){
+      if(slides[i].contains(v)){ v.currentTime=0; var pr=v.play(); if(pr&&pr.catch)pr.catch(function(){ v.muted=true; v.play(); }); }
+      else { v.pause(); }
+    });
     bar.style.width=((i+1)/slides.length*100)+'%';
     try{history.replaceState(null,'','#'+(i+1));}catch(e){}
   }
