@@ -3,20 +3,24 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Traffic Signal Viewer</title>
+<title>Signal Control Viewer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0a0e13;
-    --panel: #10151c;
-    --raised: #161d27;
-    --border: #222b37;
-    --text: #e6edf3;
-    --muted: #8a97a8;
-    --accent: #4cc9f0;
-    --green: #3ddc84;
-    --amber: #ffd166;
-    --red: #ff5d5d;
-    color-scheme: dark;
+    --paper: #fbfaf7;
+    --ink: #1c1c1a;
+    --ink-2: #5f5d58;
+    --ink-3: #8a877f;
+    --rule: #dcd8d0;
+    --rule-soft: #ebe8e2;
+    --accent: #1d4ed8;
+    --ok: #2f7d4a;
+    --bad: #b3261e;
+    --sans: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+    --mono: "IBM Plex Mono", "Cascadia Mono", Consolas, monospace;
+    color-scheme: light;
   }
 
   * { box-sizing: border-box; }
@@ -25,155 +29,134 @@
     margin: 0;
     height: 100%;
     overflow: hidden;
-    background: var(--bg);
-    color: var(--text);
-    font: 13px/1.45 ui-sans-serif, system-ui, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
-  }
-
-  .num { font-variant-numeric: tabular-nums; }
-  .muted { color: var(--muted); }
-
-  #app { display: flex; height: 100%; }
-
-  /* Map stage */
-  #stage { position: relative; flex: 1; min-width: 0; min-height: 0; }
-  #map { display: block; width: 100%; height: 100%; cursor: grab; touch-action: none; }
-  #map.dragging { cursor: grabbing; }
-  #map.pointing { cursor: pointer; }
-
-  .overlay {
-    position: absolute;
-    background: rgba(16, 21, 28, 0.88);
-    border: 1px solid var(--border);
-    backdrop-filter: blur(6px);
-  }
-
-  #banner {
-    top: 14px;
-    left: 50%;
-    transform: translateX(-50%);
-    padding: 6px 14px;
-    border-radius: 999px;
-    color: var(--muted);
-    font-size: 12px;
-    white-space: nowrap;
-    pointer-events: none;
-  }
-
-  #legend { left: 14px; bottom: 14px; padding: 10px 12px; border-radius: 12px; max-width: calc(100% - 80px); }
-  .segmented { display: inline-flex; gap: 2px; padding: 2px; border-radius: 8px; background: var(--bg); border: 1px solid var(--border); }
-  .segmented button {
-    all: unset;
-    cursor: pointer;
-    padding: 3px 10px;
-    border-radius: 6px;
-    color: var(--muted);
-    font-size: 12px;
-  }
-  .segmented button[aria-pressed="true"] { background: var(--raised); color: var(--text); }
-  .segmented button:focus-visible { outline: 2px solid var(--accent); }
-  #legend-body { margin-top: 8px; font-size: 11px; color: var(--muted); }
-  .gradient { height: 6px; border-radius: 3px; margin: 4px 0 3px; min-width: 180px; }
-  .scale-labels { display: flex; justify-content: space-between; gap: 12px; }
-  .legend-row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
-  .swatch { display: inline-block; width: 9px; height: 9px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
-  .route-grid { display: grid; grid-template-columns: repeat(2, auto); gap: 3px 16px; }
-
-  #zoom { right: 14px; bottom: 14px; display: flex; flex-direction: column; border-radius: 10px; overflow: hidden; }
-  #zoom button {
-    width: 34px;
-    height: 32px;
-    border: 0;
-    background: transparent;
-    color: var(--text);
-    font-size: 15px;
-    cursor: pointer;
-  }
-  #zoom button + button { border-top: 1px solid var(--border); }
-  #zoom button:hover { background: var(--raised); }
-
-  #tooltip {
-    min-width: 190px;
-    max-width: 290px;
-    padding: 10px 12px;
-    border-radius: 10px;
-    background: rgba(16, 21, 28, 0.97);
-    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
-    font-size: 12px;
-    pointer-events: none;
+    background: var(--paper);
+    color: var(--ink);
+    font: 13px/1.5 var(--sans);
   }
 
   [hidden] { display: none !important; }
 
-  /* Detail rows (tooltip and inspector) */
-  .detail-title { font-weight: 600; font-size: 13px; word-break: break-all; }
-  .detail-kind { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
-  .rows { display: grid; grid-template-columns: auto 1fr; gap: 3px 12px; }
-  .rows dt { color: var(--muted); }
-  .rows dd { margin: 0; text-align: right; font-variant-numeric: tabular-nums; word-break: break-all; }
+  #app { display: flex; height: 100%; }
 
-  /* Side panel */
-  #panel {
-    width: 330px;
-    flex: none;
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-    padding: 18px 16px 24px;
-    overflow-y: auto;
-    background: var(--panel);
-    border-left: 1px solid var(--border);
+  /* Map */
+  #stage { position: relative; flex: 1; min-width: 0; min-height: 0; background: #ece8e1; }
+  #map { display: block; width: 100%; height: 100%; cursor: grab; touch-action: none; }
+  #map.dragging { cursor: grabbing; }
+  #map.pointing { cursor: pointer; }
+
+  .box { position: absolute; background: #fff; border: 1px solid var(--ink); }
+
+  #banner { top: 12px; right: 12px; padding: 4px 9px; font: 12px var(--mono); pointer-events: none; }
+
+  #legend { left: 12px; bottom: 12px; padding: 8px 11px 7px; font-size: 12px; }
+  .legend-head { display: flex; gap: 10px; align-items: baseline; }
+  .legend-title { font-weight: 600; }
+  .toggle button {
+    all: unset;
+    cursor: pointer;
+    color: var(--ink-2);
+    text-underline-offset: 3px;
   }
-  h1 { margin: 0; font-size: 15px; font-weight: 650; letter-spacing: 0.01em; }
-  h2 { margin: 0 0 8px; font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
-  .title-row { display: flex; align-items: center; gap: 9px; }
-  #run-meta { margin-top: 4px; font-size: 12px; }
+  .toggle button[aria-pressed="true"] { color: var(--ink); font-weight: 600; text-decoration: underline; }
+  .toggle button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .toggle .sep { color: var(--rule); margin: 0 5px; }
+  #legend-body { margin-top: 6px; display: flex; flex-wrap: wrap; gap: 4px 14px; align-items: center; color: var(--ink-2); }
+  .swatch { display: inline-block; width: 12px; height: 7px; border: 1px solid rgba(28, 28, 26, 0.6); margin-right: 5px; vertical-align: 0; }
+  .ramp { display: inline-block; width: 70px; height: 7px; border: 1px solid rgba(28, 28, 26, 0.6); margin: 0 6px; vertical-align: 0; }
+  .legend-note { margin-top: 5px; font: 11px var(--mono); color: var(--ink-3); }
 
-  .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--muted); flex: none; }
-  .dot.running { background: var(--green); box-shadow: 0 0 0 0 rgba(61, 220, 132, 0.6); animation: pulse 1.6s infinite; }
-  .dot.offline { background: var(--red); }
-  @keyframes pulse {
-    0% { box-shadow: 0 0 0 0 rgba(61, 220, 132, 0.55); }
-    70% { box-shadow: 0 0 0 8px rgba(61, 220, 132, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(61, 220, 132, 0); }
-  }
-
-  .clock { display: flex; align-items: baseline; gap: 8px; }
-  #clock { font-size: 28px; font-weight: 650; letter-spacing: -0.01em; }
-  .progress { height: 4px; margin-top: 8px; border-radius: 2px; background: var(--raised); overflow: hidden; }
-  #progress-fill { height: 100%; width: 0; background: linear-gradient(90deg, var(--accent), var(--green)); transition: width 0.2s linear; }
-
-  .kpis { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-  .kpi { padding: 10px 12px; border-radius: 10px; background: var(--raised); border: 1px solid var(--border); }
-  .kpi-value { font-size: 20px; font-weight: 650; }
-  .kpi-label { font-size: 11px; color: var(--muted); }
-
-  .signal-card {
-    padding: 11px 12px 8px;
-    margin-bottom: 8px;
-    border-radius: 10px;
-    background: var(--raised);
-    border: 1px solid var(--border);
+  #zoom { right: 12px; bottom: 12px; display: flex; flex-direction: column; }
+  #zoom button {
+    width: 30px;
+    height: 30px;
+    border: 0;
+    background: #fff;
+    color: var(--ink);
+    font: 16px var(--mono);
     cursor: pointer;
   }
-  .signal-card:hover { border-color: #33404f; }
-  .signal-card.selected { border-color: var(--accent); }
-  .signal-head { display: flex; justify-content: space-between; align-items: baseline; }
-  .signal-name { font-weight: 650; font-size: 14px; }
-  .signal-phase { font-size: 11px; }
-  .lights { display: flex; flex-wrap: wrap; gap: 3px; margin: 8px 0; }
-  .light { width: 11px; height: 11px; border-radius: 3px; background: #3a4452; }
-  .light-gap { width: 6px; }
-  .signal-stats { display: flex; gap: 16px; align-items: baseline; }
-  .signal-stats .big { font-size: 18px; font-weight: 650; }
-  .spark { display: block; width: 100%; height: 34px; margin-top: 6px; }
-  .signal-request { font-size: 11px; margin-top: 4px; min-height: 16px; }
+  #zoom button + button { border-top: 1px solid var(--ink); }
+  #zoom button:hover { background: #f1efe9; }
 
-  #inspector:empty::before { content: "Click a car, lane, or intersection."; color: var(--muted); }
+  #tooltip {
+    min-width: 210px;
+    max-width: 300px;
+    padding: 8px 11px 9px;
+    box-shadow: 3px 3px 0 rgba(28, 28, 26, 0.12);
+    font-size: 12px;
+    pointer-events: none;
+  }
 
-  @media (max-width: 760px) {
+  /* Detail rows (tooltip and selection) */
+  .detail-kind { font: 11px var(--mono); color: var(--ink-3); }
+  .detail-title { font: 600 13px var(--mono); word-break: break-all; }
+  dl.rows { display: grid; grid-template-columns: auto 1fr; gap: 2px 14px; margin: 7px 0 0; }
+  dl.rows dt { color: var(--ink-2); }
+  dl.rows dd { margin: 0; text-align: right; font-family: var(--mono); word-break: break-all; }
+
+  /* Panel */
+  #panel {
+    width: 360px;
+    flex: none;
+    overflow-y: auto;
+    background: var(--paper);
+    border-left: 1px solid var(--ink);
+  }
+  .section { padding: 16px 20px 18px; border-bottom: 1px solid var(--rule); }
+  .section:last-child { border-bottom: 0; }
+  h1 { margin: 0; font-size: 17px; font-weight: 600; letter-spacing: -0.01em; }
+  h2 {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin: 0 0 10px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  h2 small { font: 11px var(--mono); color: var(--ink-3); font-weight: 400; }
+  .title-row { display: flex; justify-content: space-between; align-items: baseline; }
+  .status { font: 11px var(--mono); color: var(--ink-3); }
+  .status::before {
+    content: "";
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    margin-right: 6px;
+    background: currentColor;
+    vertical-align: 0;
+  }
+  .status[data-status="running"] { color: var(--ok); }
+  .status[data-status="disconnected"] { color: var(--bad); }
+  .meta { margin-top: 2px; color: var(--ink-2); font-size: 12px; }
+  .clock-row { display: flex; align-items: baseline; gap: 8px; margin-top: 14px; }
+  .clock { font: 500 34px/1 var(--mono); letter-spacing: -0.02em; }
+  .clock-end { font: 14px var(--mono); color: var(--ink-3); }
+  .bar { height: 2px; margin-top: 12px; background: var(--rule); }
+  .bar > div { height: 100%; width: 0; background: var(--ink); }
+
+  dl.facts { display: grid; grid-template-columns: 1fr auto; row-gap: 3px; margin: 0; }
+  dl.facts dt { color: var(--ink-2); }
+  dl.facts dd { margin: 0; text-align: right; font-family: var(--mono); }
+
+  .junction { padding: 12px 0 14px; border-top: 1px solid var(--rule-soft); cursor: pointer; }
+  .junction:first-child { padding-top: 0; border-top: 0; }
+  .junction-head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+  .junction-name { font: 600 14px var(--mono); }
+  .junction.selected .junction-name { color: var(--accent); }
+  .junction-phase { font-size: 12px; color: var(--ink-2); text-align: right; }
+  canvas.strip { display: block; width: 100%; height: 44px; margin: 8px 0 4px; }
+  table.approaches { width: 100%; border-collapse: collapse; font-size: 12px; }
+  table.approaches th { padding: 2px 0; font: 500 11px var(--mono); color: var(--ink-3); text-align: right; }
+  table.approaches td { padding: 2px 0; border-top: 1px solid var(--rule-soft); font-family: var(--mono); text-align: right; }
+  table.approaches th:first-child,
+  table.approaches td:first-child { text-align: left; font-family: var(--sans); color: var(--ink-2); }
+  .request { margin-top: 6px; font: 11.5px var(--mono); color: var(--ink-2); }
+
+  #inspector:empty::before { content: "Click a car, a lane, or an intersection."; color: var(--ink-3); }
+
+  @media (max-width: 820px) {
     #app { flex-direction: column; }
-    #panel { width: 100%; height: 45%; border-left: 0; border-top: 1px solid var(--border); }
+    #panel { width: 100%; height: 45%; border-left: 0; border-top: 1px solid var(--ink); }
   }
 </style>
 </head>
@@ -181,48 +164,50 @@
 <div id="app">
   <main id="stage">
     <canvas id="map" aria-label="Live traffic map"></canvas>
-    <div id="banner" class="overlay">Connecting to the simulation...</div>
-    <div id="legend" class="overlay">
-      <div class="segmented" role="group" aria-label="Color cars by">
-        <button type="button" data-mode="waiting" aria-pressed="true">Waiting</button>
-        <button type="button" data-mode="speed" aria-pressed="false">Speed</button>
-        <button type="button" data-mode="route" aria-pressed="false">Route</button>
+    <div id="banner" class="box" hidden></div>
+    <div id="legend" class="box">
+      <div class="legend-head">
+        <span class="legend-title">Cars by</span>
+        <span class="toggle" role="group" aria-label="Color cars by">
+          <button type="button" data-mode="waiting" aria-pressed="true">waiting</button><span class="sep">/</span><button type="button" data-mode="speed" aria-pressed="false">speed</button><span class="sep">/</span><button type="button" data-mode="route" aria-pressed="false">route</button>
+        </span>
       </div>
       <div id="legend-body"></div>
+      <div id="legend-note" class="legend-note"></div>
     </div>
-    <div id="zoom" class="overlay">
+    <div id="zoom" class="box">
       <button type="button" id="zoom-in" aria-label="Zoom in">+</button>
       <button type="button" id="zoom-out" aria-label="Zoom out">&minus;</button>
-      <button type="button" id="zoom-fit" aria-label="Fit network">&#x2922;</button>
+      <button type="button" id="zoom-fit" aria-label="Fit the network">&#9633;</button>
     </div>
-    <div id="tooltip" class="overlay" hidden></div>
+    <div id="tooltip" class="box" hidden></div>
   </main>
 
   <aside id="panel">
-    <header>
-      <div class="title-row"><span id="live-dot" class="dot"></span><h1>Traffic Signal Viewer</h1></div>
-      <div id="run-meta" class="muted">Waiting for data</div>
-    </header>
-
-    <section>
-      <div class="clock"><span id="clock" class="num">0 s</span><span id="clock-end" class="muted num"></span></div>
-      <div class="progress"><div id="progress-fill"></div></div>
+    <section class="section">
+      <div class="title-row"><h1>Signal control</h1><span id="status" class="status">connecting</span></div>
+      <div id="run-meta" class="meta">Waiting for data</div>
+      <div class="clock-row"><span id="clock" class="clock">00:00</span><span id="clock-end" class="clock-end"></span></div>
+      <div class="bar"><div id="progress"></div></div>
     </section>
 
-    <section class="kpis">
-      <div class="kpi"><div id="kpi-running" class="kpi-value num">&ndash;</div><div class="kpi-label">On the road</div></div>
-      <div class="kpi"><div id="kpi-arrived" class="kpi-value num">&ndash;</div><div class="kpi-label">Arrived</div></div>
-      <div class="kpi"><div id="kpi-pending" class="kpi-value num">&ndash;</div><div class="kpi-label">Waiting to enter</div></div>
-      <div class="kpi"><div id="kpi-wait" class="kpi-value num">&ndash;</div><div class="kpi-label">Mean wait, on the road</div></div>
+    <section class="section">
+      <h2>Network <small id="network-note"></small></h2>
+      <dl class="facts">
+        <dt>On the road</dt><dd id="fact-running">&ndash;</dd>
+        <dt>Arrived</dt><dd id="fact-arrived">&ndash;</dd>
+        <dt>Waiting to enter</dt><dd id="fact-pending">&ndash;</dd>
+        <dt>Mean wait, cars on the road</dt><dd id="fact-wait">&ndash;</dd>
+      </dl>
     </section>
 
-    <section>
-      <h2>Intersections</h2>
-      <div id="signals"></div>
+    <section class="section">
+      <h2>Intersections <small>signal timing, last 120 s</small></h2>
+      <div id="junctions"></div>
     </section>
 
-    <section>
-      <h2>Inspector</h2>
+    <section class="section">
+      <h2>Selected</h2>
       <div id="inspector"></div>
     </section>
   </aside>
@@ -237,45 +222,62 @@
   // ---------------------------------------------------------------------
 
   const POLL_MS = 100;
-  const HISTORY_LENGTH = 300;          // seconds of queue history per intersection
-  const CAR_LENGTH = 4.6;              // drawn a bit shorter than SUMO's 5 m so gaps stay visible
-  const CAR_WIDTH = 1.9;
-  const LONG_WAIT_S = 60;              // waiting time that maps to full red
-  const MAX_SCALE = 40;                // pixels per meter
+  const STRIP_SECONDS = 120;        // signal history shown per intersection
+  const ROAD_SCALE = 2.6;           // roads and junctions drawn wider than SUMO's lanes
+  const SIDEWALK_M = 3.2;           // sidewalk width before widening
+  const CAR_LENGTH = 5.6;           // queued cars are 7.5 m apart, so this keeps a visible gap
+  const CAR_WIDTH = 3.1;            // widened along with the lanes
+  const LONG_WAIT_S = 60;           // waiting time drawn in full red
+  const MAX_SCALE = 30;             // pixels per meter
+  const DETAIL_SCALE = 2.2;         // above this, one signal head per approach
+  const MARKING_SCALE = 1.3;        // above this, stop lines and crosswalks
+  const MONO = "'IBM Plex Mono', 'Cascadia Mono', Consolas, monospace";
 
-  const COLORS = {
-    groundCenter: "#111822",
-    ground: "#0a0e13",
-    grid: "rgba(255, 255, 255, 0.035)",
-    curb: "#1a2029",
-    asphalt: "#2a3039",
-    junction: "#2e3540",
-    centerLine: "rgba(232, 192, 72, 0.85)",
-    edgeLine: "rgba(255, 255, 255, 0.32)",
-    moving: "#4cc9f0",
-    waitShort: "#ffd166",
-    waitLong: "#ff5d5d",
-    slow: "#ff5d5d",
-    mid: "#ffd166",
-    fast: "#3ddc84",
-    accent: "#4cc9f0",
+  const MAP = {
+    land: "#ece8e1",
+    block: "#e3ded5",
+    building: ["#d7d1c6", "#d1cabe", "#dcd6cc"],
+    buildingEdge: "#b9b2a5",
+    buildingShadow: "rgba(60, 50, 40, 0.10)",
+    park: "#d2dec3",
+    tree: "#b7cba2",
+    treeEdge: "#a3b98c",
+    sidewalk: "#f6f4f0",
+    curb: "#b5afa4",
+    asphalt: "#56595f",
+    centerLine: "#e8c45a",
+    paint: "#f3f3f1",
+    carMoving: "#fbfbf9",
+    carEdge: "rgba(28, 28, 26, 0.6)",
+    waitShort: "#f2b33d",
+    waitLong: "#c62828",
+    slow: "#c62828",
+    mid: "#f2b33d",
+    fast: "#3d8b57",
+    accent: "#1d4ed8",
+    ink: "#1c1c1a",
   };
+
+  const LIGHT = { red: "#e5383b", amber: "#ffb000", green: "#2fbf71" };
+  const STRIP = { red: "#c94a3c", amber: "#d9a21b", green: "#3d8b57", off: "#d6d2ca" };
 
   // SUMO signal state characters.
-  const SIGNAL_COLORS = {
-    G: "#3ddc84", g: "#2a9d5c", y: "#ffd166", Y: "#ffd166", u: "#ffa94d",
-    r: "#ff5d5d", R: "#ff5d5d", s: "#ff5d5d", o: "#5b6675", O: "#5b6675",
+  const SIGNAL_COLOR = {
+    G: "green", g: "green", y: "amber", Y: "amber", u: "amber",
+    r: "red", R: "red", s: "red", o: "off", O: "off",
   };
-  const SIGNAL_NAMES = {
-    G: "green (priority)", g: "green (yield)", y: "yellow", Y: "yellow", u: "red-yellow",
-    r: "red", R: "red", s: "stop", o: "off (blinking)", O: "off",
-  };
-
   // Left-to-right order of movements across a lane, from the driver's view.
   const DIRECTION_ORDER = { t: 0, l: 1, L: 2, s: 3, R: 4, r: 5 };
-  const DIRECTION_NAMES = { t: "U-turn", l: "left", L: "partial left", s: "straight", R: "partial right", r: "right" };
 
-  const ROUTE_PALETTE = ["#4cc9f0", "#f72585", "#ffbe0b", "#8ac926", "#b388ff", "#fb5607", "#2ec4b6", "#ff8fab", "#3a86ff", "#e9c46a"];
+  const ROUTE_PALETTE = ["#3b6ea8", "#c0504d", "#7a9a3a", "#8064a2", "#2f8fa6", "#d9822b", "#2c4d75", "#9c4f4b", "#5d8a6e", "#b58b2a"];
+  const SLOTS = ["N", "E", "S", "W"];
+
+  const OVERRIDE_TEXT = {
+    min_green: "held, minimum green",
+    in_transition: "ignored, change in progress",
+    invalid_request: "invalid, fixed-time fallback",
+    max_green: "forced, maximum green",
+  };
 
   // ---------------------------------------------------------------------
   // State
@@ -293,9 +295,9 @@
 
   const state = {
     runId: null,
-    net: null,                 // prepared network geometry
+    net: null,                 // prepared network and drawing geometry
     snapshot: null,            // latest snapshot from the backend
-    signalStates: new Map(),   // signal id -> state string
+    signalStates: new Map(),   // signal id -> SUMO state string
     cars: new Map(),           // vehicle id -> {px, py, pa, x, y, a, data, born}
     stepStart: 0,
     stepMs: 200,
@@ -306,14 +308,14 @@
     hover: null,               // {type, id}
     selected: null,            // {type, id}
     pointer: null,             // [x, y] in CSS pixels
-    history: new Map(),        // signal id -> queue counts
-    historyTime: -1,
+    strips: new Map(),         // signal id -> [{ns, ew}] per simulated second
+    stripTime: -1,
     routeColors: new Map(),
     connected: false,
   };
 
   // ---------------------------------------------------------------------
-  // Small helpers
+  // Helpers
   // ---------------------------------------------------------------------
 
   const clamp = (value, low, high) => Math.min(high, Math.max(low, value));
@@ -322,13 +324,9 @@
     { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch]
   ));
 
-  const rgbCache = new Map();
   function hexToRgb(hex) {
-    if (!rgbCache.has(hex)) {
-      const n = parseInt(hex.slice(1), 16);
-      rgbCache.set(hex, [(n >> 16) & 255, (n >> 8) & 255, n & 255]);
-    }
-    return rgbCache.get(hex);
+    const n = parseInt(hex.slice(1), 16);
+    return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
   }
 
   function mix(hexA, hexB, t) {
@@ -338,12 +336,29 @@
     return `rgb(${c[0]}, ${c[1]}, ${c[2]})`;
   }
 
+  function withAlpha(hex, alpha) {
+    const [r, g, b] = hexToRgb(hex);
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+  }
+
+  // Small deterministic random generator, so the city looks the same every time.
+  function seededRandom(seed) {
+    return () => {
+      seed = (seed + 0x6d2b79f5) | 0;
+      let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+
   function centroid(points) {
     let x = 0;
     let y = 0;
     for (const [px, py] of points) { x += px; y += py; }
     return [x / points.length, y / points.length];
   }
+
+  const rectPoints = (x0, y0, x1, y1) => [[x0, y0], [x1, y0], [x1, y1], [x0, y1]];
 
   // Shift a polyline sideways; a positive offset moves it left of travel.
   function offsetPolyline(points, offset) {
@@ -357,20 +372,15 @@
     });
   }
 
-  function distanceToSegment(px, py, ax, ay, bx, by) {
-    const dx = bx - ax;
-    const dy = by - ay;
-    const lengthSq = dx * dx + dy * dy || 1;
-    const t = clamp(((px - ax) * dx + (py - ay) * dy) / lengthSq, 0, 1);
-    return Math.hypot(px - (ax + t * dx), py - (ay + t * dy));
-  }
-
   function distanceToPolyline(px, py, points) {
     let best = Infinity;
     for (let i = 1; i < points.length; i++) {
       const [ax, ay] = points[i - 1];
       const [bx, by] = points[i];
-      best = Math.min(best, distanceToSegment(px, py, ax, ay, bx, by));
+      const dx = bx - ax;
+      const dy = by - ay;
+      const t = clamp(((px - ax) * dx + (py - ay) * dy) / (dx * dx + dy * dy || 1), 0, 1);
+      best = Math.min(best, Math.hypot(px - (ax + t * dx), py - (ay + t * dy)));
     }
     return best;
   }
@@ -380,16 +390,264 @@
     for (let i = 0, j = points.length - 1; i < points.length; j = i++) {
       const [xi, yi] = points[i];
       const [xj, yj] = points[j];
-      if ((yi > py) !== (yj > py) && px < ((xj - xi) * (py - yi)) / (yj - yi) + xi) {
-        inside = !inside;
-      }
+      if ((yi > py) !== (yj > py) && px < ((xj - xi) * (py - yi)) / (yj - yi) + xi) inside = !inside;
     }
     return inside;
   }
 
+  function clockText(seconds) {
+    const total = Math.max(0, Math.floor(seconds));
+    return `${String(Math.floor(total / 60)).padStart(2, "0")}:${String(total % 60).padStart(2, "0")}`;
+  }
+
   // ---------------------------------------------------------------------
-  // Coordinates: SUMO uses meters with y pointing up; the canvas uses
-  // CSS pixels with y pointing down.
+  // Network geometry
+  //
+  // Roads are drawn wider than SUMO's 3.2 m lanes. Every point is passed
+  // through a warp that stretches space around each signalized junction's
+  // axes by ROAD_SCALE, so lanes, junctions, and cars widen together and
+  // cars stay centered in their lanes.
+  // ---------------------------------------------------------------------
+
+  function uniqueSorted(values) {
+    // Merge coordinates within half a meter of each other.
+    return [...new Set(values.map((value) => Math.round(value * 2) / 2))].sort((a, b) => a - b);
+  }
+
+  function makeWarp(axesX, axesY, half) {
+    const extra = ROAD_SCALE - 1;
+    const axis = (centers) => (value) => {
+      let out = value;
+      for (const center of centers) out += extra * clamp(value - center, -half, half);
+      return out;
+    };
+    const warpX = axis(axesX);
+    const warpY = axis(axesY);
+    return (point) => [warpX(point[0]), warpY(point[1])];
+  }
+
+  function lanePoint(lane, back, side) {
+    // `back` meters before the lane end, `side` meters left of its center line.
+    const [ex, ey] = lane.end;
+    const [dx, dy] = lane.dir;
+    return [ex - dx * back - dy * side, ey - dy * back + dx * side];
+  }
+
+  function laneQuad(lane, back0, back1, side0, side1) {
+    return [
+      lanePoint(lane, back0, side0),
+      lanePoint(lane, back0, side1),
+      lanePoint(lane, back1, side1),
+      lanePoint(lane, back1, side0),
+    ];
+  }
+
+  function prepareNetwork(raw) {
+    const signals = new Map(raw.signals.map((signal) => [signal.id, signal]));
+
+    // netgenerate names each signal after its junction.
+    const junctions = raw.junctions
+      .filter((junction) => junction.shape.length >= 3)
+      .map((junction) => ({
+        ...junction,
+        center: centroid(junction.shape),
+        signal: signals.has(junction.id) ? junction.id : null,
+      }));
+    const signalJunctions = junctions.filter((junction) => junction.signal);
+
+    let half = 0;
+    for (const junction of signalJunctions) {
+      for (const [x, y] of junction.shape) {
+        half = Math.max(half, Math.abs(x - junction.center[0]), Math.abs(y - junction.center[1]));
+      }
+    }
+    const axesX = uniqueSorted(signalJunctions.map((junction) => junction.center[0]));
+    const axesY = uniqueSorted(signalJunctions.map((junction) => junction.center[1]));
+    const warp = makeWarp(axesX, axesY, half);
+    const warpAll = (points) => points.map(warp);
+
+    const lanes = new Map();
+    for (const lane of raw.lanes) {
+      const shape = lane.shape;
+      const halfWidth = lane.width_m / 2;
+      const left = offsetPolyline(shape, halfWidth);
+      const right = offsetPolyline(shape, -halfWidth);
+      const outer = offsetPolyline(shape, -(halfWidth + SIDEWALK_M));
+      const [x1, y1] = shape[shape.length - 2];
+      const [x2, y2] = shape[shape.length - 1];
+      const length = Math.hypot(x2 - x1, y2 - y1) || 1;
+      const dir = [(x2 - x1) / length, (y2 - y1) / length];
+      lanes.set(lane.id, {
+        ...lane,
+        dir,
+        end: shape[shape.length - 1],
+        axis: Math.abs(dir[1]) > Math.abs(dir[0]) ? "ns" : "ew",
+        center: warpAll(shape),
+        band: warpAll([...left, ...right.slice().reverse()]),
+        sidewalk: warpAll([...right, ...outer.slice().reverse()]),
+        curb: warpAll(right),
+        centerLine: warpAll(offsetPolyline(shape, halfWidth - 0.15)),
+        drawWidth: lane.width_m * ROAD_SCALE,
+        links: [],
+        signal: null,
+      });
+    }
+
+    for (const signal of raw.signals) {
+      for (const link of signal.links) {
+        const lane = lanes.get(link.from_lane);
+        if (lane) lane.links.push({ ...link, signal: signal.id });
+      }
+    }
+
+    // Stop line, crosswalk, and signal head for every signalized approach lane.
+    for (const lane of lanes.values()) {
+      if (!lane.links.length) continue;
+      lane.links.sort((a, b) => (DIRECTION_ORDER[a.direction] ?? 3) - (DIRECTION_ORDER[b.direction] ?? 3));
+      lane.signal = lane.links[0].signal;
+      const halfWidth = lane.width_m / 2;
+      lane.stopLine = warpAll(laneQuad(lane, 3.4, 3.9, -halfWidth, halfWidth));
+      lane.crosswalk = [];
+      // Zebra stripes across both directions of the road.
+      for (let side = -halfWidth + 0.3; side + 0.5 <= halfWidth + lane.width_m - 0.3; side += 1.0) {
+        lane.crosswalk.push(warpAll(laneQuad(lane, 0.3, 2.9, side, side + 0.5)));
+      }
+      lane.head = warp(lanePoint(lane, 5, -(halfWidth + SIDEWALK_M / 2)));
+    }
+
+    // Representative approach lane per axis, for the junction glyph and timing strip,
+    // and the distance from a junction's axis to the outer edge of its road.
+    const signalAxes = new Map();
+    let roadHalf = 0;
+    for (const lane of lanes.values()) {
+      if (!lane.signal) continue;
+      const axes = signalAxes.get(lane.signal) || {};
+      if (!axes[lane.axis]) axes[lane.axis] = lane;
+      signalAxes.set(lane.signal, axes);
+
+      const junction = signalJunctions.find((item) => item.signal === lane.signal);
+      if (junction) {
+        const [dx, dy] = lane.dir;
+        const offset = Math.abs(-dy * (lane.end[0] - junction.center[0]) + dx * (lane.end[1] - junction.center[1]));
+        roadHalf = Math.max(roadHalf, offset + lane.width_m / 2);
+      }
+    }
+    roadHalf = roadHalf || half;
+
+    for (const junction of junctions) {
+      junction.drawShape = warpAll(junction.shape);
+      junction.drawCenter = warp(junction.center);
+      if (junction.signal) {
+        // Sidewalk square that fills the corners around the junction.
+        const r = roadHalf + SIDEWALK_M;
+        const [cx, cy] = junction.center;
+        junction.corners = warpAll(rectPoints(cx - r, cy - r, cx + r, cy + r));
+      }
+    }
+
+    const [x0, y0, x1, y1] = raw.boundary;
+    return {
+      lanes,
+      signals,
+      junctions,
+      signalAxes,
+      warp,
+      half,
+      city: buildCity(axesX, axesY, raw.boundary, roadHalf + SIDEWALK_M + 1.5, warpAll),
+      drawBoundary: [...warp([x0, y0]), ...warp([x1, y1])],
+    };
+  }
+
+  // Decorative city blocks in the cells between road axes; `inset` keeps them off the roads.
+  function buildCity(axesX, axesY, [x0, y0, x1, y1], inset, warpAll) {
+    const random = seededRandom(20261009);
+    const cutsX = [x0, ...axesX.filter((x) => x > x0 && x < x1), x1];
+    const cutsY = [y0, ...axesY.filter((y) => y > y0 && y < y1), y1];
+    const city = { blocks: [], parks: [], trees: [], buildings: [] };
+
+    for (let i = 0; i < cutsX.length - 1; i++) {
+      for (let j = 0; j < cutsY.length - 1; j++) {
+        // Inner cuts are roads, outer cuts are the edge of the network.
+        const bx0 = cutsX[i] + (i > 0 ? inset : 0);
+        const bx1 = cutsX[i + 1] - (i < cutsX.length - 2 ? inset : 0);
+        const by0 = cutsY[j] + (j > 0 ? inset : 0);
+        const by1 = cutsY[j + 1] - (j < cutsY.length - 2 ? inset : 0);
+        if (bx1 - bx0 < 30 || by1 - by0 < 30) continue;
+
+        city.blocks.push(warpAll(rectPoints(bx0, by0, bx1, by1)));
+
+        if (random() < 0.22) {
+          city.parks.push(warpAll(rectPoints(bx0 + 2, by0 + 2, bx1 - 2, by1 - 2)));
+          const count = Math.round(((bx1 - bx0) * (by1 - by0)) / 260);
+          for (let k = 0; k < count; k++) {
+            const [tx, ty] = warpAll([[bx0 + 6 + random() * (bx1 - bx0 - 12), by0 + 6 + random() * (by1 - by0 - 12)]])[0];
+            city.trees.push([tx, ty, 2.2 + random() * 1.8]);
+          }
+          continue;
+        }
+        addBuildings(city, random, warpAll, bx0, by0, bx1, by1);
+      }
+    }
+    return city;
+  }
+
+  // Buildings around the edge of a block, with an open courtyard inside.
+  function addBuildings(city, random, warpAll, bx0, by0, bx1, by1) {
+    const depth = () => 16 + random() * 12;
+    const add = (ax0, ay0, ax1, ay1) => {
+      if (ax1 - ax0 < 6 || ay1 - ay0 < 6) return;
+      const shape = warpAll(rectPoints(ax0, ay0, ax1, ay1));
+      city.buildings.push({
+        shape,
+        shadow: shape.map(([x, y]) => [x + 1.2, y - 1.2]),
+        color: MAP.building[Math.floor(random() * MAP.building.length)],
+      });
+    };
+    const row = (a0, a1, b0, b1, alongX) => {
+      let a = a0;
+      while (a1 - a > 8) {
+        const lot = Math.min(12 + random() * 16, a1 - a);
+        if (alongX) add(a + 0.8, b0 + 0.8, a + lot - 0.8, b1 - 0.8);
+        else add(b0 + 0.8, a + 0.8, b1 - 0.8, a + lot - 0.8);
+        a += lot;
+      }
+    };
+
+    const bottom = Math.min(depth(), (by1 - by0) / 2);
+    const top = Math.min(depth(), (by1 - by0) / 2);
+    row(bx0, bx1, by0, by0 + bottom, true);
+    row(bx0, bx1, by1 - top, by1, true);
+
+    if (by1 - top - (by0 + bottom) > 12) {
+      const left = Math.min(depth(), (bx1 - bx0) / 2);
+      const right = Math.min(depth(), (bx1 - bx0) / 2);
+      row(by0 + bottom, by1 - top, bx0, bx0 + left, false);
+      row(by0 + bottom, by1 - top, bx1 - right, bx1, false);
+    }
+  }
+
+  async function loadNetwork(runId) {
+    const response = await fetch("api/network", { cache: "no-store" });
+    if (!response.ok) throw new Error(`network ${response.status}`);
+
+    state.net = prepareNetwork(await response.json());
+    state.runId = runId;
+    state.snapshot = null;
+    state.cars = new Map();
+    state.strips = new Map();
+    state.stripTime = -1;
+    state.routeColors = new Map();
+    state.hover = null;
+    state.selected = null;
+    state.autoFit = true;
+    fitView();
+    buildJunctionPanel();
+    renderLegend();
+    renderInspector();
+  }
+
+  // ---------------------------------------------------------------------
+  // View: drawing space is meters with y up; the canvas is CSS pixels with y down.
   // ---------------------------------------------------------------------
 
   function toScreen(x, y) {
@@ -404,10 +662,7 @@
 
   function useWorldTransform() {
     const { scale, cx, cy } = state.view;
-    ctx.setTransform(
-      dpr * scale, 0, 0, -dpr * scale,
-      dpr * (width / 2 - cx * scale), dpr * (height / 2 + cy * scale),
-    );
+    ctx.setTransform(dpr * scale, 0, 0, -dpr * scale, dpr * (width / 2 - cx * scale), dpr * (height / 2 + cy * scale));
   }
 
   function useScreenTransform() {
@@ -416,8 +671,8 @@
 
   function fitView() {
     if (!state.net || width === 0 || height === 0) return;
-    const [x0, y0, x1, y1] = state.net.boundary;
-    const margin = 40;
+    const [x0, y0, x1, y1] = state.net.drawBoundary;
+    const margin = 30;
     state.fitScale = Math.min(width / (x1 - x0 + 2 * margin), height / (y1 - y0 + 2 * margin));
     state.view = { scale: state.fitScale, cx: (x0 + x1) / 2, cy: (y0 + y1) / 2 };
   }
@@ -440,74 +695,6 @@
   }
 
   // ---------------------------------------------------------------------
-  // Network
-  // ---------------------------------------------------------------------
-
-  function prepareNetwork(raw) {
-    const lanes = new Map();
-    for (const lane of raw.lanes) {
-      const points = lane.shape;
-      const [x1, y1] = points[points.length - 2];
-      const [x2, y2] = points[points.length - 1];
-      const length = Math.hypot(x2 - x1, y2 - y1) || 1;
-      lanes.set(lane.id, {
-        ...lane,
-        end: points[points.length - 1],
-        dir: [(x2 - x1) / length, (y2 - y1) / length],
-        centerLine: offsetPolyline(points, lane.width_m / 2 - 0.15),
-        edgeLine: offsetPolyline(points, -(lane.width_m / 2 - 0.25)),
-        links: [],
-        signal: null,
-      });
-    }
-
-    const signals = new Map();
-    for (const signal of raw.signals) {
-      signals.set(signal.id, signal);
-      for (const link of signal.links) {
-        const lane = lanes.get(link.from_lane);
-        if (lane) lane.links.push({ ...link, signal: signal.id });
-      }
-    }
-
-    for (const lane of lanes.values()) {
-      lane.links.sort((a, b) => (DIRECTION_ORDER[a.direction] ?? 3) - (DIRECTION_ORDER[b.direction] ?? 3));
-      lane.signal = lane.links.length ? lane.links[0].signal : null;
-    }
-
-    // netgenerate names each signal after its junction.
-    const junctions = raw.junctions
-      .filter((junction) => junction.shape.length >= 3)
-      .map((junction) => ({
-        ...junction,
-        center: centroid(junction.shape),
-        signal: signals.has(junction.id) ? junction.id : null,
-      }));
-
-    return { boundary: raw.boundary, lanes, signals, junctions };
-  }
-
-  async function loadNetwork(runId) {
-    const response = await fetch("api/network", { cache: "no-store" });
-    if (!response.ok) throw new Error(`network ${response.status}`);
-
-    state.net = prepareNetwork(await response.json());
-    state.runId = runId;
-    state.snapshot = null;
-    state.cars = new Map();
-    state.history = new Map();
-    state.historyTime = -1;
-    state.routeColors = new Map();
-    state.hover = null;
-    state.selected = null;
-    state.autoFit = true;
-    fitView();
-    buildSignalCards();
-    renderLegend();
-    renderInspector();
-  }
-
-  // ---------------------------------------------------------------------
   // Snapshots
   // ---------------------------------------------------------------------
 
@@ -515,13 +702,28 @@
     return clamp((now - state.stepStart) / state.stepMs, 0, 1);
   }
 
+  // Interpolated pose in SUMO coordinates.
   function carPose(car, t) {
     const turn = ((car.a - car.pa + 540) % 360) - 180;
-    return {
-      x: car.px + (car.x - car.px) * t,
-      y: car.py + (car.y - car.py) * t,
-      a: car.pa + turn * t,
-    };
+    return { x: car.px + (car.x - car.px) * t, y: car.py + (car.y - car.py) * t, a: car.pa + turn * t };
+  }
+
+  // Interpolated pose in drawing coordinates.
+  function carDrawPose(car, t) {
+    const pose = carPose(car, t);
+    const [x, y] = state.net.warp([pose.x, pose.y]);
+    return { x, y, a: pose.a };
+  }
+
+  function lightOf(lane) {
+    const stateString = state.signalStates.get(lane.signal) || "";
+    const link = lane.links.find((item) => item.direction === "s") || lane.links[0];
+    return SIGNAL_COLOR[stateString[link.index]] || "off";
+  }
+
+  function axisLights(signalId) {
+    const axes = (state.net && state.net.signalAxes.get(signalId)) || {};
+    return { ns: axes.ns ? lightOf(axes.ns) : "off", ew: axes.ew ? lightOf(axes.ew) : "off" };
   }
 
   function applySnapshot(snapshot) {
@@ -558,13 +760,13 @@
     state.snapshot = snapshot;
     state.signalStates = new Map(snapshot.signals.map((signal) => [signal.id, signal.state]));
 
-    if (snapshot.sim_time_s > state.historyTime) {
-      state.historyTime = snapshot.sim_time_s;
+    if (snapshot.sim_time_s > state.stripTime) {
+      state.stripTime = snapshot.sim_time_s;
       for (const signal of snapshot.signals) {
-        const values = state.history.get(signal.id) || [];
-        values.push(signal.queue_count);
-        if (values.length > HISTORY_LENGTH) values.shift();
-        state.history.set(signal.id, values);
+        const history = state.strips.get(signal.id) || [];
+        history.push(axisLights(signal.id));
+        if (history.length > STRIP_SECONDS) history.shift();
+        state.strips.set(signal.id, history);
       }
     }
 
@@ -576,32 +778,24 @@
     try {
       const response = await fetch("api/snapshot", { cache: "no-store" });
       const snapshot = await response.json();
-      setConnected(true);
+      state.connected = true;
 
       if (snapshot.status === "starting") {
-        showBanner("Starting the simulation...");
+        showBanner("starting the simulation");
       } else {
         if (snapshot.run_id !== state.runId) await loadNetwork(snapshot.run_id);
         const previous = state.snapshot;
         if (!previous || snapshot.sim_time_s !== previous.sim_time_s || snapshot.status !== previous.status) {
           applySnapshot(snapshot);
         }
-        showBanner(snapshot.status === "finished" ? "Scenario finished · showing the final state" : null);
+        showBanner(snapshot.status === "finished" ? "scenario finished, final state" : null);
       }
     } catch (error) {
-      setConnected(false);
-      showBanner(state.snapshot
-        ? "Connection lost · showing the last received state"
-        : "Waiting for the simulation backend...");
+      state.connected = false;
+      showBanner(state.snapshot ? "connection lost, last received state" : "waiting for the simulation backend");
     }
+    updateStatus();
     setTimeout(poll, POLL_MS);
-  }
-
-  function setConnected(connected) {
-    state.connected = connected;
-    const dot = document.getElementById("live-dot");
-    const status = state.snapshot ? state.snapshot.status : null;
-    dot.className = "dot " + (!connected ? "offline" : status === "running" ? "running" : "");
   }
 
   function showBanner(text) {
@@ -624,6 +818,12 @@
     ctx.closePath();
   }
 
+  function fillPolygon(points, color) {
+    ctx.fillStyle = color;
+    tracePolygon(points);
+    ctx.fill();
+  }
+
   function traceRoundedRect(x, y, w, h, r) {
     ctx.beginPath();
     ctx.moveTo(x + r, y);
@@ -634,122 +834,110 @@
     ctx.closePath();
   }
 
-  function drawGround() {
-    useScreenTransform();
-    const radius = Math.max(width, height) * 0.75;
-    const gradient = ctx.createRadialGradient(width / 2, height / 2, 0, width / 2, height / 2, radius);
-    gradient.addColorStop(0, COLORS.groundCenter);
-    gradient.addColorStop(1, COLORS.ground);
-    ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, width, height);
-  }
+  function drawCity() {
+    const { city } = state.net;
+    const pixel = 1 / state.view.scale;
 
-  function drawGrid() {
-    const [x0, y1] = toWorld(0, 0);
-    const [x1, y0] = toWorld(width, height);
-    const step = 50;
-    ctx.strokeStyle = COLORS.grid;
-    ctx.lineWidth = 1 / state.view.scale;
-    ctx.beginPath();
-    for (let x = Math.floor(x0 / step) * step; x <= x1; x += step) { ctx.moveTo(x, y0); ctx.lineTo(x, y1); }
-    for (let y = Math.floor(y0 / step) * step; y <= y1; y += step) { ctx.moveTo(x0, y); ctx.lineTo(x1, y); }
-    ctx.stroke();
+    for (const block of city.blocks) fillPolygon(block, MAP.block);
+    for (const park of city.parks) fillPolygon(park, MAP.park);
+
+    ctx.fillStyle = MAP.tree;
+    ctx.strokeStyle = MAP.treeEdge;
+    ctx.lineWidth = Math.max(0.3, pixel);
+    for (const [x, y, r] of city.trees) {
+      ctx.beginPath();
+      ctx.arc(x, y, r, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+    }
+
+    for (const building of city.buildings) fillPolygon(building.shadow, MAP.buildingShadow);
+    ctx.strokeStyle = MAP.buildingEdge;
+    ctx.lineWidth = Math.max(0.25, 0.8 * pixel);
+    for (const building of city.buildings) {
+      ctx.fillStyle = building.color;
+      tracePolygon(building.shape);
+      ctx.fill();
+      ctx.stroke();
+    }
   }
 
   function drawRoads() {
     const { lanes, junctions } = state.net;
+    const scale = state.view.scale;
+    const pixel = 1 / scale;
+
+    for (const lane of lanes.values()) fillPolygon(lane.sidewalk, MAP.sidewalk);
+    for (const junction of junctions) if (junction.corners) fillPolygon(junction.corners, MAP.sidewalk);
+
+    // Asphalt, stroked in its own color to hide seams between lane polygons.
+    ctx.strokeStyle = MAP.asphalt;
+    ctx.lineWidth = 1.2 * pixel;
     ctx.lineJoin = "round";
-    ctx.lineCap = "butt";
-
-    // Dark curb outline under the asphalt.
-    ctx.strokeStyle = COLORS.curb;
     for (const lane of lanes.values()) {
-      ctx.lineWidth = lane.width_m + 0.9;
-      tracePath(lane.shape);
+      fillPolygon(lane.band, MAP.asphalt);
       ctx.stroke();
     }
-    ctx.fillStyle = COLORS.curb;
-    ctx.lineWidth = 0.9;
     for (const junction of junctions) {
-      tracePolygon(junction.shape);
-      ctx.fill();
+      fillPolygon(junction.drawShape, MAP.asphalt);
       ctx.stroke();
     }
 
-    ctx.strokeStyle = COLORS.asphalt;
+    ctx.strokeStyle = MAP.curb;
+    ctx.lineWidth = Math.max(0.25, pixel);
     for (const lane of lanes.values()) {
-      ctx.lineWidth = lane.width_m;
-      tracePath(lane.shape);
+      tracePath(lane.curb);
       ctx.stroke();
     }
-    ctx.fillStyle = COLORS.junction;
-    for (const junction of junctions) {
-      tracePolygon(junction.shape);
+
+    // Each direction draws one line of the double yellow center line.
+    ctx.strokeStyle = MAP.centerLine;
+    ctx.lineWidth = Math.max(0.18, 0.9 * pixel);
+    for (const lane of lanes.values()) {
+      tracePath(lane.centerLine);
+      ctx.stroke();
+    }
+
+    if (scale < MARKING_SCALE) return;
+    ctx.fillStyle = MAP.paint;
+    for (const lane of lanes.values()) {
+      if (!lane.stopLine) continue;
+      tracePolygon(lane.stopLine);
       ctx.fill();
+      for (const stripe of lane.crosswalk) {
+        tracePolygon(stripe);
+        ctx.fill();
+      }
     }
-
-    // Each lane draws one line of the double center line and its own edge line.
-    ctx.lineWidth = 0.12;
-    ctx.strokeStyle = COLORS.centerLine;
-    for (const lane of lanes.values()) { tracePath(lane.centerLine); ctx.stroke(); }
-    ctx.strokeStyle = COLORS.edgeLine;
-    for (const lane of lanes.values()) { tracePath(lane.edgeLine); ctx.stroke(); }
-  }
-
-  // Stop bar split into one glowing segment per movement (left, straight, right).
-  function drawSignalBars() {
-    ctx.lineCap = "butt";
-    ctx.lineWidth = 0.9;
-    for (const lane of state.net.lanes.values()) {
-      if (!lane.links.length) continue;
-      const [dx, dy] = lane.dir;
-      const nx = -dy;
-      const ny = dx;
-      const bx = lane.end[0] - dx * 0.6;
-      const by = lane.end[1] - dy * 0.6;
-      const half = lane.width_m / 2;
-      const segment = lane.width_m / lane.links.length;
-
-      lane.links.forEach((link, i) => {
-        const ch = (state.signalStates.get(link.signal) || "")[link.index] || "o";
-        const color = SIGNAL_COLORS[ch] || SIGNAL_COLORS.o;
-        const a = half - i * segment - 0.1;
-        const b = half - (i + 1) * segment + 0.1;
-        ctx.strokeStyle = color;
-        ctx.shadowColor = color;
-        ctx.shadowBlur = ch === "o" || ch === "O" ? 0 : 14 * dpr;
-        ctx.beginPath();
-        ctx.moveTo(bx + nx * a, by + ny * a);
-        ctx.lineTo(bx + nx * b, by + ny * b);
-        ctx.stroke();
-      });
-    }
-    ctx.shadowBlur = 0;
   }
 
   function carColor(vehicle) {
-    if (state.colorMode === "route") {
-      return state.routeColors.get(vehicle.route) || COLORS.moving;
-    }
+    if (state.colorMode === "route") return state.routeColors.get(vehicle.route) || MAP.carMoving;
     if (state.colorMode === "speed") {
       const lane = state.net.lanes.get(vehicle.lane);
       const ratio = clamp(vehicle.speed_mps / (lane ? lane.speed_limit_mps : 13.89), 0, 1);
-      return ratio < 0.5 ? mix(COLORS.slow, COLORS.mid, ratio * 2) : mix(COLORS.mid, COLORS.fast, (ratio - 0.5) * 2);
+      return ratio < 0.5 ? mix(MAP.slow, MAP.mid, ratio * 2) : mix(MAP.mid, MAP.fast, (ratio - 0.5) * 2);
     }
-    if (vehicle.waiting_s <= 0) return COLORS.moving;
-    return mix(COLORS.waitShort, COLORS.waitLong, clamp(vehicle.waiting_s / LONG_WAIT_S, 0, 1));
+    if (vehicle.waiting_s <= 0) return MAP.carMoving;
+    return mix(MAP.waitShort, MAP.waitLong, clamp(vehicle.waiting_s / LONG_WAIT_S, 0, 1));
+  }
+
+  // Cars get a minimum on-screen size so they stay visible when zoomed out.
+  function carSize() {
+    const scale = state.view.scale;
+    return [Math.max(CAR_LENGTH, 6 / scale), Math.max(CAR_WIDTH, 3.6 / scale)];
   }
 
   function drawCars(now) {
     const t = stepProgress(now);
-    const L = CAR_LENGTH;
-    const W = CAR_WIDTH;
+    const [L, W] = carSize();
+
+    ctx.strokeStyle = MAP.carEdge;
+    ctx.lineWidth = Math.max(0.12, 0.8 / state.view.scale);
 
     for (const car of state.cars.values()) {
-      const pose = carPose(car, t);
+      const pose = carDrawPose(car, t);
       const vehicle = car.data;
-      const color = carColor(vehicle);
-      const stopped = vehicle.speed_mps < 0.1;
 
       ctx.save();
       ctx.globalAlpha = clamp((now - car.born) / 300, 0, 1);
@@ -757,165 +945,250 @@
       // SUMO angles run clockwise from north; the car is drawn facing +y.
       ctx.rotate((-pose.a * Math.PI) / 180);
 
-      // Body with a soft drop shadow, or a glow for long waits.
-      if (state.colorMode === "waiting" && vehicle.waiting_s > LONG_WAIT_S / 2) {
-        ctx.shadowColor = color;
-        ctx.shadowBlur = 16 * dpr;
-      } else {
-        ctx.shadowColor = "rgba(0, 0, 0, 0.55)";
-        ctx.shadowBlur = 6 * dpr;
-        ctx.shadowOffsetX = 2 * dpr;
-        ctx.shadowOffsetY = 3 * dpr;
-      }
-      ctx.fillStyle = color;
-      traceRoundedRect(-W / 2, -L, W, L, 0.55);
+      ctx.fillStyle = carColor(vehicle);
+      traceRoundedRect(-W / 2, -L, W, L, Math.min(0.6, W / 3));
       ctx.fill();
-      ctx.shadowColor = "transparent";
-      ctx.shadowBlur = 0;
-      ctx.shadowOffsetX = 0;
-      ctx.shadowOffsetY = 0;
+      ctx.stroke();
 
-      // Windows and roof.
-      ctx.fillStyle = "rgba(8, 12, 17, 0.72)";
-      traceRoundedRect(-W / 2 + 0.25, -1.75, W - 0.5, 0.8, 0.2);
-      ctx.fill();
-      traceRoundedRect(-W / 2 + 0.3, -L + 0.45, W - 0.6, 0.55, 0.2);
-      ctx.fill();
-      ctx.fillStyle = "rgba(255, 255, 255, 0.14)";
-      traceRoundedRect(-W / 2 + 0.32, -L + 1.15, W - 0.64, 1.55, 0.25);
-      ctx.fill();
+      // Windshield and rear window.
+      ctx.fillStyle = "rgba(34, 38, 44, 0.55)";
+      ctx.fillRect(-W / 2 + W * 0.14, -L * 0.36, W * 0.72, L * 0.15);
+      ctx.fillRect(-W / 2 + W * 0.17, -L * 0.9, W * 0.66, L * 0.1);
 
-      // Headlights at the front, brake lights that glow when stopped.
-      ctx.fillStyle = "rgba(255, 244, 214, 0.95)";
-      ctx.fillRect(-W / 2 + 0.18, -0.24, 0.42, 0.18);
-      ctx.fillRect(W / 2 - 0.6, -0.24, 0.42, 0.18);
-      ctx.fillStyle = stopped ? "#ff3b3b" : "rgba(150, 28, 28, 0.9)";
-      if (stopped) {
-        ctx.shadowColor = "#ff3b3b";
-        ctx.shadowBlur = 10 * dpr;
+      if (vehicle.speed_mps < 0.1) {
+        ctx.fillStyle = "#d32f2f";
+        ctx.fillRect(-W / 2 + W * 0.08, -L * 0.99, W * 0.22, L * 0.05);
+        ctx.fillRect(W / 2 - W * 0.3, -L * 0.99, W * 0.22, L * 0.05);
       }
-      ctx.fillRect(-W / 2 + 0.18, -L + 0.06, 0.42, 0.18);
-      ctx.fillRect(W / 2 - 0.6, -L + 0.06, 0.42, 0.18);
       ctx.restore();
     }
   }
 
-  function carCenter(car, t) {
-    const pose = carPose(car, t);
-    const a = (pose.a * Math.PI) / 180;
-    return [pose.x - Math.sin(a) * CAR_LENGTH / 2, pose.y - Math.cos(a) * CAR_LENGTH / 2];
-  }
-
   function drawHighlight(target, strong, now) {
     if (!target || !state.net) return;
-    const color = strong ? COLORS.accent : "rgba(255, 255, 255, 0.55)";
     const pixel = 1 / state.view.scale;
-    ctx.strokeStyle = color;
+    ctx.strokeStyle = strong ? MAP.accent : "rgba(28, 28, 26, 0.75)";
     ctx.lineWidth = (strong ? 2 : 1.5) * pixel;
+    ctx.setLineDash(strong ? [] : [4 * pixel, 3 * pixel]);
 
     if (target.type === "vehicle") {
       const car = state.cars.get(target.id);
-      if (!car) return;
-      const [x, y] = carCenter(car, stepProgress(now));
-      const pulse = strong ? Math.sin(now / 250) * 0.35 : 0;
-      ctx.beginPath();
-      ctx.arc(x, y, 3.6 + pulse + 4 * pixel, 0, Math.PI * 2);
-      ctx.stroke();
+      if (car) {
+        const pose = carDrawPose(car, stepProgress(now));
+        const [L] = carSize();
+        const a = (pose.a * Math.PI) / 180;
+        ctx.beginPath();
+        ctx.arc(pose.x - Math.sin(a) * L / 2, pose.y - Math.cos(a) * L / 2, L / 2 + 1.6 + 3 * pixel, 0, Math.PI * 2);
+        ctx.stroke();
+      }
     } else if (target.type === "lane") {
       const lane = state.net.lanes.get(target.id);
-      if (!lane) return;
-      ctx.lineWidth = lane.width_m;
-      ctx.strokeStyle = strong ? "rgba(76, 201, 240, 0.28)" : "rgba(255, 255, 255, 0.12)";
-      tracePath(lane.shape);
-      ctx.stroke();
+      if (lane) {
+        fillPolygon(lane.band, strong ? "rgba(29, 78, 216, 0.22)" : "rgba(255, 255, 255, 0.16)");
+        ctx.stroke();
+      }
     } else if (target.type === "signal") {
       const junction = state.net.junctions.find((item) => item.signal === target.id);
-      if (!junction) return;
-      ctx.fillStyle = strong ? "rgba(76, 201, 240, 0.12)" : "rgba(255, 255, 255, 0.06)";
-      tracePolygon(junction.shape);
+      if (junction) {
+        fillPolygon(junction.drawShape, strong ? "rgba(29, 78, 216, 0.22)" : "rgba(255, 255, 255, 0.16)");
+        ctx.stroke();
+      }
+    }
+    ctx.setLineDash([]);
+  }
+
+  // Signal heads per approach when zoomed in, one glyph per junction when zoomed out.
+  function signalMarkers() {
+    const markers = [];
+    if (state.view.scale >= DETAIL_SCALE) {
+      for (const lane of state.net.lanes.values()) {
+        if (lane.head) markers.push({ at: toScreen(...lane.head), signal: lane.signal, lane });
+      }
+    } else {
+      for (const junction of state.net.junctions) {
+        if (junction.signal) markers.push({ at: toScreen(...junction.drawCenter), signal: junction.signal });
+      }
+    }
+    return markers;
+  }
+
+  function drawSignalHead(x, y, light) {
+    // Three lenses: red on top, amber, green at the bottom.
+    ctx.fillStyle = "#232427";
+    ctx.strokeStyle = "#0e0e0f";
+    ctx.lineWidth = 1;
+    traceRoundedRect(x - 5.5, y - 14, 11, 28, 2.5);
+    ctx.fill();
+    ctx.stroke();
+    for (const [color, dy] of [["red", -8], ["amber", 0], ["green", 8]]) {
+      const lit = light === color;
+      if (lit) {
+        ctx.fillStyle = withAlpha(LIGHT[color], 0.3);
+        ctx.beginPath();
+        ctx.arc(x, y + dy, 6.5, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.fillStyle = lit ? LIGHT[color] : "#3c3f45";
+      ctx.beginPath();
+      ctx.arc(x, y + dy, 3.3, 0, Math.PI * 2);
       ctx.fill();
-      ctx.stroke();
+    }
+  }
+
+  function drawJunctionGlyph(x, y, lights) {
+    // Vertical arm: north-south light. Horizontal arm: east-west light.
+    const arm = 13;
+    const thick = 6;
+    ctx.fillStyle = MAP.ink;
+    ctx.fillRect(x - thick / 2 - 1, y - arm - 1, thick + 2, 2 * arm + 2);
+    ctx.fillRect(x - arm - 1, y - thick / 2 - 1, 2 * arm + 2, thick + 2);
+    ctx.fillStyle = LIGHT[lights.ns] || "#8f8c86";
+    ctx.fillRect(x - thick / 2, y - arm, thick, 2 * arm);
+    ctx.fillStyle = LIGHT[lights.ew] || "#8f8c86";
+    ctx.fillRect(x - arm, y - thick / 2, 2 * arm, thick);
+    ctx.fillStyle = MAP.ink;
+    ctx.fillRect(x - thick / 2, y - thick / 2, thick, thick);
+  }
+
+  function drawSignals() {
+    for (const marker of signalMarkers()) {
+      const [x, y] = marker.at;
+      if (marker.lane) drawSignalHead(x, y, lightOf(marker.lane));
+      else drawJunctionGlyph(x, y, axisLights(marker.signal));
     }
   }
 
   function drawLabels() {
-    useScreenTransform();
-    ctx.font = "600 11px ui-sans-serif, system-ui, 'Segoe UI', sans-serif";
+    const scale = state.view.scale;
+    const clearance = (state.net.half + SIDEWALK_M) * ROAD_SCALE * scale + 12;
+    ctx.font = `600 11px ${MONO}`;
     ctx.textBaseline = "middle";
+    ctx.textAlign = "left";
+    ctx.lineWidth = 1;
+
     for (const junction of state.net.junctions) {
       if (!junction.signal) continue;
-      const [sx, sy] = toScreen(junction.center[0], junction.center[1]);
+      const [sx, sy] = toScreen(...junction.drawCenter);
       const signal = state.snapshot && state.snapshot.signals.find((item) => item.id === junction.signal);
-      const text = signal ? `${junction.id}  ·  ${signal.queue_count} queued` : junction.id;
-      const x = sx + 18;
-      const y = sy - 20;
-      const w = ctx.measureText(text).width + 16;
-      ctx.fillStyle = "rgba(16, 21, 28, 0.88)";
-      ctx.strokeStyle = "rgba(255, 255, 255, 0.12)";
-      ctx.lineWidth = 1;
-      traceRoundedRect(x, y - 10, w, 20, 10);
-      ctx.fill();
+      const text = signal ? `${junction.id}  ${signal.queue_count} queued` : junction.id;
+      const x = sx + clearance;
+      const y = sy - clearance;
+      const w = Math.ceil(ctx.measureText(text).width) + 12;
+
+      ctx.strokeStyle = MAP.ink;
+      ctx.beginPath();
+      ctx.moveTo(sx + 13, sy - 13);
+      ctx.lineTo(x, y);
       ctx.stroke();
-      ctx.fillStyle = "#e6edf3";
-      ctx.fillText(text, x + 8, y + 0.5);
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(x, y - 10, w, 20);
+      ctx.strokeRect(x + 0.5, y - 9.5, w - 1, 19);
+      ctx.fillStyle = MAP.ink;
+      ctx.fillText(text, x + 6, y + 0.5);
     }
   }
 
+  function drawMapFurniture() {
+    // North arrow.
+    ctx.fillStyle = MAP.ink;
+    ctx.beginPath();
+    ctx.moveTo(24, 22);
+    ctx.lineTo(18, 40);
+    ctx.lineTo(24, 36);
+    ctx.lineTo(30, 40);
+    ctx.closePath();
+    ctx.fill();
+    ctx.font = `600 11px ${MONO}`;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "bottom";
+    ctx.fillText("N", 24, 20);
+
+    // Scale bar for road lengths (junctions are drawn widened).
+    const options = [5, 10, 20, 50, 100, 200, 500, 1000];
+    let meters = options[0];
+    for (const option of options) if (option * state.view.scale <= 130) meters = option;
+    const length = Math.round(meters * state.view.scale);
+    const x = 44;
+    const y = 34;
+    ctx.fillStyle = MAP.ink;
+    ctx.fillRect(x, y, length / 2, 5);
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(x + length / 2, y, length / 2, 5);
+    ctx.strokeStyle = MAP.ink;
+    ctx.lineWidth = 1;
+    ctx.strokeRect(x + 0.5, y + 0.5, length, 5);
+    ctx.fillStyle = MAP.ink;
+    ctx.font = `10px ${MONO}`;
+    ctx.textBaseline = "bottom";
+    ctx.textAlign = "left";
+    ctx.fillText("0", x, y - 2);
+    ctx.textAlign = "right";
+    ctx.fillText(`${meters} m`, x + length, y - 2);
+  }
+
   function frame(now) {
-    drawGround();
+    useScreenTransform();
+    ctx.fillStyle = MAP.land;
+    ctx.fillRect(0, 0, width, height);
+
     if (state.net) {
       useWorldTransform();
-      drawGrid();
+      drawCity();
       drawRoads();
-      drawSignalBars();
       drawHighlight(state.hover, false, now);
       drawCars(now);
       drawHighlight(state.selected, true, now);
+
+      useScreenTransform();
+      drawSignals();
       drawLabels();
+      drawMapFurniture();
     }
     requestAnimationFrame(frame);
   }
 
   // ---------------------------------------------------------------------
-  // Picking, tooltip, inspector
+  // Picking, tooltip, selection
   // ---------------------------------------------------------------------
 
   function pick(px, py) {
     if (!state.net) return null;
+
+    for (const marker of signalMarkers()) {
+      if (Math.abs(px - marker.at[0]) <= 10 && Math.abs(py - marker.at[1]) <= 15) {
+        return { type: "signal", id: marker.signal };
+      }
+    }
+
     const [x, y] = toWorld(px, py);
     const t = stepProgress(performance.now());
-    const pad = Math.max(0.6, 6 / state.view.scale);
-
+    const [L, W] = carSize();
+    const pad = 4 / state.view.scale;
     let best = null;
     let bestDistance = Infinity;
+
     for (const [id, car] of state.cars) {
-      const pose = carPose(car, t);
+      const pose = carDrawPose(car, t);
       const a = (pose.a * Math.PI) / 180;
       const dx = x - pose.x;
       const dy = y - pose.y;
       // Rotate the point into the car's frame (front at 0, body along -y).
       const lx = Math.cos(a) * dx - Math.sin(a) * dy;
       const ly = Math.sin(a) * dx + Math.cos(a) * dy;
-      if (Math.abs(lx) <= CAR_WIDTH / 2 + pad && ly <= pad && ly >= -CAR_LENGTH - pad) {
-        const distance = Math.hypot(lx, ly + CAR_LENGTH / 2);
+      if (Math.abs(lx) <= W / 2 + pad && ly <= pad && ly >= -L - pad) {
+        const distance = Math.hypot(lx, ly + L / 2);
         if (distance < bestDistance) { best = { type: "vehicle", id }; bestDistance = distance; }
       }
     }
     if (best) return best;
 
-    for (const lane of state.net.lanes.values()) {
-      if (lane.signal && Math.hypot(x - lane.end[0], y - lane.end[1]) < Math.max(1.8, 8 / state.view.scale)) {
-        return { type: "signal", id: lane.signal };
-      }
-    }
-
     for (const junction of state.net.junctions) {
-      if (junction.signal && pointInPolygon(x, y, junction.shape)) return { type: "signal", id: junction.signal };
+      if (junction.signal && pointInPolygon(x, y, junction.drawShape)) return { type: "signal", id: junction.signal };
     }
 
     for (const lane of state.net.lanes.values()) {
-      const distance = distanceToPolyline(x, y, lane.shape);
-      if (distance < lane.width_m / 2 + 2 / state.view.scale && distance < bestDistance) {
+      const distance = distanceToPolyline(x, y, lane.center);
+      if (distance < lane.drawWidth / 2 && distance < bestDistance) {
         best = { type: "lane", id: lane.id };
         bestDistance = distance;
       }
@@ -924,50 +1197,24 @@
   }
 
   const sameTarget = (a, b) => (a && b ? a.type === b.type && a.id === b.id : a === b);
-
   const actionLabel = (name) => (name ? name.replace(/_/g, "–") : "–");
-
-  const OVERRIDE_TEXT = {
-    min_green: "held: minimum green",
-    in_transition: "ignored: change in progress",
-    invalid_request: "invalid: fixed-time fallback",
-    max_green: "forced: maximum green",
-  };
 
   function controlText(control) {
     if (control.transition_state === "green") {
-      return `${actionLabel(control.active_action)} green · ${Math.round(control.elapsed_green_s)} s`;
+      return `${actionLabel(control.active_action)} green, ${Math.round(control.elapsed_green_s)} s`;
     }
     const stage = control.transition_state === "yellow" ? "yellow" : "all-red";
-    return `${actionLabel(control.active_action)} → ${actionLabel(control.target_action)} · ${stage}`;
+    return `${actionLabel(control.active_action)} → ${actionLabel(control.target_action)}, ${stage}`;
   }
 
   function requestText(control) {
     const request = control.last_request;
-    if (!request) return "No requests yet";
-    const asked = request.requested_action
-      ? `requested ${actionLabel(request.requested_action)}`
-      : "safety rule";
+    if (!request) return "no requests yet";
+    const asked = request.requested_action ? `asked ${actionLabel(request.requested_action)}` : "safety rule";
     const outcome = request.override_reason
       ? OVERRIDE_TEXT[request.override_reason] || request.override_reason
       : "applied";
-    return `${Math.round(request.time_s)} s: ${asked} · ${outcome}`;
-  }
-
-  function lightsHtml(signalId) {
-    const signal = state.net.signals.get(signalId);
-    const stateString = state.signalStates.get(signalId) || "";
-    if (!signal) return "";
-    let html = "";
-    let previousLane = null;
-    for (const link of signal.links) {
-      if (previousLane !== null && link.from_lane !== previousLane) html += '<span class="light-gap"></span>';
-      previousLane = link.from_lane;
-      const ch = stateString[link.index] || "o";
-      const title = `#${link.index} ${link.from_lane} → ${link.to_lane} (${DIRECTION_NAMES[link.direction] || link.direction}): ${SIGNAL_NAMES[ch] || ch}`;
-      html += `<span class="light" style="background:${SIGNAL_COLORS[ch] || SIGNAL_COLORS.o}" title="${escapeHtml(title)}"></span>`;
-    }
-    return html;
+    return `${clockText(request.time_s)}  ${asked}, ${outcome}`;
   }
 
   function describe(target) {
@@ -976,19 +1223,18 @@
 
     if (target.type === "vehicle") {
       const car = state.cars.get(target.id);
-      if (!car) return { kind: "Vehicle", title: target.id, rows: [["Status", "Left the network"]] };
+      if (!car) return { kind: "vehicle", title: target.id, rows: [["Status", "left the network"]] };
       const v = car.data;
       return {
-        kind: "Vehicle",
+        kind: "vehicle",
         title: v.id,
         rows: [
-          ["Speed", `${v.speed_mps.toFixed(1)} m/s · ${Math.round(v.speed_mps * 3.6)} km/h`],
+          ["Speed", `${v.speed_mps.toFixed(1)} m/s, ${Math.round(v.speed_mps * 3.6)} km/h`],
           ["Waiting now", `${v.waiting_s.toFixed(0)} s`],
           ["Waiting in total", `${v.accumulated_waiting_s.toFixed(0)} s`],
           ["Lane", v.lane],
           ["Route", v.route],
           ["Type", v.type],
-          ["Heading", `${v.angle_deg.toFixed(0)}°`],
         ],
       };
     }
@@ -998,16 +1244,15 @@
       const live = snapshot.lanes[target.id];
       if (!lane || !live) return null;
       return {
-        kind: "Lane",
+        kind: "lane",
         title: lane.id,
         rows: [
           ["Vehicles", live.vehicle_count],
-          ["Halting (< 0.1 m/s)", live.halting_count],
+          ["Halting, below 0.1 m/s", live.halting_count],
           ["Occupancy", `${(live.occupancy * 100).toFixed(1)} %`],
           ["Mean speed", `${live.mean_speed_mps.toFixed(1)} m/s`],
           ["Length", `${lane.length_m.toFixed(1)} m`],
           ["Speed limit", `${lane.speed_limit_mps.toFixed(2)} m/s`],
-          ["Edge", lane.edge],
           ["Signal", lane.signal || "none"],
         ],
       };
@@ -1017,25 +1262,20 @@
       const signal = snapshot.signals.find((item) => item.id === target.id);
       if (!signal) return null;
       const control = signal.control;
-      // While a safety controller holds the phases, SUMO's switch time is unused.
+      // While the safety controller holds the phases, SUMO's switch time is unused.
       const timing = control
-        ? [
-            ["Showing", controlText(control)],
-            ["Last request", requestText(control)],
-            ["Safety overrides", control.override_count],
-          ]
+        ? [["Showing", controlText(control)], ["Last request", requestText(control)], ["Safety overrides", control.override_count]]
         : [["Next switch in", `${Math.max(0, signal.next_switch_s).toFixed(0)} s`]];
       return {
-        kind: "Traffic light",
+        kind: "traffic light",
         title: signal.id,
         rows: [
           ...timing,
           ["Phase index", signal.phase],
           ["Queued on approaches", signal.queue_count],
           ["Vehicles on approaches", signal.vehicle_count],
-          ["State", signal.state],
+          ["SUMO state", signal.state],
         ],
-        extra: `<div class="lights">${lightsHtml(signal.id)}</div>`,
       };
     }
     return null;
@@ -1047,8 +1287,7 @@
       .join("");
     return `<div class="detail-kind">${escapeHtml(detail.kind)}</div>`
       + `<div class="detail-title">${escapeHtml(detail.title)}</div>`
-      + (detail.extra || "")
-      + `<dl class="rows" style="margin:8px 0 0">${rows}</dl>`;
+      + `<dl class="rows">${rows}</dl>`;
   }
 
   function updateHover(px, py) {
@@ -1074,8 +1313,8 @@
   function select(target) {
     state.selected = target;
     renderInspector();
-    for (const card of document.querySelectorAll(".signal-card")) {
-      card.classList.toggle("selected", sameTarget(target, { type: "signal", id: card.dataset.id }));
+    for (const block of document.querySelectorAll(".junction")) {
+      block.classList.toggle("selected", sameTarget(target, { type: "signal", id: block.dataset.id }));
     }
   }
 
@@ -1085,118 +1324,139 @@
   }
 
   // ---------------------------------------------------------------------
-  // Side panel
+  // Panel
   // ---------------------------------------------------------------------
 
-  function buildSignalCards() {
-    const container = document.getElementById("signals");
+  function buildJunctionPanel() {
+    const container = document.getElementById("junctions");
     container.innerHTML = "";
     for (const id of state.net.signals.keys()) {
-      const card = document.createElement("div");
-      card.className = "signal-card";
-      card.dataset.id = id;
-      card.innerHTML = `
-        <div class="signal-head">
-          <span class="signal-name">${escapeHtml(id)}</span>
-          <span class="signal-phase muted num"></span>
-        </div>
-        <div class="lights"></div>
-        <div class="signal-stats">
-          <div><span class="big num" data-field="queue">0</span> <span class="muted">queued</span></div>
-          <div><span class="num" data-field="vehicles">0</span> <span class="muted">approaching</span></div>
-        </div>
-        <div class="signal-request muted"></div>
-        <canvas class="spark" aria-label="Queue over the last ${HISTORY_LENGTH} seconds"></canvas>`;
-      card.addEventListener("click", () => select({ type: "signal", id }));
-      container.appendChild(card);
+      const block = document.createElement("div");
+      block.className = "junction";
+      block.dataset.id = id;
+      block.innerHTML = `
+        <div class="junction-head"><span class="junction-name">${escapeHtml(id)}</span><span class="junction-phase"></span></div>
+        <canvas class="strip" aria-label="Signal timing at ${escapeHtml(id)} over the last ${STRIP_SECONDS} seconds"></canvas>
+        <table class="approaches" hidden>
+          <thead><tr><th></th>${SLOTS.map((slot) => `<th>${slot}</th>`).join("")}</tr></thead>
+          <tbody></tbody>
+        </table>
+        <div class="request"></div>`;
+      block.addEventListener("click", () => select({ type: "signal", id }));
+      container.appendChild(block);
     }
+    document.getElementById("network-note").textContent = `${state.net.signals.size} signals`;
   }
 
-  function drawSparkline(canvasElement, values) {
+  // Signal timing strip: one row per axis, one column per simulated second.
+  function drawStrip(canvasElement, history) {
     const w = canvasElement.clientWidth;
     const h = canvasElement.clientHeight;
-    if (w === 0 || h === 0) return;
+    if (!w || !h) return;
     canvasElement.width = Math.round(w * dpr);
     canvasElement.height = Math.round(h * dpr);
     const c = canvasElement.getContext("2d");
     c.setTransform(dpr, 0, 0, dpr, 0, 0);
     c.clearRect(0, 0, w, h);
-    if (values.length < 2) return;
 
-    const max = Math.max(5, ...values);
-    const step = w / (HISTORY_LENGTH - 1);
-    const x0 = w - (values.length - 1) * step;
-    const yOf = (value) => h - 2 - (value / max) * (h - 12);
+    const labelWidth = 34;
+    const rowHeight = 9;
+    const gap = 4;
+    const plotWidth = w - labelWidth;
+    const step = plotWidth / STRIP_SECONDS;
 
-    c.beginPath();
-    values.forEach((value, i) => (i ? c.lineTo(x0 + i * step, yOf(value)) : c.moveTo(x0, yOf(value))));
-    c.strokeStyle = COLORS.accent;
-    c.lineWidth = 1.5;
-    c.stroke();
-    c.lineTo(w, h);
-    c.lineTo(x0, h);
-    c.closePath();
-    c.fillStyle = "rgba(76, 201, 240, 0.12)";
-    c.fill();
+    c.font = `500 10px ${MONO}`;
+    c.textBaseline = "middle";
+    c.textAlign = "left";
+    [["ns", "N–S"], ["ew", "E–W"]].forEach(([key, label], row) => {
+      const y = 1 + row * (rowHeight + gap);
+      c.fillStyle = "#5f5d58";
+      c.fillText(label, 0, y + rowHeight / 2 + 0.5);
+      c.fillStyle = STRIP.off;
+      c.fillRect(labelWidth, y, plotWidth, rowHeight);
+      const start = labelWidth + plotWidth - history.length * step;
+      history.forEach((entry, i) => {
+        c.fillStyle = STRIP[entry[key]] || STRIP.off;
+        c.fillRect(start + i * step, y, step + 0.6, rowHeight);
+      });
+    });
 
-    c.fillStyle = "#8a97a8";
-    c.font = "10px ui-sans-serif, system-ui, sans-serif";
-    c.textAlign = "right";
+    // Time axis: ticks every 30 s, "now" at the right edge.
+    const axisY = 1 + 2 * rowHeight + gap + 5;
+    c.fillStyle = "#8a877f";
+    c.font = `9px ${MONO}`;
     c.textBaseline = "top";
-    c.fillText(`peak ${max}`, w, 0);
+    for (let seconds = 0; seconds <= STRIP_SECONDS; seconds += 30) {
+      const x = labelWidth + plotWidth - seconds * step;
+      c.fillRect(Math.round(x) - 0.5, axisY - 3, 1, 3);
+      c.textAlign = seconds === 0 ? "right" : seconds === STRIP_SECONDS ? "left" : "center";
+      c.fillText(seconds === 0 ? "now" : `−${seconds}s`, x, axisY + 1);
+    }
   }
 
   function updatePanel() {
     const s = state.snapshot;
-    document.getElementById("run-meta").textContent = `${s.scenario} · ${s.controller}`;
-    document.getElementById("clock").textContent = `${Math.round(s.sim_time_s)} s`;
-    document.getElementById("clock-end").textContent = s.end_time_s > 0 ? `of ${Math.round(s.end_time_s)} s` : "";
-    document.getElementById("progress-fill").style.width = s.end_time_s > 0
+    document.getElementById("run-meta").textContent = `${s.scenario} · ${s.controller} · run ${s.run_id}`;
+    document.getElementById("clock").textContent = clockText(s.sim_time_s);
+    document.getElementById("clock-end").textContent = s.end_time_s > 0 ? `/ ${clockText(s.end_time_s)}` : "";
+    document.getElementById("progress").style.width = s.end_time_s > 0
       ? `${clamp((s.sim_time_s / s.end_time_s) * 100, 0, 100)}%` : "0";
 
-    document.getElementById("kpi-running").textContent = s.totals.running;
-    document.getElementById("kpi-arrived").textContent = s.totals.arrived;
-    document.getElementById("kpi-pending").textContent = s.totals.waiting_to_insert;
-    document.getElementById("kpi-wait").textContent = `${s.totals.mean_waiting_s.toFixed(1)} s`;
+    document.getElementById("fact-running").textContent = s.totals.running;
+    document.getElementById("fact-arrived").textContent = s.totals.arrived;
+    document.getElementById("fact-pending").textContent = s.totals.waiting_to_insert;
+    document.getElementById("fact-wait").textContent = `${s.totals.mean_waiting_s.toFixed(1)} s`;
+
+    const rows = [
+      ["Queued", (a) => a.queue],
+      ["Vehicles", (a) => a.vehicles],
+      ["Mean wait", (a) => `${Math.round(a.mean_wait_s)} s`],
+    ];
 
     for (const signal of s.signals) {
-      const card = document.querySelector(`.signal-card[data-id="${CSS.escape(signal.id)}"]`);
-      if (!card) continue;
-      card.querySelector(".signal-phase").textContent = signal.control
+      const block = document.querySelector(`.junction[data-id="${CSS.escape(signal.id)}"]`);
+      if (!block) continue;
+      block.querySelector(".junction-phase").textContent = signal.control
         ? controlText(signal.control)
-        : `phase ${signal.phase} · switch in ${Math.max(0, signal.next_switch_s).toFixed(0)} s`;
-      card.querySelector(".signal-request").textContent = signal.control ? requestText(signal.control) : "";
-      card.querySelector(".lights").innerHTML = lightsHtml(signal.id);
-      card.querySelector('[data-field="queue"]').textContent = signal.queue_count;
-      card.querySelector('[data-field="vehicles"]').textContent = signal.vehicle_count;
-      drawSparkline(card.querySelector(".spark"), state.history.get(signal.id) || []);
+        : `phase ${signal.phase}`;
+      block.querySelector(".request").textContent = signal.control ? requestText(signal.control) : "";
+
+      const table = block.querySelector(".approaches");
+      table.hidden = !signal.approaches;
+      if (signal.approaches) {
+        table.tBodies[0].innerHTML = rows.map(([label, value]) => (
+          `<tr><td>${label}</td>${SLOTS.map((slot) => (
+            `<td>${signal.approaches[slot] ? escapeHtml(value(signal.approaches[slot])) : "–"}</td>`
+          )).join("")}</tr>`
+        )).join("");
+      }
+      drawStrip(block.querySelector(".strip"), state.strips.get(signal.id) || []);
     }
 
-    setConnected(state.connected);
     renderInspector();
+  }
+
+  function updateStatus() {
+    const element = document.getElementById("status");
+    const status = !state.connected ? "disconnected" : state.snapshot ? state.snapshot.status : "connecting";
+    element.textContent = { running: "live", finished: "finished" }[status] || status;
+    element.dataset.status = status;
   }
 
   function renderLegend() {
     const body = document.getElementById("legend-body");
     if (state.colorMode === "waiting") {
       body.innerHTML = `
-        <div class="legend-row">
-          <span><span class="swatch" style="background:${COLORS.moving}"></span>moving</span>
-          <div style="flex:1">
-            <div class="gradient" style="background:linear-gradient(90deg, ${COLORS.waitShort}, ${COLORS.waitLong})"></div>
-            <div class="scale-labels"><span>waiting 0 s</span><span>${LONG_WAIT_S} s+</span></div>
-          </div>
-        </div>`;
+        <span><span class="swatch" style="background:${MAP.carMoving}"></span>moving</span>
+        <span>waiting 0 s<span class="ramp" style="background:linear-gradient(90deg, ${MAP.waitShort}, ${MAP.waitLong})"></span>${LONG_WAIT_S} s+</span>`;
     } else if (state.colorMode === "speed") {
       body.innerHTML = `
-        <div class="gradient" style="background:linear-gradient(90deg, ${COLORS.slow}, ${COLORS.mid}, ${COLORS.fast})"></div>
-        <div class="scale-labels"><span>stopped</span><span>speed limit</span></div>`;
+        <span>stopped<span class="ramp" style="background:linear-gradient(90deg, ${MAP.slow}, ${MAP.mid}, ${MAP.fast})"></span>speed limit</span>`;
     } else {
       const routes = [...state.routeColors.entries()].sort(([a], [b]) => a.localeCompare(b));
       body.innerHTML = routes.length
-        ? `<div class="route-grid">${routes.map(([route, color]) =>
-            `<span><span class="swatch" style="background:${color}"></span>${escapeHtml(route)}</span>`).join("")}</div>`
-        : "No vehicles yet";
+        ? routes.map(([route, color]) => `<span><span class="swatch" style="background:${color}"></span>${escapeHtml(route)}</span>`).join("")
+        : "no vehicles yet";
     }
   }
 
@@ -1257,8 +1517,8 @@
     fitView();
   });
 
-  document.getElementById("zoom-in").addEventListener("click", () => zoomAt(width / 2, height / 2, 1.4));
-  document.getElementById("zoom-out").addEventListener("click", () => zoomAt(width / 2, height / 2, 1 / 1.4));
+  document.getElementById("zoom-in").addEventListener("click", () => zoomAt(width / 2, height / 2, 1.5));
+  document.getElementById("zoom-out").addEventListener("click", () => zoomAt(width / 2, height / 2, 1 / 1.5));
   document.getElementById("zoom-fit").addEventListener("click", () => { state.autoFit = true; fitView(); });
 
   for (const button of document.querySelectorAll("#legend button")) {
@@ -1275,6 +1535,7 @@
   // Start
   // ---------------------------------------------------------------------
 
+  document.getElementById("legend-note").textContent = `road widths drawn ${ROAD_SCALE}× real`;
   new ResizeObserver(resize).observe(stage);
   resize();
   renderLegend();

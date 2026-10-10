@@ -49,8 +49,8 @@ def run_episode(
     """Run one scenario to its end time and save metrics.json in output_dir.
 
     run holds run_id, scenario, and controller (one of CONTROLLERS).
-    on_step(adapter, control, status) is called at every step boundary, for
-    example to publish telemetry to the viewer.
+    on_step(adapter, control, states, status) is called at every step
+    boundary, for example to publish telemetry to the viewer.
     """
 
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -93,12 +93,12 @@ def run_episode(
             recorder.record_phases(adapter.read_phases())
 
             if on_step is not None:
-                on_step(adapter, safety.control_summary(time_s), "running")
+                on_step(adapter, safety.control_summary(time_s), states, "running")
 
             adapter.step()
 
         if on_step is not None:
-            on_step(adapter, safety.control_summary(time_s), "finished")
+            on_step(adapter, safety.control_summary(time_s), states, "finished")
 
         totals = {
             "horizon_s": time_s,

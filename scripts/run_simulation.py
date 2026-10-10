@@ -149,7 +149,7 @@ def main() -> None:
     server = TelemetryServer(arguments.host, arguments.port, VIEWER_PAGE)
     pacing = {"next_tick": None}
 
-    def publish(adapter, control, status) -> None:
+    def publish(adapter, control, states, status) -> None:
         # The network is only known once SUMO has started.
         if pacing["next_tick"] is None:
             server.set_network(adapter.read_network())
@@ -158,7 +158,9 @@ def main() -> None:
             pacing["next_tick"] = time.perf_counter()
 
         seconds_per_step = adapter.step_length_s / arguments.speed
-        server.publish(build_snapshot(adapter, run, status, seconds_per_step, control))
+        server.publish(
+            build_snapshot(adapter, run, status, seconds_per_step, control, states)
+        )
 
         pacing["next_tick"] += seconds_per_step
         delay = pacing["next_tick"] - time.perf_counter()

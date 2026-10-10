@@ -219,6 +219,7 @@ class SafetyController:
             record = self._last_record.get(node_id)
             requested = record.requested_action if record else None
             summary[self.signal_ids[node_id]] = {
+                "intersection_id": node_id,
                 "active_action": names[signal.green_action],
                 "target_action": names[signal.target_action],
                 "transition_state": signal.stage,

@@ -18,10 +18,12 @@ def build_snapshot(
     status: str,
     real_seconds_per_step: float,
     control: dict[str, dict] | None = None,
+    states: dict | None = None,
 ) -> dict:
     """Combine one step of adapter readings into a telemetry snapshot.
 
-    control is the safety controller's summary per signal ID, if one is running.
+    control is the safety controller's summary per signal ID, if one is running;
+    states are the IntersectionState objects for the same step.
     """
 
     vehicles = adapter.read_vehicles()
@@ -39,7 +41,20 @@ def build_snapshot(
         signal["vehicle_count"] = sum(lane["vehicle_count"] for lane in incoming)
 
         if control is not None:
-            signal["control"] = control.get(signal["id"])
+            signal_control = control.get(signal["id"])
+            signal["control"] = signal_control
+
+            # Per-approach measurements for the viewer's N/E/S/W table.
+            if states is not None and signal_control is not None:
+                intersection = states[signal_control["intersection_id"]]
+                signal["approaches"] = {
+                    slot: {
+                        "queue": approach.queue_count,
+                        "vehicles": approach.vehicle_count,
+                        "mean_wait_s": approach.mean_wait_s,
+                    }
+                    for slot, approach in intersection.approaches.items()
+                }
 
     waiting_times = [vehicle["waiting_s"] for vehicle in vehicles]
 
