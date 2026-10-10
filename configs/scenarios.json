@@ -9,17 +9,48 @@
     "minGap": 2.5
   },
   "routes": {
-    "eastbound": ["left0A0", "A0B0", "B0C0", "C0right0"],
-    "westbound": ["right0C0", "C0B0", "B0A0", "A0left0"],
-    "southbound_A0": ["top0A0", "A0bottom0"],
-    "northbound_A0": ["bottom0A0", "A0top0"],
-    "southbound_B0": ["top1B0", "B0bottom1"],
-    "northbound_B0": ["bottom1B0", "B0top1"],
-    "southbound_C0": ["top2C0", "C0bottom2"],
-    "northbound_C0": ["bottom2C0", "C0top2"]
+    "eastbound": [
+      "left0A0",
+      "A0B0",
+      "B0C0",
+      "C0right0"
+    ],
+    "westbound": [
+      "right0C0",
+      "C0B0",
+      "B0A0",
+      "A0left0"
+    ],
+    "southbound_A0": [
+      "top0A0",
+      "A0bottom0"
+    ],
+    "northbound_A0": [
+      "bottom0A0",
+      "A0top0"
+    ],
+    "southbound_B0": [
+      "top1B0",
+      "B0bottom1"
+    ],
+    "northbound_B0": [
+      "bottom1B0",
+      "B0top1"
+    ],
+    "southbound_C0": [
+      "top2C0",
+      "C0bottom2"
+    ],
+    "northbound_C0": [
+      "bottom2C0",
+      "C0top2"
+    ]
   },
   "route_groups": {
-    "east_west": ["eastbound", "westbound"],
+    "east_west": [
+      "eastbound",
+      "westbound"
+    ],
     "north_south": [
       "southbound_A0",
       "northbound_A0",
@@ -31,6 +62,8 @@
   },
   "scenarios": {
     "balanced": {
+      "label": "Balanced traffic",
+      "description": "About 300 cars per hour on every route.",
       "seed": 1001,
       "end_s": 900,
       "intervals": [
@@ -51,6 +84,8 @@
       ]
     },
     "ew_heavy": {
+      "label": "Main-road rush hour",
+      "description": "600 cars per hour each way on the main road, 150 on each side street.",
       "seed": 1002,
       "end_s": 900,
       "intervals": [
@@ -71,6 +106,8 @@
       ]
     },
     "demo_incident": {
+      "label": "Incident at B0",
+      "description": "A stopped car blocks the road leaving B0 to the north for 4 minutes, starting near 4:40.",
       "seed": 1003,
       "end_s": 900,
       "intervals": [
@@ -100,7 +137,13 @@
       ]
     },
     "test_balanced": {
-      "seeds": [9001, 9002, 9003],
+      "label": "Balanced traffic (test)",
+      "description": "Never seen in training. About 320 cars per hour on every route.",
+      "seeds": [
+        9001,
+        9002,
+        9003
+      ],
       "end_s": 900,
       "intervals": [
         {
@@ -120,7 +163,13 @@
       ]
     },
     "test_ew_heavy": {
-      "seeds": [9011, 9012, 9013],
+      "label": "Main-road rush hour (test)",
+      "description": "Never seen in training. 650 cars per hour each way on the main road.",
+      "seeds": [
+        9011,
+        9012,
+        9013
+      ],
       "end_s": 900,
       "intervals": [
         {
@@ -140,7 +189,13 @@
       ]
     },
     "test_shift": {
-      "seeds": [9021, 9022, 9023],
+      "label": "Rush hour moves (test)",
+      "description": "Never seen in training. The main road is busy for 7.5 minutes, then the side streets are.",
+      "seeds": [
+        9021,
+        9022,
+        9023
+      ],
       "end_s": 900,
       "intervals": [
         {

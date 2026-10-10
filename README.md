@@ -49,8 +49,9 @@ Run everything from the project root.
 # 2. Tests (a few start SUMO and take several seconds)
 .\.venv\Scripts\python.exe -m unittest discover -s tests -v
 
-# 3. Watch a controller live, then open http://127.0.0.1:8000/
-.\.venv\Scripts\python.exe scripts\run_simulation.py --scenario simulation\scenarios\ew_heavy.sumocfg --controller actuated
+# 3. Start the live viewer, then open http://127.0.0.1:8000/ and pick a
+#    scenario, a controller (timer, sensors, or the AI), and a speed
+.\.venv\Scripts\python.exe scripts\run_simulation.py
 
 # 4. Run a baseline headless and save metrics to results/
 .\.venv\Scripts\python.exe scripts\run_simulation.py --scenario simulation\scenarios\ew_heavy.sumocfg --controller fixed-time --headless
@@ -61,13 +62,18 @@ Run everything from the project root.
 # 6. Compare PPO with both baselines on the held-out test scenarios
 .\.venv\Scripts\python.exe scripts\evaluate.py --checkpoint models\ppo_main\checkpoint_0120.pt
 
-# 7. Watch the trained policy
-.\.venv\Scripts\python.exe scripts\run_simulation.py --scenario simulation\scenarios\test_ew_heavy_s9011.sumocfg --controller ppo --checkpoint models\ppo_main\checkpoint_0120.pt
+# 7. Start the viewer directly on a scenario and controller (both can be
+#    changed in the page; ppo uses selected_checkpoint from configs/training.json)
+.\.venv\Scripts\python.exe scripts\run_simulation.py --scenario simulation\scenarios\demo_incident.sumocfg --controller ppo
 
-# 8. Calibrate congestion alerts, then watch an incident raise and clear one
+# 8. Recalibrate the congestion-alert reference (already calibrated in configs/alerts.json)
 .\.venv\Scripts\python.exe scripts\calibrate_alerts.py
-.\.venv\Scripts\python.exe scripts\run_simulation.py --scenario simulation\scenarios\demo_incident.sumocfg --controller actuated
 ```
+
+In the viewer, the panel shows plain-language numbers by default (average
+time stopped per finished trip, cars stopped at lights, cars waiting by
+direction, traffic-jam alerts). "Show technical details" adds the raw SUMO
+measurements.
 
 The viewer can be embedded in another web page:
 

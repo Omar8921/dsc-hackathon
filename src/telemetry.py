@@ -20,12 +20,14 @@ def build_snapshot(
     control: dict[str, dict] | None = None,
     states: dict | None = None,
     alerts: list[dict] | None = None,
+    trips: dict | None = None,
 ) -> dict:
     """Combine one step of adapter readings into a telemetry snapshot.
 
     control is the safety controller's summary per signal ID, if one is running;
     states are the IntersectionState objects for the same step; alerts are the
-    congestion events so far, or None when the detector is off.
+    congestion events so far, or None when the detector is off; trips is the
+    live finished-trip summary.
     """
 
     vehicles = adapter.read_vehicles()
@@ -54,6 +56,7 @@ def build_snapshot(
                         "queue": approach.queue_count,
                         "vehicles": approach.vehicle_count,
                         "mean_wait_s": approach.mean_wait_s,
+                        "storage": approach.storage_capacity,
                     }
                     for slot, approach in intersection.approaches.items()
                 }
@@ -80,6 +83,7 @@ def build_snapshot(
         "lanes": lanes,
         "vehicles": vehicles,
         "alerts": alerts,
+        "trips": trips,
     }
 
 
@@ -106,15 +110,23 @@ class TelemetryServer:
     """Serve the viewer page, the static network, and the latest snapshot.
 
     Routes:
-        /               viewer page
-        /api/network    lane, junction, and signal geometry (fixed per run)
-        /api/snapshot   latest per-step snapshot
+        GET  /               viewer page
+        GET  /api/network    lane, junction, and signal geometry (fixed per run)
+        GET  /api/snapshot   latest per-step snapshot
+        GET  /api/catalog    runs the viewer may choose from
+        POST /api/run        {"scenario", "controller"}: switch to another run
+        POST /api/speed      {"speed"}: simulated seconds per real second
+
+    POST requests are passed to on_command(path, payload), which returns a
+    JSON-ready result or raises ValueError for a bad request.
     """
 
     def __init__(self, host: str, port: int, viewer_page: Path) -> None:
         self.viewer_page = viewer_page
+        self.on_command = None
         self._lock = threading.Lock()
         self._network: bytes | None = None
+        self._catalog: bytes | None = None
         self._snapshot = _encode(
             {"schema_version": SCHEMA_VERSION, "status": "starting"}
         )
@@ -134,6 +146,10 @@ class TelemetryServer:
         with self._lock:
             self._network = _encode(network)
 
+    def set_catalog(self, catalog: dict) -> None:
+        with self._lock:
+            self._catalog = _encode(catalog)
+
     def publish(self, snapshot: dict) -> None:
         body = _encode(snapshot)
 
@@ -152,7 +168,7 @@ class TelemetryServer:
 
     def _read(self, route: str) -> bytes | None:
         with self._lock:
-            return self._network if route == "network" else self._snapshot
+            return {"network": self._network, "catalog": self._catalog}.get(route, self._snapshot)
 
     def _make_handler(self) -> type[BaseHTTPRequestHandler]:
         telemetry = self
@@ -165,11 +181,11 @@ class TelemetryServer:
                     self._send(
                         telemetry.viewer_page.read_bytes(), "text/html; charset=utf-8"
                     )
-                elif path == "/api/network":
-                    body = telemetry._read("network")
+                elif path in ("/api/network", "/api/catalog"):
+                    body = telemetry._read(path.rsplit("/", 1)[1])
 
                     if body is None:
-                        self.send_error(503, "Network not loaded yet")
+                        self.send_error(503, "Not available yet")
                     else:
                         self._send(body, "application/json")
                 elif path == "/api/snapshot":
@@ -177,8 +193,33 @@ class TelemetryServer:
                 else:
                     self.send_error(404)
 
-            def _send(self, body: bytes, content_type: str) -> None:
-                self.send_response(200)
+            def do_POST(self) -> None:
+                path = urlsplit(self.path).path
+
+                if telemetry.on_command is None or path not in ("/api/run", "/api/speed"):
+                    self.send_error(404)
+                    return
+
+                try:
+                    length = int(self.headers.get("Content-Length") or 0)
+                    payload = json.loads(self.rfile.read(length) or b"{}")
+                    result = telemetry.on_command(path, payload)
+                except (ValueError, TypeError) as error:
+                    self._send(_encode({"error": str(error)}), "application/json", status=400)
+                    return
+
+                self._send(_encode(result), "application/json")
+
+            def do_OPTIONS(self) -> None:
+                # CORS preflight, for an interface posting from its own origin.
+                self.send_response(204)
+                self.send_header("Access-Control-Allow-Origin", "*")
+                self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+                self.send_header("Access-Control-Allow-Headers", "Content-Type")
+                self.end_headers()
+
+            def _send(self, body: bytes, content_type: str, status: int = 200) -> None:
+                self.send_response(status)
                 self.send_header("Content-Type", content_type)
                 self.send_header("Content-Length", str(len(body)))
                 self.send_header("Cache-Control", "no-store")

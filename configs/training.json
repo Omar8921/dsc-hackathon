@@ -3,6 +3,7 @@
   "updates": 100,
   "episodes_per_update": 2,
   "checkpoint_every_updates": 10,
+  "selected_checkpoint": "models/ppo_main/checkpoint_0120.pt",
   "networks": [
     {
       "name": "corridor",

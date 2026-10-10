@@ -41,6 +41,36 @@ class EpisodeRecorder:
                 self.phases[signal_id].append(phase)
 
 
+class LiveTripTracker:
+    """Total waiting time of each vehicle, for a live finished-trip average.
+
+    Waiting counts steps at or below 0.1 m/s, like SUMO's trip output, so the
+    live number matches the evaluation's completed-trip waiting time.
+    """
+
+    def __init__(self, step_length_s: float) -> None:
+        self.step_length_s = step_length_s
+        self.waiting: dict[str, float] = {}
+        self.finished: list[float] = []
+
+    def update(self, vehicles: list[dict]) -> None:
+        current = {
+            vehicle["id"]: self.waiting.get(vehicle["id"], 0.0)
+            + (self.step_length_s if vehicle["speed_mps"] <= 0.1 else 0.0)
+            for vehicle in vehicles
+        }
+
+        # A vehicle that disappeared has reached the end of its route.
+        self.finished.extend(seconds for vehicle_id, seconds in self.waiting.items() if vehicle_id not in current)
+        self.waiting = current
+
+    def summary(self) -> dict:
+        return {
+            "finished": len(self.finished),
+            "mean_wait_s": sum(self.finished) / len(self.finished) if self.finished else None,
+        }
+
+
 def read_tripinfo(path: Path) -> list[dict]:
     """Return the completed trips in a SUMO tripinfo file."""
 
