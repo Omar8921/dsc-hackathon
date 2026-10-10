@@ -123,7 +123,7 @@ Runs the tests. Some of them start SUMO.
 | `results/` | Held-out evaluation summary |
 | `viewer/` | The web interface |
 | `tests/` | Unit and episode tests |
-| `pitch/` | Pitch deck and demo video |
+| `pitch/` | Pitch deck |
 | `docs/` | Design document and file structure |
 
 ## Limitations
