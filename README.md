@@ -9,6 +9,11 @@ compared with fixed-time and actuated control on held-out traffic.
 Design: [docs/TRAFFIC_AI_DESIGN.md](docs/TRAFFIC_AI_DESIGN.md) ·
 File layout: [docs/PROJECT_STRUCTURE.md](docs/PROJECT_STRUCTURE.md)
 
+**Faris (فارس):** the viewer is styled in the Faris brand (dark control-room theme, signal
+colours as meaning) and lists the demo use cases only. The pitch deck is
+[pitch/faris-deck.html](pitch/faris-deck.html): open it in a browser; ← / PageDown / Space
+go forward, → / PageUp go back, F toggles full screen. Planning docs live on branch `iteration-1`.
+
 ## What is implemented
 
 | Part | Status |
