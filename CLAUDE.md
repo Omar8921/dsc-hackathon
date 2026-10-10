@@ -12,26 +12,34 @@ Our team's project for **AI Quest 2026 — Future Jordan Hackathon** (HTU, 9–1
 
 Full brief: [docs/00-hackathon-brief.md](docs/00-hackathon-brief.md)
 
+## The idea: فارس / Faris
+AI adaptive traffic signals for Amman. Faris reads the cameras GAM already has, counts queues per approach, sets the green split each cycle within GAM-signed safety limits, and coordinates neighbouring junctions. It's sold B2G to the Greater Amman Municipality. The first site is the 7th Circle cluster. Jordanian dialect, Arabic RTL, dark "control room" brand.
+
+All planning outputs are in [iteration_1/](iteration_1/README.md). Decisions: [docs/decision-log.md](docs/decision-log.md). Sources: [docs/sources.md](docs/sources.md).
+
+**Don't mention the existing GAM/PSD smart-signal pilot** in pitch materials (team decision).
+
 ## Current phase
-**Ideation / planning. Do not scaffold or write application code unless the team explicitly says we're moving to build.**
-Check [HANDOFF.md](HANDOFF.md) first for the latest state, then [docs/README.md](docs/README.md).
+**Planning, iteration 1 done** (problem, users, feasibility, impact, branding, revenue, deck v1). Still to decide: feature list, modules, tech stack, user flow, pitch storyline and script.
+**Don't scaffold or write application code until the team explicitly says we're moving to build.**
+Check [HANDOFF.md](HANDOFF.md) first for the latest state.
 
 ## Team
 4 people: 3 AI / data-science students (one is an AI researcher; two have industry experience at PwC and Amazon) + 1 computer-science student / software engineer.
 
 ## Tentative stack (not final)
-- Frontend: web app or mobile (undecided). Must support **Arabic / RTL**.
+- Simulation: SUMO (fixed plan tuned with Webster vs our controller). Vision: YOLO-style vehicle counting on recorded footage.
+- Frontend: Arabic RTL operator console (web). Brand tokens are in [iteration_1/05-branding.md](iteration_1/05-branding.md).
 - Backend: **Supabase** (Postgres, auth, storage, edge functions).
-- AI: LLM API and/or agents. The AI must do something a plain form/website can't.
+- AI: vision counting + timing controller; LLM for Arabic explanations of decisions.
 
-## Idea principles (agreed)
-1. Avoid the predictable ideas every team gets from an LLM. See [docs/01-common-ideas-to-avoid.md](docs/01-common-ideas-to-avoid.md).
-2. One singular, real problem for a clear group in Jordan, backed by data and sources.
-3. Prefer problems with a **proven solution abroad** (China, Saudi, UAE, India, etc.) that doesn't exist in Jordan yet.
-4. Always answer: *who is left out today, and does our app actually reach them?*
+## Honesty rules for this idea
+- Only quote our own SUMO result for "X% less waiting", measured against a **properly tuned** fixed plan. Never against a weak baseline.
+- Impact numbers in 04 are scenario arithmetic. Label them as such.
+- We don't claim field results, a live camera integration, or control of a real signal.
 
 ## Repo conventions
-- `main` is protected by convention. Work on branches (`ideation/research` holds the planning docs).
-- Docs live in `docs/`. One file per idea in `docs/ideas/`, same template. Decisions are appended to `docs/03-decision-log.md`.
-- Every factual claim in docs gets a source link (add it to `docs/sources.md`).
+- `main` is protected by convention. This branch (`iteration-1`) holds only Faris context. Older idea rounds are on `ideation/research`.
+- Iteration outputs live in `iteration_N/` folders. Decisions are appended to `docs/decision-log.md`.
+- Every factual claim gets a source link (add it to `docs/sources.md`).
 - Update `HANDOFF.md` at the end of every working session.
