@@ -1,0 +1,150 @@
+{
+  "network_file": "simulation/networks/corridor.net.xml",
+  "vehicle_spacing_m": 7.5,
+  "intersections": {
+    "A0": {
+      "junction_id": "A0",
+      "signal_id": "A0",
+      "approaches": {
+        "N": {
+          "incoming_lanes": ["top0A0_0"],
+          "receiving_lanes": ["A0bottom0_0"],
+          "neighbor": null,
+          "storage_capacity": 25
+        },
+        "E": {
+          "incoming_lanes": ["B0A0_0"],
+          "receiving_lanes": ["A0left0_0"],
+          "neighbor": "B0",
+          "storage_capacity": 38
+        },
+        "S": {
+          "incoming_lanes": ["bottom0A0_0"],
+          "receiving_lanes": ["A0top0_0"],
+          "neighbor": null,
+          "storage_capacity": 25
+        },
+        "W": {
+          "incoming_lanes": ["left0A0_0"],
+          "receiving_lanes": ["A0B0_0"],
+          "neighbor": null,
+          "storage_capacity": 25
+        }
+      },
+      "actions": [
+        {
+          "action": 0,
+          "name": "north_south",
+          "served_approaches": ["N", "S"],
+          "green_phase": 0,
+          "yellow_phase": 1,
+          "all_red_phase": 2
+        },
+        {
+          "action": 1,
+          "name": "east_west",
+          "served_approaches": ["E", "W"],
+          "green_phase": 3,
+          "yellow_phase": 4,
+          "all_red_phase": 5
+        }
+      ]
+    },
+    "B0": {
+      "junction_id": "B0",
+      "signal_id": "B0",
+      "approaches": {
+        "N": {
+          "incoming_lanes": ["top1B0_0"],
+          "receiving_lanes": ["B0bottom1_0"],
+          "neighbor": null,
+          "storage_capacity": 25
+        },
+        "E": {
+          "incoming_lanes": ["C0B0_0"],
+          "receiving_lanes": ["B0A0_0"],
+          "neighbor": "C0",
+          "storage_capacity": 38
+        },
+        "S": {
+          "incoming_lanes": ["bottom1B0_0"],
+          "receiving_lanes": ["B0top1_0"],
+          "neighbor": null,
+          "storage_capacity": 25
+        },
+        "W": {
+          "incoming_lanes": ["A0B0_0"],
+          "receiving_lanes": ["B0C0_0"],
+          "neighbor": "A0",
+          "storage_capacity": 38
+        }
+      },
+      "actions": [
+        {
+          "action": 0,
+          "name": "north_south",
+          "served_approaches": ["N", "S"],
+          "green_phase": 0,
+          "yellow_phase": 1,
+          "all_red_phase": 2
+        },
+        {
+          "action": 1,
+          "name": "east_west",
+          "served_approaches": ["E", "W"],
+          "green_phase": 3,
+          "yellow_phase": 4,
+          "all_red_phase": 5
+        }
+      ]
+    },
+    "C0": {
+      "junction_id": "C0",
+      "signal_id": "C0",
+      "approaches": {
+        "N": {
+          "incoming_lanes": ["top2C0_0"],
+          "receiving_lanes": ["C0bottom2_0"],
+          "neighbor": null,
+          "storage_capacity": 25
+        },
+        "E": {
+          "incoming_lanes": ["right0C0_0"],
+          "receiving_lanes": ["C0B0_0"],
+          "neighbor": null,
+          "storage_capacity": 25
+        },
+        "S": {
+          "incoming_lanes": ["bottom2C0_0"],
+          "receiving_lanes": ["C0top2_0"],
+          "neighbor": null,
+          "storage_capacity": 25
+        },
+        "W": {
+          "incoming_lanes": ["B0C0_0"],
+          "receiving_lanes": ["C0right0_0"],
+          "neighbor": "B0",
+          "storage_capacity": 38
+        }
+      },
+      "actions": [
+        {
+          "action": 0,
+          "name": "north_south",
+          "served_approaches": ["N", "S"],
+          "green_phase": 0,
+          "yellow_phase": 1,
+          "all_red_phase": 2
+        },
+        {
+          "action": 1,
+          "name": "east_west",
+          "served_approaches": ["E", "W"],
+          "green_phase": 3,
+          "yellow_phase": 4,
+          "all_red_phase": 5
+        }
+      ]
+    }
+  }
+}
