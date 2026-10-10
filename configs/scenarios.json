@@ -18,6 +18,17 @@
     "southbound_C0": ["top2C0", "C0bottom2"],
     "northbound_C0": ["bottom2C0", "C0top2"]
   },
+  "route_groups": {
+    "east_west": ["eastbound", "westbound"],
+    "north_south": [
+      "southbound_A0",
+      "northbound_A0",
+      "southbound_B0",
+      "northbound_B0",
+      "southbound_C0",
+      "northbound_C0"
+    ]
+  },
   "scenarios": {
     "balanced": {
       "seed": 1001,
@@ -55,6 +66,80 @@
             "northbound_B0": 150,
             "southbound_C0": 150,
             "northbound_C0": 150
+          }
+        }
+      ]
+    },
+    "test_balanced": {
+      "seeds": [9001, 9002, 9003],
+      "end_s": 900,
+      "intervals": [
+        {
+          "begin_s": 0,
+          "end_s": 900,
+          "flows_vph": {
+            "eastbound": 320,
+            "westbound": 320,
+            "southbound_A0": 320,
+            "northbound_A0": 320,
+            "southbound_B0": 320,
+            "northbound_B0": 320,
+            "southbound_C0": 320,
+            "northbound_C0": 320
+          }
+        }
+      ]
+    },
+    "test_ew_heavy": {
+      "seeds": [9011, 9012, 9013],
+      "end_s": 900,
+      "intervals": [
+        {
+          "begin_s": 0,
+          "end_s": 900,
+          "flows_vph": {
+            "eastbound": 650,
+            "westbound": 650,
+            "southbound_A0": 160,
+            "northbound_A0": 160,
+            "southbound_B0": 160,
+            "northbound_B0": 160,
+            "southbound_C0": 160,
+            "northbound_C0": 160
+          }
+        }
+      ]
+    },
+    "test_shift": {
+      "seeds": [9021, 9022, 9023],
+      "end_s": 900,
+      "intervals": [
+        {
+          "begin_s": 0,
+          "end_s": 450,
+          "flows_vph": {
+            "eastbound": 600,
+            "westbound": 600,
+            "southbound_A0": 150,
+            "northbound_A0": 150,
+            "southbound_B0": 150,
+            "northbound_B0": 150,
+            "southbound_C0": 150,
+            "northbound_C0": 150
+          }
+        },
+        {
+          "begin_s": 450,
+          "end_s": 900,
+          "flows_vph": {
+            "eastbound": 200,
+            "westbound": 200,
+            "southbound_A0": 450,
+            "northbound_A0": 450,
+            "southbound_B0": 450,
+            "northbound_B0": 450,
+            "southbound_C0": 450,
+            "northbound_C0": 450
           }
         }
       ]

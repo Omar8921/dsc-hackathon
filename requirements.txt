@@ -1,3 +1,7 @@
 eclipse-sumo
 traci
 sumolib
+# CPU build: pip install torch --index-url https://download.pytorch.org/whl/cpu
+torch
+# Not used directly; installed so torch can start without a warning.
+numpy

@@ -1,0 +1,38 @@
+{
+  "seed": 7,
+  "updates": 100,
+  "episodes_per_update": 2,
+  "checkpoint_every_updates": 10,
+  "networks": [
+    {
+      "name": "corridor",
+      "intersections": "configs/intersections.json",
+      "scenarios": "configs/scenarios.json"
+    }
+  ],
+  "ppo": {
+    "hidden_size": 64,
+    "learning_rate": 0.0003,
+    "gamma": 0.99,
+    "gae_lambda": 0.95,
+    "clip_range": 0.2,
+    "entropy_coef": 0.01,
+    "value_coef": 0.5,
+    "epochs": 10,
+    "minibatch_size": 64,
+    "max_grad_norm": 0.5
+  },
+  "reward": {
+    "congestion_weight": 0.25,
+    "congestion_threshold": 0.8,
+    "jam_occupancy": 0.667
+  },
+  "demand": {
+    "episode_length_s": 900,
+    "profiles": ["balanced", "ew_heavy", "ns_heavy", "shift"],
+    "balanced_vph": [200, 450],
+    "major_vph": [450, 700],
+    "minor_vph": [100, 250],
+    "route_jitter": 0.15
+  }
+}

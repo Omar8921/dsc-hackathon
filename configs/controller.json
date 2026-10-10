@@ -6,6 +6,9 @@
     "all_red_s": 1,
     "fallback_green_s": 30
   },
+  "policy": {
+    "decision_interval_s": 10
+  },
   "observation": {
     "arrival_window_s": 30,
     "arrival_reference_vps": 0.5,

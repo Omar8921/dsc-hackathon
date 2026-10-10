@@ -235,7 +235,7 @@ reward = -(mean_normalized_queue + 0.25 * congested_receiving_fraction)
 ```
 
 - `mean_normalized_queue`: Mean approach queue divided by storage capacity across all controlled intersections.
-- `congested_receiving_fraction`: Fraction of receiving road measurements whose occupancy exceeds a starting threshold of 0.80.
+- `congested_receiving_fraction`: Fraction of receiving road measurements whose occupancy exceeds a starting threshold of 0.80 of jam occupancy. SUMO lane occupancy counts vehicle lengths only, so a fully jammed lane reads about `length / (length + minGap)` (0.67 for the demand vehicle); a raw 0.80 threshold could never trigger. (Changed during implementation.)
 - Average both terms over the 10 s simulation interval.
 - Give every agent the same team reward.
 - Include independent intersections in the team metric, but also report each connected component separately.

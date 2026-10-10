@@ -51,6 +51,7 @@ default.
 | --- | --- |
 | src/__init__.py | Package marker |
 | src/simulation_adapter.py | SUMO lifecycle and traffic measurements |
+| src/demand.py | Seeded vehicle demand, route files, and training scenario sampling |
 | src/state.py | Raw traffic-state data structures |
 | src/observations.py | Convert raw state into the 44-value observation |
 | src/safety_controller.py | Validate requests and execute safe transitions |
