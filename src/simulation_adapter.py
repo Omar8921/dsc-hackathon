@@ -1,5 +1,6 @@
 """SUMO lifecycle and raw traffic measurements through TraCI."""
 
+import subprocess
 import sys
 from pathlib import Path
 
@@ -46,8 +47,10 @@ def find_sumo_binary(name: str) -> Path:
 class SimulationAdapter:
     """Own one SUMO process and read its state between simulation steps."""
 
-    def __init__(self, sumocfg_path: Path) -> None:
+    def __init__(self, sumocfg_path: Path, quiet: bool = False) -> None:
         self.sumocfg_path = sumocfg_path
+        # Hide SUMO's console output, e.g. during tests and training.
+        self.quiet = quiet
         self.step_length_s = 0.0
         self.end_time_s = -1.0
         self.lane_ids: list[str] = []
@@ -69,7 +72,8 @@ class SimulationAdapter:
                 "true",
                 "--duration-log.statistics",
                 "true",
-            ]
+            ],
+            stdout=subprocess.DEVNULL if self.quiet else None,
         )
         self._connected = True
 

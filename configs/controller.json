@@ -1,0 +1,13 @@
+{
+  "safety": {
+    "min_green_s": 10,
+    "max_green_s": 60,
+    "yellow_s": 3,
+    "all_red_s": 1
+  },
+  "observation": {
+    "arrival_window_s": 30,
+    "arrival_reference_vps": 0.5,
+    "wait_reference_s": 120
+  }
+}
