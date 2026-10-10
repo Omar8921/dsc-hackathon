@@ -39,7 +39,7 @@ So we add **software**, not roads, poles or cameras.
 | **4. Scale** | Month 6+ | Corridor by corridor across GAM's 200+ intersections, then other cities (Zarqa, Irbid, Aqaba) through their municipalities. | GAM contract / tender |
 
 ## 4. Safety: what makes "automatic" acceptable
-The AI only **asks** for a green direction. A separate, deterministic safety controller decides what the lights show, inside limits GAM's engineers set. The AI can't break them.
+The AI **picks** which direction gets green. Fixed timing rules (a deterministic safety controller) carry out every change inside limits GAM's engineers set, and the AI can't break them: a change picked too early waits, and every change goes through yellow and all-red.
 
 **Built and tested today** (`src/safety_controller.py`; prototype values, not real Amman timings):
 - **Minimum green 10 s** per phase. An early switch request is rejected.
@@ -47,7 +47,7 @@ The AI only **asks** for a green direction. A separate, deterministic safety con
 - Every change goes **green → yellow 3 s → all-red 1 s → green**; new requests are ignored mid-change.
 - **Invalid or missing AI output → fixed-timer fallback** (switch every 30 s).
 - **Everything is logged:** requested phase, applied phase, override reason.
-- Result: **0 illegal transitions in 27 held-out runs**; the safety controller overrode 60–85 AI requests per run.
+- Result: **0 illegal transitions in 27 held-out runs**; in each run, 60–85 AI switch choices came before the minimum green and waited.
 
 **To add before any real deployment:**
 - **Pedestrian phases** and crossing times (V1 has none).

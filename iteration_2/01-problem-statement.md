@@ -63,7 +63,7 @@ with a hard safety layer, measured simulation results and an Arabic operator scr
   never saw in training (3 seeds).
 - We also say, unprompted: on **balanced** traffic the AI is **40% worse** than the timer, and a simple
   **sensor-actuated rule beats the AI in every scenario** (47% less waiting than the timer in rush hour).
-- We claim: **0 unsafe signal transitions in 27 test runs**; every AI request passes a safety controller.
+- We claim: **0 unsafe signal transitions in 27 test runs**; every AI choice is carried out through fixed timing rules.
 - We claim: persistent-congestion alerts fire in the incident scenario (~80 s after the blockage).
 - Vehicle counts from real footage: **only once the YOLO demo exists**. Today counts come from the simulator.
 - We do not claim: field results, a live camera integration, control of a real signal, accident

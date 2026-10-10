@@ -42,7 +42,7 @@
   |---|---|
   | See queues and lights per junction, live | ✅ Viewer: map, light-colour strips, waiting per direction |
   | Know when a junction is in trouble | ✅ Persistent-congestion alerts |
-  | See what the AI asked for vs what the lights did | ✅ In the data (`requested`, `applied`, `override_reason`); shown under "technical details" |
+  | See what the AI chose vs what the lights did | ✅ In the data (`requested`, `applied`, `override_reason`); shown under "technical details" |
   | Read **why**, in Arabic | ❌ To build: Arabic sentence per decision from that data |
   | One click back to the fixed plan | ⚠️ Partly: the controller dropdown switches to the timer, but restarts the run |
   | Arabic, dark control-room look | ❌ To build: the viewer is English, light theme |

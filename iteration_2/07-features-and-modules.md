@@ -11,8 +11,8 @@
 |---|---|---|---|---|
 | M1 | **Perception** (يشوف) | Camera footage → vehicles, tracks, counts per approach | not on the branch (`scripts/run_perception.py`, `src/perception.py` are planned in PROJECT_STRUCTURE) | 🛠 |
 | M2 | **Traffic state** | Per-junction measurements: queue, count, occupancy, arrivals, wait, speed, downstream; 44-number observation incl. neighbours | `src/simulation_adapter.py`, `src/state.py`, `src/observations.py` | ✅ (simulator source) |
-| M3 | **Decision** (يقرّر) | Shared PPO policy asks for a green direction every 10 s; baselines for comparison | `src/policy.py`, `src/rl_environment.py`, `src/baselines.py`, `scripts/train.py` | ✅ |
-| M4 | **Safety** (يحمي) | Enforces min/max green, yellow, all-red, fallback; logs requested vs applied | `src/safety_controller.py`, `configs/controller.json` | ✅ |
+| M3 | **Decision** (يقرّر) | Shared PPO policy picks the green direction every 10 s; baselines for comparison | `src/policy.py`, `src/rl_environment.py`, `src/baselines.py`, `scripts/train.py` | ✅ |
+| M4 | **Safety** (يحمي) | Enforces min/max green, yellow, all-red, fallback; logs chosen vs shown phase | `src/safety_controller.py`, `configs/controller.json` | ✅ |
 | M5 | **Alerts** (ينبّه) | Persistent-congestion detection per junction | `src/congestion_detector.py`, `configs/alerts.json`, `scripts/calibrate_alerts.py` | ✅ |
 | M6 | **Evaluation** | Same demand, seeds and safety for every controller; held-out results table | `src/metrics.py`, `src/runner.py`, `scripts/evaluate.py` | ✅ |
 | M7 | **Operator console** (يشرح) | Live map + Arabic panels, explanations, override | `viewer/index.html`, `src/telemetry.py` (API) | ✅ English viewer · 🛠 Arabic console |

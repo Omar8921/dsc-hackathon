@@ -62,7 +62,7 @@ The first opens the incident demo, where the alert fires at B0. The second re-ru
 2. Switch the controller to **AI controller (PPO)** and let it run. Read the "average time a car spent stopped" number.
 3. Say the measured result from the slides (10% less waiting, 23% less time lost, unseen traffic), not the live number. One live run is a single seed.
 4. Switch the scenario to **Incident at B0**. Wait for the congestion alert at B0 (~80 s of simulated time after the blockage at ~4:40) and its resolution.
-5. Optional: open "Show technical details" to show requested vs applied phases and safety overrides.
+5. Optional: open "Show technical details" to show the phase the AI chose, what the lights show, and any timing rule that delayed a change.
 
 Record this once as a backup video.
 

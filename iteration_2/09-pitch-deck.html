@@ -210,25 +210,25 @@ td.v{font-weight:600}
   <div class="kicker">الحل</div>
   <h2><span class="logo" style="font-size:1em"><span class="f">ڡ<span class="dot"></span></span>ارس</span> بيشوف الطابور، وبيعطي الأخضر للي مستنّي.</h2>
   <div class="flow">
-    <div class="step"><div class="n"><span class="num">1</span></div><h3>بيشوف</h3><p>بيعدّ السيارات والطابور والانتظار على كل اتجاه، وعند التقاطعات اللي جنبه.</p></div>
-    <div class="step"><div class="n"><span class="num">2</span></div><h3>بيقرّر</h3><p>ذكاء اصطناعي واحد لكل التقاطعات. كل <span class="num">10</span> ثواني بيطلب الأخضر للاتجاه اللي مستنّي.</p></div>
-    <div class="step"><div class="n"><span class="num">3</span></div><h3>بيحمي</h3><p>طبقة سلامة منفصلة هي اللي بتقرّر شو بيضوي فعلاً. الذكاء الاصطناعي بس بيطلب.</p></div>
-    <div class="step"><div class="n"><span class="num">4</span></div><h3>بينبّه</h3><p>لما طابور يضل أطول من الطبيعي، بيطلع تنبيه أزمة للمشغّل.</p></div>
+    <div class="step"><div class="n"><span class="num">1</span></div><h3>بيقرا الحركة</h3><p>كل ثانية بيقيس على كل اتجاه: الطابور، عدد السيارات، الانتظار، والسرعة. وبيشوف كمان طوابير التقاطعات اللي جنبه.</p></div>
+    <div class="step"><div class="n"><span class="num">2</span></div><h3>بيقرّر</h3><p>نموذج ذكاء اصطناعي واحد لكل التقاطعات. كل <span class="num">10</span> ثواني بيختار مين ياخد الأخضر بكل تقاطع: شمال–جنوب أو شرق–غرب.</p></div>
+    <div class="step"><div class="n"><span class="num">3</span></div><h3>بيحمي</h3><p>قواعد توقيت ثابتة بكل تحويل: أصفر <span class="num">3</span> ث وأحمر كامل <span class="num">1</span> ث، والأخضر بين <span class="num">10</span> و<span class="num">60</span> ثانية.</p></div>
+    <div class="step"><div class="n"><span class="num">4</span></div><h3>بيعرض وبينبّه</h3><p>شاشة حيّة للإشارات والطوابير، وتنبيه أزمة لما طابور يضل أطول من الطبيعي. كله أوتوماتيك.</p></div>
   </div>
-  <p class="muted" style="margin-top:auto;font-size:22px">بالعرض اليوم الأرقام جاية من محاكاة SUMO. عدّ السيارات من الكاميرا قيد التنفيذ.</p>
+  <p class="muted" style="margin-top:auto;font-size:22px">بالعرض، الأرقام جاية من محاكاة SUMO لممر فيه <span class="num">3</span> تقاطعات.</p>
 </section>
 
 <!-- 7. Safety + privacy -->
 <section class="slide" data-title="أمان">
   <div class="kicker">أوتوماتيك، بس ضمن حدود</div>
-  <h2>الذكاء الاصطناعي بيطلب، <span class="go">وطبقة السلامة بتقرّر.</span></h2>
+  <h2>الذكاء الاصطناعي بيختار، <span class="go">وقواعد التوقيت بتضمن السلامة.</span></h2>
   <div class="grid g2" style="margin-top:56px">
     <div class="card">
       <div class="label go">السلامة · مبنية ومجرّبة</div>
       <ul class="clean">
         <li><span class="pip" style="background:var(--go)"></span><p>أخضر أدنى <span class="num">10</span> ث وأقصى <span class="num">60</span> ث. ولا شارع بينسى</p></li>
         <li><span class="pip" style="background:var(--go)"></span><p>كل تحويل: أصفر <span class="num">3</span> ث ثم أحمر كامل <span class="num">1</span> ث</p></li>
-        <li><span class="pip" style="background:var(--wait)"></span><p>طلب غلط؟ بيرجع عالجدول الثابت لحاله</p></li>
+        <li><span class="pip" style="background:var(--wait)"></span><p>مخرج غلط من النموذج؟ بيرجع عالجدول الثابت لحاله</p></li>
         <li><span class="pip" style="background:var(--go)"></span><p><b class="go" style="font-weight:700"><span class="num">0</span> تحويلات غير آمنة</b> بـ<span class="num">27</span> تجربة</p></li>
       </ul>
       <p style="font-size:20px;margin-top:14px" class="muted">المشاة واللفّات: أول إضافة قبل أي تقاطع حقيقي.</p>
@@ -255,7 +255,6 @@ td.v{font-weight:600}
   <h1>هلأ خلّونا نفرجيكم.</h1>
   <p class="muted" style="margin-top:30px;font-size:32px">زحمة الشارع الرئيسي: الجدول الثابت مقابل فارس · حادث عند التقاطع B: تنبيه أزمة</p>
   <p class="muted" style="margin-top:14px;font-size:24px">محاكاة SUMO حيّة لممر فيه <span class="num">3</span> تقاطعات</p>
-  <p class="ph" style="margin-top:50px;padding:16px 34px;font-size:22px">رابط تسجيل احتياطي للعرض (بنحطّه لما يجهز)</p>
 </section>
 
 <!-- 9. Result -->
@@ -390,7 +389,6 @@ td.v{font-weight:600}
       </ul>
     </div>
   </div>
-  <p class="ph-note">إذا جهز عدّ السيارات بـYOLO والشاشة العربية، ضيفوهم لـ«شغّال اليوم».</p>
 </section>
 
 <!-- 15. Close -->
@@ -398,7 +396,6 @@ td.v{font-weight:600}
   <div class="logo live" style="font-size:200px"><span class="f">ڡ<span class="dot"></span></span>ارس</div>
   <p style="font-size:54px;font-weight:500;margin-top:36px">الأخضر للي مستنّي</p>
   <p style="font-size:34px;margin-top:56px">جاهزين نبلّش من <span class="go">الدوار السابع</span>.</p>
-  <p class="ph" style="margin-top:50px;padding:12px 30px;font-size:22px">أسماء الفريق</p>
 </section>
 
 </div></div>
