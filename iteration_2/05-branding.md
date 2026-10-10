@@ -39,8 +39,8 @@ Rules:
 - Use one signal colour per number or element. Never use red, amber and green for decoration.
 - On slides, problem numbers are `--stop`, waiting time is `--wait`, our results are `--go`.
 - In the app, a junction's state uses the same three. The traffic-radio words make good labels: **سالكة** (go), **في أزمة** (stop), **بتستنّى** (wait).
-- Coloured text should be at least 18 px or bold.
-- **No pill/badge chips.** Label a card with a small signal dot + plain muted text instead. All three signal colours pass AA on `--bg`.
+- Coloured text should be at least 18 px or bold. All three signal colours pass AA on `--bg`.
+- **No pill/badge chips.** Label a card with a small signal dot + plain muted text instead.
 
 ## Typography
 - **IBM Plex Sans Arabic** (Google Fonts), weights 400 / 500 / 600 / 700. Its Latin is Plex Sans, so English words and numbers match.
