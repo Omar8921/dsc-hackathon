@@ -58,6 +58,7 @@ default.
 | src/policy.py | Shared actor/value networks and PPO integration |
 | src/baselines.py | Fixed-time and actuated controller integration |
 | src/metrics.py | Common evaluation metrics |
+| src/runner.py | Common episode runner: one SUMO clock, controller requests, safety, metrics |
 | src/congestion_detector.py | Persistent-congestion detection |
 | src/telemetry.py | Monitoring snapshots, events, and the viewer's local HTTP endpoint |
 | src/perception.py | Separate pretrained detection/tracking pipeline |

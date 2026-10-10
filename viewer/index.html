@@ -167,6 +167,7 @@
   .signal-stats { display: flex; gap: 16px; align-items: baseline; }
   .signal-stats .big { font-size: 18px; font-weight: 650; }
   .spark { display: block; width: 100%; height: 34px; margin-top: 6px; }
+  .signal-request { font-size: 11px; margin-top: 4px; min-height: 16px; }
 
   #inspector:empty::before { content: "Click a car, lane, or intersection."; color: var(--muted); }
 
@@ -924,6 +925,35 @@
 
   const sameTarget = (a, b) => (a && b ? a.type === b.type && a.id === b.id : a === b);
 
+  const actionLabel = (name) => (name ? name.replace(/_/g, "–") : "–");
+
+  const OVERRIDE_TEXT = {
+    min_green: "held: minimum green",
+    in_transition: "ignored: change in progress",
+    invalid_request: "invalid: fixed-time fallback",
+    max_green: "forced: maximum green",
+  };
+
+  function controlText(control) {
+    if (control.transition_state === "green") {
+      return `${actionLabel(control.active_action)} green · ${Math.round(control.elapsed_green_s)} s`;
+    }
+    const stage = control.transition_state === "yellow" ? "yellow" : "all-red";
+    return `${actionLabel(control.active_action)} → ${actionLabel(control.target_action)} · ${stage}`;
+  }
+
+  function requestText(control) {
+    const request = control.last_request;
+    if (!request) return "No requests yet";
+    const asked = request.requested_action
+      ? `requested ${actionLabel(request.requested_action)}`
+      : "safety rule";
+    const outcome = request.override_reason
+      ? OVERRIDE_TEXT[request.override_reason] || request.override_reason
+      : "applied";
+    return `${Math.round(request.time_s)} s: ${asked} · ${outcome}`;
+  }
+
   function lightsHtml(signalId) {
     const signal = state.net.signals.get(signalId);
     const stateString = state.signalStates.get(signalId) || "";
@@ -986,12 +1016,21 @@
     if (target.type === "signal") {
       const signal = snapshot.signals.find((item) => item.id === target.id);
       if (!signal) return null;
+      const control = signal.control;
+      // While a safety controller holds the phases, SUMO's switch time is unused.
+      const timing = control
+        ? [
+            ["Showing", controlText(control)],
+            ["Last request", requestText(control)],
+            ["Safety overrides", control.override_count],
+          ]
+        : [["Next switch in", `${Math.max(0, signal.next_switch_s).toFixed(0)} s`]];
       return {
         kind: "Traffic light",
         title: signal.id,
         rows: [
+          ...timing,
           ["Phase index", signal.phase],
-          ["Next switch in", `${Math.max(0, signal.next_switch_s).toFixed(0)} s`],
           ["Queued on approaches", signal.queue_count],
           ["Vehicles on approaches", signal.vehicle_count],
           ["State", signal.state],
@@ -1066,6 +1105,7 @@
           <div><span class="big num" data-field="queue">0</span> <span class="muted">queued</span></div>
           <div><span class="num" data-field="vehicles">0</span> <span class="muted">approaching</span></div>
         </div>
+        <div class="signal-request muted"></div>
         <canvas class="spark" aria-label="Queue over the last ${HISTORY_LENGTH} seconds"></canvas>`;
       card.addEventListener("click", () => select({ type: "signal", id }));
       container.appendChild(card);
@@ -1122,8 +1162,10 @@
     for (const signal of s.signals) {
       const card = document.querySelector(`.signal-card[data-id="${CSS.escape(signal.id)}"]`);
       if (!card) continue;
-      card.querySelector(".signal-phase").textContent =
-        `phase ${signal.phase} · switch in ${Math.max(0, signal.next_switch_s).toFixed(0)} s`;
+      card.querySelector(".signal-phase").textContent = signal.control
+        ? controlText(signal.control)
+        : `phase ${signal.phase} · switch in ${Math.max(0, signal.next_switch_s).toFixed(0)} s`;
+      card.querySelector(".signal-request").textContent = signal.control ? requestText(signal.control) : "";
       card.querySelector(".lights").innerHTML = lightsHtml(signal.id);
       card.querySelector('[data-field="queue"]').textContent = signal.queue_count;
       card.querySelector('[data-field="vehicles"]').textContent = signal.vehicle_count;

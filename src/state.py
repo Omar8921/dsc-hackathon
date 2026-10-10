@@ -200,8 +200,8 @@ class StateBuilder:
         )
 
     def _signal(self, node_id: str, node: dict, phase: int, time_s: float) -> SignalState:
-        # Until the safety controller exists, read signal state from SUMO's
-        # current phase index using the configured mapping.
+        # Read signal state from the phase SUMO actually showed, using the
+        # configured mapping, so it reflects what drivers saw.
         for action in node["actions"]:
             kinds = {
                 action["green_phase"]: "green",

@@ -16,9 +16,14 @@ VEHICLE_VARIABLES = [
     tc.VAR_WAITING_TIME,
     tc.VAR_ACCUMULATED_WAITING_TIME,
     tc.VAR_LANE_ID,
+    tc.VAR_LANEPOSITION,
     tc.VAR_ROUTE_ID,
     tc.VAR_TYPE,
 ]
+
+# Remaining duration given to every phase we set, so that SUMO never advances
+# a phase on its own; the safety controller decides every change.
+HOLD_PHASE_S = 1_000_000.0
 
 # Values SUMO sends back for every normal lane after each step.
 LANE_VARIABLES = [
@@ -47,10 +52,17 @@ def find_sumo_binary(name: str) -> Path:
 class SimulationAdapter:
     """Own one SUMO process and read its state between simulation steps."""
 
-    def __init__(self, sumocfg_path: Path, quiet: bool = False) -> None:
+    def __init__(
+        self,
+        sumocfg_path: Path,
+        quiet: bool = False,
+        extra_args: list[str] | None = None,
+    ) -> None:
         self.sumocfg_path = sumocfg_path
         # Hide SUMO's console output, e.g. during tests and training.
         self.quiet = quiet
+        # Additional SUMO options, e.g. trip output files.
+        self.extra_args = extra_args or []
         self.step_length_s = 0.0
         self.end_time_s = -1.0
         self.lane_ids: list[str] = []
@@ -58,6 +70,7 @@ class SimulationAdapter:
         self.signal_lanes: dict[str, list[str]] = {}
         self.departed_total = 0
         self.arrived_total = 0
+        self.teleports_total = 0
         self._connected = False
 
     def start(self) -> None:
@@ -72,6 +85,7 @@ class SimulationAdapter:
                 "true",
                 "--duration-log.statistics",
                 "true",
+                *self.extra_args,
             ],
             stdout=subprocess.DEVNULL if self.quiet else None,
         )
@@ -111,6 +125,7 @@ class SimulationAdapter:
 
         self.departed_total += traci.simulation.getDepartedNumber()
         self.arrived_total += traci.simulation.getArrivedNumber()
+        self.teleports_total += traci.simulation.getStartingTeleportNumber()
 
     def time_s(self) -> float:
         """Return the current simulation time."""
@@ -207,6 +222,8 @@ class SimulationAdapter:
                     "waiting_s": values[tc.VAR_WAITING_TIME],
                     "accumulated_waiting_s": values[tc.VAR_ACCUMULATED_WAITING_TIME],
                     "lane": values[tc.VAR_LANE_ID],
+                    # Distance driven along the current lane, from its start.
+                    "lane_position_m": values[tc.VAR_LANEPOSITION],
                     "route": values[tc.VAR_ROUTE_ID],
                     "type": values[tc.VAR_TYPE],
                 }
@@ -245,6 +262,20 @@ class SimulationAdapter:
             }
             for signal_id in self.signal_ids
         ]
+
+    def read_phases(self) -> dict[str, int]:
+        """Return the phase index each traffic light is showing now."""
+
+        return {
+            signal_id: traci.trafficlight.getPhase(signal_id)
+            for signal_id in self.signal_ids
+        }
+
+    def set_signal_phase(self, signal_id: str, phase_index: int) -> None:
+        """Show a phase and hold it until the next explicit change."""
+
+        traci.trafficlight.setPhase(signal_id, phase_index)
+        traci.trafficlight.setPhaseDuration(signal_id, HOLD_PHASE_S)
 
     def pending_count(self) -> int:
         """Return how many vehicles are due to depart but not yet inserted."""

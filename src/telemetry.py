@@ -17,8 +17,12 @@ def build_snapshot(
     run: dict,
     status: str,
     real_seconds_per_step: float,
+    control: dict[str, dict] | None = None,
 ) -> dict:
-    """Combine one step of adapter readings into a telemetry snapshot."""
+    """Combine one step of adapter readings into a telemetry snapshot.
+
+    control is the safety controller's summary per signal ID, if one is running.
+    """
 
     vehicles = adapter.read_vehicles()
     lanes = adapter.read_lanes()
@@ -33,6 +37,9 @@ def build_snapshot(
         ]
         signal["queue_count"] = sum(lane["halting_count"] for lane in incoming)
         signal["vehicle_count"] = sum(lane["vehicle_count"] for lane in incoming)
+
+        if control is not None:
+            signal["control"] = control.get(signal["id"])
 
     waiting_times = [vehicle["waiting_s"] for vehicle in vehicles]
 
