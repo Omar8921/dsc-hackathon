@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>فارس · Faris</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0E1116; --surface:#161B22; --surface-2:#1E2530; --line:#2A313C;
+  --text:#F2F4F7; --muted:#8A94A6; --off:#3A3F48;
+  --stop:#FF5A5F; --wait:#FFB020; --go:#2BD576;
+  --font:'IBM Plex Sans Arabic', system-ui, sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--font);overflow:hidden}
+#stage{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+#deck{width:1920px;height:1080px;position:relative;transform-origin:center center;flex:none}
+.slide{position:absolute;inset:0;padding:110px 140px 120px;display:flex;flex-direction:column;opacity:0;visibility:hidden;transition:opacity .35s ease}
+.slide.on{opacity:1;visibility:visible}
+.num{font-variant-numeric:lining-nums;unicode-bidi:isolate;direction:ltr;display:inline-block}
+
+/* type */
+.kicker{font-size:28px;color:var(--muted);font-weight:500;margin-bottom:22px}
+h1{font-size:96px;font-weight:700;line-height:1.15}
+h2{font-size:64px;font-weight:600;line-height:1.25;max-width:1500px}
+h3{font-size:34px;font-weight:600;line-height:1.3}
+p,li{font-size:30px;line-height:1.6}
+.muted{color:var(--muted)}
+.stop{color:var(--stop)} .wait{color:var(--wait)} .go{color:var(--go)}
+.source{position:absolute;bottom:56px;right:140px;left:420px;font-size:17px;color:var(--muted);line-height:1.5}
+.lane{border:0;border-top:4px dashed var(--line);margin:44px 0;width:100%}
+
+/* footer */
+.foot{position:absolute;bottom:52px;left:140px;display:flex;align-items:center;gap:22px;font-size:20px;color:var(--muted)}
+.foot .mini{font-size:30px}
+
+/* logo */
+.logo{font-weight:700;line-height:1;white-space:nowrap}
+.logo .f{position:relative;display:inline-block}
+.logo .dot{position:absolute;width:.2em;height:.2em;border-radius:50%;top:-.09em;right:.14em;background:var(--go)}
+.logo.live .dot{animation:cycle 4.5s ease-in-out 1 forwards}
+@keyframes cycle{0%,30%{background:var(--stop)}34%,63%{background:var(--wait)}67%,100%{background:var(--go)}}
+
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:36px;margin-top:auto;margin-bottom:60px}
+.stat{background:var(--surface);border-radius:20px;padding:44px 44px 40px}
+.stat .big{font-size:110px;font-weight:700;line-height:1}
+.stat .big small{font-size:48px;font-weight:600;margin-inline-start:8px}
+.stat p{font-size:28px;margin-top:20px;color:var(--text)}
+.stat .s{font-size:18px;color:var(--muted);margin-top:14px;line-height:1.4}
+
+/* cards and grids */
+.grid{display:grid;gap:32px}
+.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}
+.card{background:var(--surface);border-radius:20px;padding:40px}
+.card h3{margin-bottom:14px}
+.card p{font-size:26px;color:var(--muted);line-height:1.55}
+.tag{display:inline-block;font-size:20px;font-weight:600;padding:6px 18px;border-radius:999px;margin-bottom:22px}
+.tag.go{background:rgba(43,213,118,.14)} .tag.wait{background:rgba(255,176,32,.14)} .tag.stop{background:rgba(255,90,95,.14)} .tag.n{background:var(--surface-2);color:var(--muted)}
+ul.clean{list-style:none}
+ul.clean li{padding:14px 0;border-bottom:2px solid var(--line);display:flex;gap:20px;align-items:baseline}
+ul.clean li:last-child{border-bottom:0}
+.pip{width:16px;height:16px;border-radius:50%;flex:none;transform:translateY(-3px)}
+
+/* flow */
+.flow{display:grid;grid-template-columns:repeat(4,1fr);gap:28px;margin-top:70px}
+.step{background:var(--surface);border-radius:20px;padding:40px 36px;position:relative}
+.step .n{font-size:22px;color:var(--muted);font-weight:500}
+.step h3{font-size:44px;margin:10px 0 14px}
+.step p{font-size:24px;color:var(--muted);line-height:1.55}
+.step:not(:last-child)::after{content:"←";position:absolute;left:-26px;top:50%;transform:translate(-50%,-50%);font-size:34px;color:var(--off)}
+
+/* tables */
+table{width:100%;border-collapse:collapse;font-size:28px}
+th{font-weight:500;color:var(--muted);text-align:right;padding:18px 20px;border-bottom:2px solid var(--line);font-size:22px}
+td{padding:22px 20px;border-bottom:2px solid var(--line)}
+tr:last-child td{border-bottom:0}
+td.v{font-weight:600}
+
+/* placeholder */
+.ph{border:3px dashed var(--wait);border-radius:20px;color:var(--wait)}
+.ph-note{font-size:20px;color:var(--wait);margin-top:16px}
+
+/* timeline */
+.tl{display:grid;grid-template-columns:repeat(5,1fr);gap:0;margin-top:60px;position:relative}
+.tl::before{content:"";position:absolute;top:21px;right:0;left:0;border-top:4px dashed var(--line)}
+.tl .ph5{position:relative;padding-left:24px}
+.tl .ball{width:46px;height:46px;border-radius:50%;background:var(--surface-2);border:4px solid var(--bg);position:relative;margin-bottom:26px}
+.tl .ball.go{background:var(--go)}
+.tl .when{font-size:20px;color:var(--muted)}
+.tl h3{font-size:32px;margin:6px 0 10px}
+.tl p{font-size:22px;color:var(--muted);line-height:1.5}
+
+/* progress + hint */
+#bar{position:fixed;bottom:0;right:0;height:4px;background:var(--go);transition:width .3s;z-index:5}
+#hint{position:fixed;top:14px;left:18px;font-size:13px;color:var(--muted);opacity:.0;transition:opacity .4s;font-family:var(--font)}
+body:hover #hint{opacity:.6}
+</style>
+</head>
+<body>
+<div id="stage"><div id="deck">
+
+<!-- 1. Title -->
+<section class="slide" data-title="عنوان" style="justify-content:center;align-items:flex-start">
+  <div class="logo live" style="font-size:240px"><span class="f">ڡ<span class="dot"></span></span>ارس</div>
+  <p style="font-size:54px;font-weight:500;margin-top:40px">الأخضر للي مستنّي</p>
+  <hr class="lane" style="width:420px;margin:56px 0 36px">
+  <p class="muted" style="font-size:26px">نظام ذكاء اصطناعي بيوزّع وقت الإشارة حسب الطابور الحقيقي، من الكاميرات الموجودة</p>
+  <p class="muted" style="font-size:22px;margin-top:18px"><span class="num">AI Quest 2026</span> · <span class="num">next.society()</span> · <span class="ph" style="border-width:2px;padding:2px 14px;border-radius:10px;font-size:20px">اسم الفريق</span></p>
+</section>
+
+<!-- 2. The moment -->
+<section class="slide" data-title="المشكلة">
+  <div class="kicker">المشكلة</div>
+  <h2>إشارة خضرا لشارع فاضي،<br><span class="stop">والشارع الثاني واقف.</span></h2>
+  <div style="flex:1;display:flex;align-items:center;justify-content:center;margin-top:20px">
+    <svg viewBox="0 0 1400 560" width="1400" height="560" role="img" aria-label="تقاطع: الشارع الرئيسي فيه طابور طويل والإشارة حمرا، والشارع الفرعي فاضي والإشارة خضرا">
+      <rect x="0" y="210" width="1400" height="140" fill="#161B22"/>
+      <rect x="610" y="0" width="180" height="560" fill="#161B22"/>
+      <line x1="0" y1="280" x2="600" y2="280" stroke="#2A313C" stroke-width="4" stroke-dasharray="26 20"/>
+      <line x1="800" y1="280" x2="1400" y2="280" stroke="#2A313C" stroke-width="4" stroke-dasharray="26 20"/>
+      <line x1="700" y1="0" x2="700" y2="200" stroke="#2A313C" stroke-width="4" stroke-dasharray="26 20"/>
+      <line x1="700" y1="360" x2="700" y2="560" stroke="#2A313C" stroke-width="4" stroke-dasharray="26 20"/>
+      <rect x="800" y="290" width="6" height="56" fill="#F2F4F7" opacity=".5"/>
+      <g fill="#FF5A5F" opacity=".9">
+        <rect x="822" y="296" width="70" height="40" rx="9"/><rect x="908" y="296" width="70" height="40" rx="9"/>
+        <rect x="994" y="296" width="70" height="40" rx="9"/><rect x="1080" y="296" width="70" height="40" rx="9"/>
+        <rect x="1166" y="296" width="70" height="40" rx="9"/><rect x="1252" y="296" width="70" height="40" rx="9"/>
+        <rect x="1338" y="296" width="62" height="40" rx="9"/>
+      </g>
+      <g opacity=".55" fill="#FF5A5F">
+        <rect x="508" y="224" width="70" height="40" rx="9"/><rect x="422" y="224" width="70" height="40" rx="9"/>
+        <rect x="336" y="224" width="70" height="40" rx="9"/><rect x="250" y="224" width="70" height="40" rx="9"/>
+        <rect x="164" y="224" width="70" height="40" rx="9"/><rect x="78" y="224" width="70" height="40" rx="9"/>
+      </g>
+      <g transform="translate(830,120)"><rect width="46" height="120" rx="12" fill="#0E1116" stroke="#2A313C" stroke-width="3"/>
+        <circle cx="23" cy="24" r="13" fill="#FF5A5F"/><circle cx="23" cy="60" r="13" fill="#3A3F48"/><circle cx="23" cy="96" r="13" fill="#3A3F48"/></g>
+      <g transform="translate(524,384)"><rect width="46" height="120" rx="12" fill="#0E1116" stroke="#2A313C" stroke-width="3"/>
+        <circle cx="23" cy="24" r="13" fill="#3A3F48"/><circle cx="23" cy="60" r="13" fill="#3A3F48"/><circle cx="23" cy="96" r="13" fill="#2BD576"><animate attributeName="opacity" values="1;.45;1" dur="2s" repeatCount="indefinite"/></circle></g>
+      <text x="1110" y="400" fill="#FF5A5F" font-size="30" font-family="IBM Plex Sans Arabic" font-weight="600" text-anchor="middle">الطابور بيكبر</text>
+      <text x="700" y="535" fill="#2BD576" font-size="30" font-family="IBM Plex Sans Arabic" font-weight="600" text-anchor="middle">أخضر… لولا حدا</text>
+    </svg>
+  </div>
+</section>
+
+<!-- 3. The cost -->
+<section class="slide" data-title="التكلفة">
+  <div class="kicker">قدّيش بتكلّفنا؟</div>
+  <h2>الأزمة مش إزعاج بس. <span class="stop">هاي فاتورة على البلد كلها.</span></h2>
+  <div class="stats">
+    <div class="stat"><div class="big stop"><span class="num">6%</span></div><p>من الناتج المحلي بيروح على عدم كفاءة النقل، يعني حوالي <span class="num">$3</span> مليار بالسنة</p><div class="s">البنك الدولي، 2022</div></div>
+    <div class="stat"><div class="big wait"><span class="num">11.5</span><small>مليون</small></div><p>حركة مركبات يومياً بعمّان، وكل وحدة فيها بتقطع إشارات</p><div class="s">إدارة السير، أيلول 2026</div></div>
+    <div class="stat"><div class="big wait"><span class="num">2.2</span><small>مليون</small></div><p>طالب رجعوا عالمدارس، وإدارة السير بتنصح تطلع <span class="num">10</span> دقايق بدري</p><div class="s">المملكة، آب 2026 · إدارة السير</div></div>
+  </div>
+</section>
+
+<!-- 4. Why -->
+<section class="slide" data-title="ليش">
+  <div class="kicker">ليش بصير هيك؟</div>
+  <h2>الإشارات ماشية على <span class="wait">جدول ثابت</span>، مش على مين مستنّي.</h2>
+  <div class="grid g2" style="margin-top:70px">
+    <div class="card">
+      <span class="tag wait">المشكلة الأولى</span>
+      <h3>نفس التوقيت، كل يوم، كل ساعة</h3>
+      <p>الجدول ما بيعرف إنه المدارس فتحت، أو إنه الشارع الرئيسي مليان والفرعي فاضي. بيعطي أخضر حسب الساعة، مش حسب الطابور.</p>
+    </div>
+    <div class="card">
+      <span class="tag stop">المشكلة الثانية</span>
+      <h3>الإشارات بتأثّر على بعض</h3>
+      <p>توقيت غلط بتقاطع بيدفش الطابور عالتقاطع اللي بعده. لما كل إشارة بتشتغل لحالها، الأزمة بتنتقل من دوّار لدوّار.</p>
+      <svg viewBox="0 0 700 90" width="100%" height="90" style="margin-top:26px" aria-hidden="true">
+        <line x1="40" y1="45" x2="660" y2="45" stroke="#2A313C" stroke-width="4" stroke-dasharray="18 14"/>
+        <circle cx="620" cy="45" r="26" fill="#FFB020"/><circle cx="350" cy="45" r="26" fill="#FF5A5F"/><circle cx="80" cy="45" r="26" fill="#FF5A5F" opacity=".6"/>
+        <path d="M560 45 L420 45" stroke="#8A94A6" stroke-width="4" marker-end="url(#ah)"/><path d="M290 45 L150 45" stroke="#8A94A6" stroke-width="4" marker-end="url(#ah)"/>
+        <defs><marker id="ah" markerWidth="10" markerHeight="10" refX="6" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#8A94A6"/></marker></defs>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- 5. The insight -->
+<section class="slide" data-title="الفكرة">
+  <div class="kicker">الفرصة</div>
+  <h2>الكاميرات موجودة. <span class="go">الناقص عقل بيقرّر.</span></h2>
+  <div class="stats">
+    <div class="stat"><div class="big"><span class="num">5,600</span></div><p>كاميرا عند أمانة عمّان</p><div class="s">أمانة عمّان، نيسان 2026</div></div>
+    <div class="stat"><div class="big"><span class="num">75%</span></div><p>منها مش للمخالفات، أغلبها لعدّ السيارات وتحليل الحركة</p><div class="s">أمانة عمّان، نيسان 2026</div></div>
+    <div class="stat"><div class="big"><span class="num">200+</span></div><p>تقاطع مربوط بمركز تحكّم مركزي</p><div class="s">أمانة عمّان، نيسان 2026</div></div>
+  </div>
+</section>
+
+<!-- 6. Faris -->
+<section class="slide" data-title="فارس">
+  <div class="kicker">الحل</div>
+  <h2><span class="logo" style="font-size:1em"><span class="f">ڡ<span class="dot"></span></span>ارس</span> بيشوف الطابور، وبيعطي الأخضر للي مستنّي.</h2>
+  <div class="flow">
+    <div class="step"><div class="n"><span class="num">1</span></div><h3>بيشوف</h3><p>بيقرا الكاميرات الموجودة وبيعدّ السيارات والطابور على كل مسرب.</p></div>
+    <div class="step"><div class="n"><span class="num">2</span></div><h3>بيقرّر</h3><p>بيوزّع الأخضر كل دورة حسب مين مستنّي، ضمن حدود السلامة.</p></div>
+    <div class="step"><div class="n"><span class="num">3</span></div><h3>بينسّق</h3><p>بيظبط التقاطعات اللي جنب بعض مع بعض، عشان الأزمة ما تنتقل.</p></div>
+    <div class="step"><div class="n"><span class="num">4</span></div><h3>بيشرح</h3><p>شاشة بالعربي للمشغّل: شو غيّر وليش، وبكبسة وحدة بيرجع عالخطة الثابتة.</p></div>
+  </div>
+</section>
+
+<!-- 7. Safety + privacy -->
+<section class="slide" data-title="أمان">
+  <div class="kicker">أوتوماتيك من أول يوم</div>
+  <h2>بيقرّر لحاله، <span class="go">بس عمره ما بيطلع عن الحدود.</span></h2>
+  <div class="grid g2" style="margin-top:60px">
+    <div class="card">
+      <span class="tag go">السلامة</span>
+      <ul class="clean">
+        <li><span class="pip" style="background:var(--go)"></span><p>أخضر أدنى لكل شارع. ولا شارع بينسى</p></li>
+        <li><span class="pip" style="background:var(--go)"></span><p>وقت قطع المشاة والأحمر الكامل محفوظين دايماً</p></li>
+        <li><span class="pip" style="background:var(--go)"></span><p>حد أعلى للدورة. ما حدا بيستنّى أكثر من اليوم</p></li>
+        <li><span class="pip" style="background:var(--wait)"></span><p>الكاميرا مش واضحة؟ بيرجع عالخطة الثابتة لحاله</p></li>
+      </ul>
+    </div>
+    <div class="card">
+      <span class="tag n">الخصوصية</span>
+      <h3 style="font-size:44px;margin:10px 0 24px">بنعدّ سيارات، مش ناس.</h3>
+      <ul class="clean">
+        <li><span class="pip" style="background:var(--off)"></span><p>ولا نمر، ولا وجوه، ولا تتبّع</p></li>
+        <li><span class="pip" style="background:var(--off)"></span><p>بنحتفظ بأرقام بس: عدد، طابور، وقت انتظار</p></li>
+        <li><span class="pip" style="background:var(--off)"></span><p>متوافق مع قانون حماية البيانات الشخصية رقم <span class="num">24</span> لسنة <span class="num">2023</span></p></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 8. Demo -->
+<section class="slide" data-title="عرض" style="justify-content:center;align-items:center;text-align:center">
+  <div style="display:flex;gap:26px;justify-content:center;margin-bottom:56px">
+    <span style="width:56px;height:56px;border-radius:50%;background:var(--off)"></span>
+    <span style="width:56px;height:56px;border-radius:50%;background:var(--off)"></span>
+    <span style="width:56px;height:56px;border-radius:50%;background:var(--go)"></span>
+  </div>
+  <h1>هلأ خلّونا نفرجيكم.</h1>
+  <p class="muted" style="margin-top:30px;font-size:32px">شاشة المشغّل الحيّة · المحاكاة: جدول ثابت مقابل فارس</p>
+  <p class="ph" style="margin-top:60px;padding:16px 34px;font-size:22px">رابط تسجيل احتياطي للعرض (بنحطّه لما يجهز)</p>
+</section>
+
+<!-- 9. Result -->
+<section class="slide" data-title="النتيجة">
+  <div class="kicker">النتيجة بالمحاكاة</div>
+  <h2>قدّيش قلّ الانتظار؟</h2>
+  <div style="display:flex;align-items:center;gap:80px;margin-top:auto;margin-bottom:auto">
+    <div class="ph" style="padding:30px 60px"><div style="font-size:220px;font-weight:700;line-height:1" class="go"><span class="num">X%</span></div></div>
+    <div>
+      <p style="font-size:38px;font-weight:500">أقل وقت انتظار للسيارة</p>
+      <p class="muted" style="margin-top:16px">مقارنة بخطة ثابتة <b style="color:var(--text);font-weight:600">مضبوطة صح</b> (Webster) لنفس الحركة، بمحاكاة SUMO لتقاطع على نمط عمّان.</p>
+      <p class="ph-note">بنحط الرقم لما تطلع نتيجة المحاكاة. ما بنحكي أي رقم غيره.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 10. Impact -->
+<section class="slide" data-title="الأثر">
+  <div class="kicker">الأثر، لو وفّرنا بس <span class="num">10%</span></div>
+  <h2>عمّان بترجعلها <span class="go">2.7 مليون ساعة</span> بالسنة.</h2>
+  <div class="grid g2" style="margin-top:56px;align-items:start">
+    <div class="grid" style="gap:28px">
+      <div class="stat" style="padding:36px 40px"><div class="big go" style="font-size:88px"><span class="num">2</span><small>مليون لتر</small></div><p>بنزين ما بينحرق عالإشارة</p></div>
+      <div class="stat" style="padding:36px 40px"><div class="big go" style="font-size:88px"><span class="num">4,800</span><small>طن</small></div><p>CO₂ أقل بالسنة</p></div>
+    </div>
+    <div class="card">
+      <table>
+        <tr><th>ساعات بترجع بالسنة</th><th><span class="num">10%</span></th><th><span class="num">20%</span></th><th><span class="num">30%</span></th></tr>
+        <tr><td>الدوار السابع (<span class="num">6</span> تقاطعات)</td><td class="v"><span class="num">80K</span></td><td><span class="num">160K</span></td><td><span class="num">240K</span></td></tr>
+        <tr><td>عمّان (<span class="num">200</span>)</td><td class="v go"><span class="num">2.7M</span></td><td><span class="num">5.3M</span></td><td><span class="num">8.0M</span></td></tr>
+        <tr><td>الأردن (<span class="num">300</span>، تقدير)</td><td class="v"><span class="num">4.0M</span></td><td><span class="num">8.0M</span></td><td><span class="num">12.0M</span></td></tr>
+      </table>
+      <p style="font-size:20px;margin-top:22px" class="muted">ساعات سيارة. الناس بالسيارة أكثر، فالرقم الحقيقي أعلى.</p>
+    </div>
+  </div>
+  <div class="source">حسابات تقديرية مش نتائج مقاسة: <span class="num">40</span> ث تأخير للسيارة، <span class="num">40,000</span> سيارة للتقاطع يومياً، <span class="num">300</span> يوم، <span class="num">0.76</span> لتر/ساعة (Argonne)، <span class="num">2.35</span> كغ CO₂/لتر (EPA). FHWA: التحكّم التكيّفي بيحسّن وقت الرحلة أكثر من <span class="num">10%</span> بالمعدّل.</div>
+</section>
+
+<!-- 11. Who -->
+<section class="slide" data-title="مين">
+  <div class="kicker">مين؟</div>
+  <h2>مين بيدفع، مين بيستخدم، ومين بيستفيد.</h2>
+  <div class="grid g4" style="margin-top:64px">
+    <div class="card"><span class="tag n">بيدفع</span><h3>أمانة عمّان</h3><p>صاحبة الإشارات ومركز التحكّم والكاميرات.</p></div>
+    <div class="card"><span class="tag n">شريك</span><h3>إدارة السير</h3><p>أقل أزمات بتحتاج شرطي ينظّمها بإيده.</p></div>
+    <div class="card"><span class="tag n">بيستخدم</span><h3>مشغّل غرفة التحكّم</h3><p>بيشوف شو قرّر فارس وليش، وبيقدر يرجّعه بكبسة.</p></div>
+    <div class="card"><span class="tag go">بيستفيد</span><h3>كل اللي واقف عالإشارة</h3><p>الموظفين، وطلاب المدارس والجامعات. بدون ما ينزّلوا ولا تطبيق.</p></div>
+  </div>
+</section>
+
+<!-- 12. Deployment -->
+<section class="slide" data-title="التطبيق">
+  <div class="kicker">كيف بنطبّقه</div>
+  <h2>بنبلّش من <span class="go">الدوار السابع</span> والتقاطعات اللي حواليه.</h2>
+  <div class="tl">
+    <div class="ph5"><div class="ball"></div><div class="when">أسبوع <span class="num">0–4</span></div><h3>اتفاقية</h3><p>مذكرة تفاهم مع الأمانة، ووصول للكاميرات وخطط التوقيت.</p></div>
+    <div class="ph5"><div class="ball"></div><div class="when">أسبوع <span class="num">4–10</span></div><h3>نسخة رقمية</h3><p>محاكاة للمنطقة على أرقام الكاميرات الحقيقية، والأمانة بتوقّع حدود السلامة.</p></div>
+    <div class="ph5"><div class="ball go"></div><div class="when">الشهر <span class="num">3</span></div><h3>تشغيل أوتوماتيك</h3><p>فارس بيستلم المنطقة <span class="num">24/7</span>، والمشغّل بيراقب.</p></div>
+    <div class="ph5"><div class="ball"></div><div class="when">الشهر <span class="num">3–6</span></div><h3>قياس</h3><p>نفس الكاميرات بتقيس قبل وبعد. تقرير شهري للأمانة.</p></div>
+    <div class="ph5"><div class="ball"></div><div class="when">الشهر <span class="num">6+</span></div><h3>توسّع</h3><p>محور ورا محور بعمّان، وبعدين الزرقاء وإربد والعقبة.</p></div>
+  </div>
+  <p class="muted" style="margin-top:auto;font-size:24px">برمجيات بس، على كاميرات الأمانة. وإذا التقاطع بحاجة، جهاز صغير بخزانة الإشارة.</p>
+</section>
+
+<!-- 13. Business -->
+<section class="slide" data-title="التكلفة">
+  <div class="kicker">مين بيدفع وقدّيش</div>
+  <h2><span class="go"><span class="num">200</span> دينار بالشهر</span> للتقاطع.</h2>
+  <div class="grid g2" style="margin-top:56px;align-items:start">
+    <div class="card">
+      <ul class="clean">
+        <li><p style="flex:1">تركيب لمرة وحدة</p><p class="num" style="font-weight:600">JD 3,000</p></li>
+        <li><p style="flex:1">ترخيص سنوي</p><p class="num" style="font-weight:600">JD 2,400</p></li>
+        <li><p style="flex:1">أول <span class="num">6</span> تقاطعات (الدوار السابع)</p><p style="font-weight:600">خصم <span class="num">50%</span></p></li>
+        <li><p style="flex:1">تكلفة <span class="num">5</span> سنين كاملة</p><p class="num go" style="font-weight:700">JD 15,000</p></li>
+      </ul>
+      <p style="font-size:22px;margin-top:18px" class="muted">الأنظمة المستوردة: تقريباً <span class="num">JD 18,000–43,000</span> للتقاطع، شراء بس، بدون صيانة (FHWA، أسعار 2010).</p>
+    </div>
+    <div class="card">
+      <table>
+        <tr><th>السنة</th><th>تقاطعات</th><th>دخل</th></tr>
+        <tr><td><span class="num">1</span> · الدوار السابع</td><td><span class="num">6</span></td><td class="v"><span class="num">JD 16K</span></td></tr>
+        <tr><td><span class="num">2</span> · أول محاور</td><td><span class="num">40</span></td><td class="v"><span class="num">JD 198K</span></td></tr>
+        <tr><td><span class="num">3</span> · عمّان</td><td><span class="num">120</span></td><td class="v"><span class="num">JD 528K</span></td></tr>
+        <tr><td>عمّان كاملة</td><td><span class="num">200</span></td><td class="v go"><span class="num">JD 480K</span> / سنة</td></tr>
+      </table>
+      <p style="font-size:22px;margin-top:18px" class="muted">بنغطّي تكاليفنا عند حوالي <span class="num">105</span> تقاطع، يعني نص عمّان.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 14. Honesty -->
+<section class="slide" data-title="بصراحة">
+  <div class="kicker">بصراحة</div>
+  <h2>شو شغّال اليوم، وشو لسّا عالورق.</h2>
+  <div class="grid g2" style="margin-top:60px">
+    <div class="card">
+      <span class="tag go">شغّال اليوم</span>
+      <ul class="clean">
+        <li><span class="pip" style="background:var(--go)"></span><p>عدّ السيارات من فيديو حقيقي لتقاطع</p></li>
+        <li><span class="pip" style="background:var(--go)"></span><p>محاكاة SUMO: فارس مقابل خطة ثابتة مضبوطة</p></li>
+        <li><span class="pip" style="background:var(--go)"></span><p>حدود السلامة والرجوع للخطة الثابتة</p></li>
+        <li><span class="pip" style="background:var(--go)"></span><p>شاشة المشغّل بالعربي</p></li>
+      </ul>
+    </div>
+    <div class="card">
+      <span class="tag n">لسّا عالورق</span>
+      <ul class="clean">
+        <li><span class="pip" style="background:var(--off)"></span><p>ربط مباشر مع كاميرات الأمانة</p></li>
+        <li><span class="pip" style="background:var(--off)"></span><p>التحكّم بإشارة حقيقية</p></li>
+        <li><span class="pip" style="background:var(--off)"></span><p>نتايج من الشارع</p></li>
+        <li><span class="pip" style="background:var(--off)"></span><p>أرقام الأثر فوق تقديرية، مش مقاسة</p></li>
+      </ul>
+    </div>
+  </div>
+  <p class="ph-note">تأكدوا من القائمة لما نثبّت الميزات.</p>
+</section>
+
+<!-- 15. Close -->
+<section class="slide" data-title="ختام" style="justify-content:center;align-items:center;text-align:center">
+  <div class="logo live" style="font-size:200px"><span class="f">ڡ<span class="dot"></span></span>ارس</div>
+  <p style="font-size:54px;font-weight:500;margin-top:36px">الأخضر للي مستنّي</p>
+  <hr class="lane" style="width:420px;margin:50px auto">
+  <p style="font-size:34px">جاهزين نبلّش من <span class="go">الدوار السابع</span>.</p>
+  <p class="ph" style="margin-top:50px;padding:12px 30px;font-size:22px">أسماء الفريق</p>
+</section>
+
+</div></div>
+<div id="bar"></div>
+<div id="hint">← التالي · → السابق · F شاشة كاملة</div>
+
+<script>
+(function(){
+  var deck=document.getElementById('deck'),slides=[].slice.call(document.querySelectorAll('.slide')),bar=document.getElementById('bar'),i=0;
+  slides.forEach(function(s,n){
+    if(n===0||s.style.justifyContent==='center')return;
+    var f=document.createElement('div');f.className='foot';
+    f.innerHTML='<span class="logo mini"><span class="f">ڡ<span class="dot"></span></span>ارس</span><span class="num">'+(n+1)+' / '+slides.length+'</span>';
+    s.appendChild(f);
+  });
+  function fit(){var k=Math.min(innerWidth/1920,innerHeight/1080);deck.style.transform='scale('+k+')';}
+  function restartLogo(s){s.querySelectorAll('.logo.live .dot').forEach(function(d){d.style.animation='none';void d.offsetWidth;d.style.animation='';});}
+  function go(n){
+    i=Math.max(0,Math.min(slides.length-1,n));
+    slides.forEach(function(s,k){s.classList.toggle('on',k===i);});
+    restartLogo(slides[i]);
+    bar.style.width=((i+1)/slides.length*100)+'%';
+    try{history.replaceState(null,'','#'+(i+1));}catch(e){}
+  }
+  addEventListener('keydown',function(e){
+    var k=e.key;
+    if(['ArrowLeft','PageDown',' ','ArrowDown','Enter'].indexOf(k)>-1){e.preventDefault();go(i+1);}
+    else if(['ArrowRight','PageUp','ArrowUp','Backspace'].indexOf(k)>-1){e.preventDefault();go(i-1);}
+    else if(k==='Home'){go(0);}else if(k==='End'){go(slides.length-1);}
+    else if(k==='f'||k==='F'){if(!document.fullscreenElement)document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen();else document.exitFullscreen();}
+  });
+  addEventListener('click',function(e){ if(e.clientX<innerWidth/2)go(i+1);else go(i-1); });
+  addEventListener('resize',fit);
+  fit();
+  var h=parseInt((location.hash||'').slice(1),10);go(isNaN(h)?0:h-1);
+})();
+</script>
+</body>
+</html>

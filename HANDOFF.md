@@ -2,19 +2,19 @@
 
 Rolling "where are we" note. Read this first and **update it at the end of every session** (overwrite the Status section; don't let it grow forever).
 
-_Last updated: 2026-10-09 (Day 1), ideation session 2._
+_Last updated: 2026-10-10 (Day 2), Faris planning session._
 
 ## Status
-- Phase: **ideation**, no code. Branch `ideation/research`.
-- History: R1 rejected → R2 Najm (H) → R3 learning studio (L) → R4 top 5 → R5 big problems (07) → R6 solutions for smoking/reading/traffic (08; team not convinced they're "hackathon-winning") → **R7: Najm deep-dive → [docs/ideas/H3-najm-wow-revenue-training.md](docs/ideas/H3-najm-wow-revenue-training.md).**
-- **Current lead: H (Najm for Jordan) = 4.70**, with the wow feature **"AI draws the kroka"**: photos + two dialect voice statements + GPS → animated reconstruction on the real OpenStreetMap street + auto-drawn sketch + contradiction detection + fault split with law citation; the officer approves. Template-based (8 scenarios), not physics.
-- Revenue: insurers pay per processed case → later a per-policy levy (Najm's own path; SAR 750M in 2021); plus repair/towing network commissions, analytics, regional licensing (Palestinian CMA studied E-Kroka in May 2026). Jordan alone ≈ JD 2–4M/yr.
-- Training: hackathon = YOLOv8-seg fine-tuned on CarDD (4k imgs) / VehiDE (13.9k) / HITL CC0 (1.8k), report test mAP; production = JIF E-Kroka archive since 2013 (photos + sketches + fault + settlements) under data-sharing. Fault % = law retrieval + LLM (TrafficRAG-style), not trained on photos.
-- Roadmap planner: helps Jordan through jobs (7,000 ICT grads/yr, ~3,000 employed; $200M YTJ project), but that's the **economy** sector → 3.65 as society, 4.15 if a mentor approves the crossover.
+- **Idea chosen: adaptive traffic signals, brand فارس / Faris** (Oct 10). All work lives in [docs/signals/](docs/signals/): 01 problem, 02 users, 03 feasibility, 04 impact, 05 branding, 06 revenue/costs, 07 pitch deck (HTML, Arabic RTL, ←/PageDown = next, F = fullscreen).
+- Decisions for today are in the decision log (2026-10-10 entries). Key ones: GAM buyer, fully automatic within safety limits, 7th Circle cluster first, JD 200/month per junction, **don't mention the existing smart-signal pilot**.
+- Still open: feature list, modules, tech stack, user flow, pitch storyline and script.
 
 ## Next actions
-1. Team decides: H (with reconstruction) vs others.
-2. If H: mentor check on sector fit; Day-1 parallel tracks: (a) YOLOv8-seg training, (b) two-phone flow + Supabase, (c) reconstruction templates + OSM, (d) LLM statements/contradictions/fault RAG + test scenarios.
+1. Lock features/modules, then build: SUMO baseline (Webster) vs controller, YOLO counting on recorded footage, Arabic operator console.
+2. Put the SUMO X% into deck slide 9 and impact doc 04 (replace scenarios).
+3. Fix 01: remove pilot references (fact 5, "who it reaches", "why now"), the local-path source on line 80, and change "16 hours/yr" to the 5–14 h range.
+4. Name the 7th Circle neighbouring junctions; verify the FHWA cost page in a browser; fill team names in the deck.
+5. Deck loads IBM Plex Sans Arabic from Google Fonts. Check the venue has internet, or bundle the font locally.
 
 ## Business model for H
 See [docs/ideas/H2-najm-ai-and-business-model.md](docs/ideas/H2-najm-ai-and-business-model.md). In short: fault % is the hook for drivers. Damage estimation and fraud scoring are what insurers pay for, because motor claims are ≈96% of motor premiums (JD 261M of JD 272M in 2024). Phases: insurer per-claim pilot → PSD×JIF remote-kroka pilot → per-policy levy (Najm switched from per-accident to per-policy because per-accident fees reward more accidents).

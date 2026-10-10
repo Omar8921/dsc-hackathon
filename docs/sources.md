@@ -166,6 +166,37 @@ All accessed 2026-10-09. Search-engine summaries were used for some figures. **O
 - ICT grads 7,000/yr, ~3,000 employed — https://intaj.net/?p=20938 ; skills gap — https://jordantimes.com/node/261579
 - Youth Technology & Jobs project — https://modee.gov.jo/EN/Pages/Youth_Technology_and_Jobs_Project ; 31.7% disbursed — https://www.jordannews.jo/Section-112/Economy/World-Bank-31-7-of-Youth-Technology-and-Jobs-Project-Funding-Disbursed-46248
 
+## Crown Prince Award winners (doc 09)
+- Award site + winners list (19 winners, 4 editions) — https://cpa.jo/home (data from https://cpa.jo/backend/api/portal/winners?page=1&pageSize=1000)
+
+## Amman bus / quantum routing (Idea O)
+- D-Wave logistics routing page (inspiration) — https://www.dwavequantum.com/solutions-and-products/quantum-optimization/logistics-routing/
+- 47% of women turned down jobs (SADAQA/FES), JD57/month — https://www.urbanet.info/jordan-public-transport-women-work-force/ ; https://blogs.worldbank.org/en/arabvoices/addressing-womens-safety-concerns-public-transport-jordan-boost-their-economic-activity
+- Half of transit users commute 1h+ — https://foreignpolicy.com/2023/02/16/amman-jordan-public-transportation-brt-bus-women-mobility-labor/
+- ~300 buses; Jan–Apr 2025 ridership 7.2M BRT / 3.6M Amman Bus — https://www.jordannews.jo/Section-109/News/15-New-Electric-Buses-to-Operate-in-Amman-in-the-Second-Half-of-2025-42123
+- Free bus↔BRT transfers only at 6 interchanges — https://jordannews.jo/Section-109/News/Transfers-between-Amman-bus-and-BRT-are-free-GAM-24475
+- Payment system covers Amman Bus + BRT only — https://www.mastercard.com/news/eemea/en/newsroom/press-releases/en/2023/february/mastercard-joins-forces-with-greater-amman-municipality-and-network-international-to-launch-jordan-s-first-transit-payment-ecosystem
+- 71% would use BRT + on-demand — https://doaj.org/article/2c64b7e297dc4511a2b04a25fe72678b
+- LTRC inter-governorate 2025: 1.6M passengers — https://petra.gov.jo/videoconference/index.php/en/news/ltrc-advances-inter-province-transport-project-to-boost-efficiency-and-connectivity
+- BRT route merges / 13 new Amman Bus routes — https://www.jordannews.jo/Section-109/News/BRT-routes-merged-frequencies-changed-15730 ; https://www.jordannews.jo/Section-109/News/Amman-Bus-to-launch-13-new-bus-routes-in-coming-two-weeks-27406
+- VW + D-Wave Lisbon pilot — https://arxiv.org/pdf/2006.14162 ; https://www.volkswagengroup.it/en/lab/quantum-computers-for-traffic-optimisation-a-pilot-project-in-lisbon ; https://thequantuminsider.com/2019/12/19/volkswagen-traffic-jam-eradication-project-hits-the-road/
+- QAOA VRP vs Gurobi — https://arxiv.org/pdf/2511.00506 ; https://arxiv.org/pdf/2304.09629 ; annealing vs classical — https://arxiv.org/html/2409.05542v2 ; https://arxiv.org/pdf/2412.07460
+- D-Wave Leap trial / LaunchPad — https://dwavesys.com/solutions-and-products/developer ; https://thequantuminsider.com/2025/01/22/d-wave-announces-new-leap-quantum-launchpad-program-to-support-quantum-computing-applications/
+- Shanghai customised bus — https://www.sixthtone.com/news/1017072 ; Beijing — https://english.beijing.gov.cn/travellinginbeijing/transportation/bus/202306/t20230601_3119561.html
+- Dubai Bus-On-Demand H1 2026 — https://www.khaleejtimes.com/life-and-living/public-transport-in-uae/dubai-rta-bus-on-demand-al-satwa-al-quoz-mirdif-ridership
+- Riyadh Bus On Demand — https://www.listmag.com/en/travel-stay/new-on-demand-bus-service-links-residential-areas-to-the-riyadh-metro-3307
+- Barcelona Nova Xarxa — https://its.berkeley.edu/publications/network-effects-bus-transit-evidence-barcelona%E2%80%99s-nova-xarxa-0
+- Optibus $1.3B — https://techcrunch.com/?p=2318921 ; Via buys Remix $100M — https://freightwaves.com/news/via-acquires-mapping-software-company-remix-for-100m ; https://geoawesomeness.com/via-acquires-mapping-startup-remix/
+- Swvl Jordan / retrenchment — https://enterpriseam.com/egypt/2020/11/30/swvl-expands-to-jordan-with-new-product-targeting-businesses/ ; https://techcrunch.com/2022/11/28/swvl-reduces-its-headcount-by-50-six-months-after-axing-400-staff/amp
+
+## Khatti deep dive (Idea O2)
+- Passenger Transportation Law 19/2017 + Smart Apps Regulation 9/2018 — https://www.tamimi.com/law-update-articles/ride-hailing-apps-in-jordan/
+- LTRC removes cap, opens app licensing (Jan 2026) — https://en.arij.net/impact/following-an-arij-investigation-new-regulations-issued-to-regulate-the-ride-hailing-app-sector-in-jordan/
+- Amman Bus fare 30–65 piasters — https://almamlakatv.com/news/23032-أجرة-باص-عمان-بين-30-65-قرشا
+- UJ shuttle (22-seat buses) — https://ipmd.ju.edu.jo/Pages/Transportation1.aspx ; Al-Zaytoonah cancels trips < 7 students — https://www.zuj.edu.jo/Transportation-Department/Announcements.aspx
+- Swvl unit economics (bus rental ≈ ¾ of direct costs; corporate ≈ 70% of revenue) — https://www.thefridaytimes.com/2022/12/27/swvl-the-numbers-for-pakistani-operations-help-comprehend-the-mobility-startups-exit-from-the-country/ ; B2C vs B2B — https://enterpriseam.com/egypt/whatsnext/with-a-long-road-to-profitability-a-rethink-of-the-traditional-ride-hailing-business-model-is-in-order/
+- Shanghai DZ mechanics (15–20 riders, 220+ routes, ~3 days) — https://www.sixthtone.com/news/1017072
+
 ## CPR (Idea I)
 - Singapore myResponder 2025 — https://pubmed.ncbi.nlm.nih.gov/40383504/
 - Singapore 2021 (mixed) — https://www.annals.edu.sg/pdf/50VolNo3Mar2021/V50N3p212.pdf
@@ -200,3 +231,18 @@ All accessed 2026-10-09. Search-engine summaries were used for some figures. **O
 - Solar soiling in Jordan — https://www.mdpi.com/2071-1050/13/14/7636
 - Disability 11.2% — https://jordannews.jo/Section-109/News/Despite-their-high-ratio-Jordanians-with-disabilities-still-facing-discrimination-4530
 - Takaful exclusion (HRW) — https://www.hrw.org/news/2023/07/04/jordan-should-take-social-protection-all-way
+
+## Adaptive signals / Faris (docs/signals)
+- GAM 5,600 cameras, 25% violations, 200+ intersections, central control (Apr 2026) — https://www.jordannews.jo/Section-109/News/GAM-5-600-Traffic-Monitoring-Cameras-in-Operation-Only-25-Dedicated-to-Traffic-Violations-50992
+- Traffic Department director on signals linked to GAM central control + cameras (26 Aug 2026) — https://www.almamlakatv.com/news/208193-
+- 11.5M vehicle movements/day, 2,500+ cameras (Sep 2026) — https://www.almamlakatv.com/news/209556-
+- 2.2M students, 7,818 schools, 2,263,438 enrolled (23 Aug 2026) — https://www.almamlakatv.com/news/207917-
+- School-year traffic plan, leave 10 min early (21 Aug 2025) — https://www.jordannews.jo/Section-109/News/Comprehensive-Traffic-Security-Plan-for-the-New-School-Year-44249
+- 7th Circle converted from roundabout to lights, model for 8th Circle (5 Aug 2014) — https://arabiaweather.com/en/content/إزالة-الدوار-الثامن-نهاية-أيلول
+- Jordan PDPL No. 24 of 2023, in force 17 Mar 2024 — https://www.clydeco.com/fr/insights/2023/10/jordan-issues-first-personal-data-protection-law
+- HCM signalised LOS delay bands — https://pmc.ncbi.nlm.nih.gov/articles/PMC11479351/table/sensors-24-06410-t001
+- Argonne idling 0.2–0.5 gal/h — https://www.energy.gov/sites/prod/files/2014/03/f8/p-09_gaines.pdf
+- EPA 8,887 g CO₂/gal — https://www.epa.gov/greenvehicles/greenhouse-gas-emissions-typical-passenger-vehicle
+- ASCT capital cost per intersection, FHWA 2010 $ (⚠️ verify in browser; 403 to fetch) — https://www.itskrs.its.dot.gov/2015-sc00355
+- Jordan software-engineer pay JD 800–2,000/month — https://qureos.com/career-guide/top-in-demand-jobs-in-jordan
+- Jetson Orin Nano Super $249 — https://www.sparkfun.com/nvidia-jetson-orin-nano-developer-kit.html

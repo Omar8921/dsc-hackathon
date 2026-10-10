@@ -17,6 +17,9 @@ Phase: **ideation**. Nothing is built yet, on purpose.
 | [06-top-5.md](06-top-5.md) | ⭐ **Current top 5** with problem / uniqueness / MVP / profit for each |
 | [07-jordan-big-problems.md](07-jordan-big-problems.md) | ⭐ **Round 5: 15 big, obvious Jordan problems (problems only), rated by our filters** |
 | [08-solutions-smoking-reading-traffic.md](08-solutions-smoking-reading-traffic.md) | ⭐ **Round 6: 7 solutions for smoking / reading / traffic, scored on the 6 criteria** |
+| [09-crown-prince-award-winners.md](09-crown-prince-award-winners.md) | Crown Prince Award (cpa.jo) winners, all 4 editions: sector fit, scores, what it means for H |
+| [ideas/O-quantum-amman-bus.md](ideas/O-quantum-amman-bus.md) | Round 8: whiteboard "Quantum Amman Bus" reality check (2.55 as written), reshaped O1 "Khatti" crowdsourced routes (3.80) + 4 more angles |
+| [ideas/O2-khatti-deep-dive.md](ideas/O2-khatti-deep-dive.md) | ⭐ Round 9: Khatti deep dive: how routes get created (pool → pledge → launch), UX for 4 users, engine, live demo, break-even economics, 20 weak points (3.95) |
 | [ideas/H3-najm-wow-revenue-training.md](ideas/H3-najm-wow-revenue-training.md) | ⭐ **Round 7: Najm wow feature (AI draws the kroka), revenue model, training data** |
 | [sources.md](sources.md) | Every source used, grouped by topic |
 
