@@ -18,8 +18,12 @@
 html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--font);overflow:hidden}
 #stage{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
 #deck{width:1920px;height:1080px;position:relative;transform-origin:center center;flex:none}
-.slide{position:absolute;inset:0;padding:110px 140px 120px;display:flex;flex-direction:column;opacity:0;visibility:hidden;transition:opacity .35s ease}
-.slide.on{opacity:1;visibility:visible}
+.slide{position:absolute;inset:0;padding:110px 140px 120px;display:flex;flex-direction:column;opacity:0;visibility:hidden;transform:translateX(-90px);transition:opacity .5s ease,transform .5s cubic-bezier(.2,.7,.2,1),visibility 0s linear .5s}
+.slide.past{transform:translateX(90px)}
+.slide.on{opacity:1;visibility:visible;transform:none;transition:opacity .5s ease,transform .5s cubic-bezier(.2,.7,.2,1),visibility 0s}
+.slide.on .rise{animation:rise .6s cubic-bezier(.2,.7,.2,1) both}
+.slide.on .rise:nth-child(2){animation-delay:.08s}.slide.on .rise:nth-child(3){animation-delay:.16s}.slide.on .rise:nth-child(4){animation-delay:.24s}
+@keyframes rise{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
 .num{font-variant-numeric:lining-nums;unicode-bidi:isolate;direction:ltr;display:inline-block}
 
 /* type */
@@ -58,8 +62,21 @@ p,li{font-size:30px;line-height:1.6}
 .card{background:var(--surface);border-radius:20px;padding:40px}
 .card h3{margin-bottom:14px}
 .card p{font-size:26px;color:var(--muted);line-height:1.55}
-.tag{display:inline-block;font-size:20px;font-weight:600;padding:6px 18px;border-radius:999px;margin-bottom:22px}
-.tag.go{background:rgba(43,213,118,.14)} .tag.wait{background:rgba(255,176,32,.14)} .tag.stop{background:rgba(255,90,95,.14)} .tag.n{background:var(--surface-2);color:var(--muted)}
+/* card label: a small signal light + plain text */
+.label{display:flex;align-items:center;gap:14px;font-size:22px;font-weight:500;color:var(--muted);margin-bottom:22px}
+.label::before{content:"";width:14px;height:14px;border-radius:50%;background:var(--off);box-shadow:0 0 0 5px var(--surface-2)}
+.label.go::before{background:var(--go)} .label.wait::before{background:var(--wait)} .label.stop::before{background:var(--stop)}
+
+/* charts */
+.chart text{font-family:var(--font)}
+.chart .bar{transform-box:fill-box;transform-origin:bottom;transform:scaleY(0)}
+.slide.on .chart .bar{animation:grow .9s cubic-bezier(.2,.7,.2,1) forwards}
+.slide.on .chart .bar.b2{animation-delay:.12s}.slide.on .chart .bar.b3{animation-delay:.24s}.slide.on .chart .bar.b4{animation-delay:.36s}
+.chart .hbar{transform-box:fill-box;transform-origin:right;transform:scaleX(0)}
+.slide.on .chart .hbar{animation:growx .9s cubic-bezier(.2,.7,.2,1) .2s forwards}
+.chart .fadein{opacity:0}
+.slide.on .chart .fadein{animation:fade .5s ease .9s forwards}
+@keyframes grow{to{transform:scaleY(1)}} @keyframes growx{to{transform:scaleX(1)}} @keyframes fade{to{opacity:1}}
 ul.clean{list-style:none}
 ul.clean li{padding:14px 0;border-bottom:2px solid var(--line);display:flex;gap:20px;align-items:baseline}
 ul.clean li:last-child{border-bottom:0}
@@ -94,10 +111,8 @@ td.v{font-weight:600}
 .tl h3{font-size:32px;margin:6px 0 10px}
 .tl p{font-size:22px;color:var(--muted);line-height:1.5}
 
-/* progress + hint */
+/* progress */
 #bar{position:fixed;bottom:0;right:0;height:4px;background:var(--go);transition:width .3s;z-index:5}
-#hint{position:fixed;top:14px;left:18px;font-size:13px;color:var(--muted);opacity:.0;transition:opacity .4s;font-family:var(--font)}
-body:hover #hint{opacity:.6}
 </style>
 </head>
 <body>
@@ -107,9 +122,7 @@ body:hover #hint{opacity:.6}
 <section class="slide" data-title="عنوان" style="justify-content:center;align-items:flex-start">
   <div class="logo live" style="font-size:240px"><span class="f">ڡ<span class="dot"></span></span>ارس</div>
   <p style="font-size:54px;font-weight:500;margin-top:40px">الأخضر للي مستنّي</p>
-  <hr class="lane" style="width:420px;margin:56px 0 36px">
-  <p class="muted" style="font-size:26px">نظام ذكاء اصطناعي بيوزّع وقت الإشارة حسب الطابور الحقيقي، من الكاميرات الموجودة</p>
-  <p class="muted" style="font-size:22px;margin-top:18px"><span class="num">AI Quest 2026</span> · <span class="num">next.society()</span> · <span class="ph" style="border-width:2px;padding:2px 14px;border-radius:10px;font-size:20px">اسم الفريق</span></p>
+  <p class="muted" style="font-size:26px;margin-top:56px">نظام ذكاء اصطناعي بيوزّع وقت الإشارة حسب الطابور الحقيقي</p>
 </section>
 
 <!-- 2. The moment -->
@@ -149,7 +162,7 @@ body:hover #hint{opacity:.6}
 <!-- 3. The cost -->
 <section class="slide" data-title="التكلفة">
   <div class="kicker">قدّيش بتكلّفنا؟</div>
-  <h2>الأزمة مش إزعاج بس. <span class="stop">هاي فاتورة على البلد كلها.</span></h2>
+  <h2>الأزمة إزعاج <span class="stop">وفاتورة على البلد كلها.</span></h2>
   <div class="stats">
     <div class="stat"><div class="big stop"><span class="num">6%</span></div><p>من الناتج المحلي بيروح على عدم كفاءة النقل، يعني حوالي <span class="num">$3</span> مليار بالسنة</p><div class="s">البنك الدولي، 2022</div></div>
     <div class="stat"><div class="big wait"><span class="num">11.5</span><small>مليون</small></div><p>حركة مركبات يومياً بعمّان، وكل وحدة فيها بتقطع إشارات</p><div class="s">إدارة السير، أيلول 2026</div></div>
@@ -160,15 +173,15 @@ body:hover #hint{opacity:.6}
 <!-- 4. Why -->
 <section class="slide" data-title="ليش">
   <div class="kicker">ليش بصير هيك؟</div>
-  <h2>الإشارات ماشية على <span class="wait">جدول ثابت</span>، مش على مين مستنّي.</h2>
+  <h2>الإشارات ماشية على <span class="wait">جدول ثابت</span>.</h2>
   <div class="grid g2" style="margin-top:70px">
     <div class="card">
-      <span class="tag wait">المشكلة الأولى</span>
+      <div class="label wait">المشكلة الأولى</div>
       <h3>نفس التوقيت، كل يوم، كل ساعة</h3>
-      <p>الجدول ما بيعرف إنه المدارس فتحت، أو إنه الشارع الرئيسي مليان والفرعي فاضي. بيعطي أخضر حسب الساعة، مش حسب الطابور.</p>
+      <p>الجدول ما بيعرف إنه المدارس فتحت، أو إنه الشارع الرئيسي مليان والفرعي فاضي. بيعطي الأخضر حسب الساعة.</p>
     </div>
     <div class="card">
-      <span class="tag stop">المشكلة الثانية</span>
+      <div class="label stop">المشكلة الثانية</div>
       <h3>الإشارات بتأثّر على بعض</h3>
       <p>توقيت غلط بتقاطع بيدفش الطابور عالتقاطع اللي بعده. لما كل إشارة بتشتغل لحالها، الأزمة بتنتقل من دوّار لدوّار.</p>
       <svg viewBox="0 0 700 90" width="100%" height="90" style="margin-top:26px" aria-hidden="true">
@@ -184,7 +197,7 @@ body:hover #hint{opacity:.6}
 <!-- 5. The insight -->
 <section class="slide" data-title="الفكرة">
   <div class="kicker">الفرصة</div>
-  <h2>الكاميرات موجودة. <span class="go">الناقص عقل بيقرّر.</span></h2>
+  <h2>الكاميرات موجودة عند الأمانة، <span class="go">وجاهزة لفارس.</span></h2>
   <div class="stats">
     <div class="stat"><div class="big"><span class="num">5,600</span></div><p>كاميرا عند أمانة عمّان</p><div class="s">أمانة عمّان، نيسان 2026</div></div>
     <div class="stat"><div class="big"><span class="num">75%</span></div><p>منها مش للمخالفات، أغلبها لعدّ السيارات وتحليل الحركة</p><div class="s">أمانة عمّان، نيسان 2026</div></div>
@@ -202,6 +215,7 @@ body:hover #hint{opacity:.6}
     <div class="step"><div class="n"><span class="num">3</span></div><h3>بيحمي</h3><p>طبقة سلامة منفصلة هي اللي بتقرّر شو بيضوي فعلاً. الذكاء الاصطناعي بس بيطلب.</p></div>
     <div class="step"><div class="n"><span class="num">4</span></div><h3>بينبّه</h3><p>لما طابور يضل أطول من الطبيعي، بيطلع تنبيه أزمة للمشغّل.</p></div>
   </div>
+  <p class="muted" style="margin-top:auto;font-size:22px">بالعرض اليوم الأرقام جاية من محاكاة SUMO. عدّ السيارات من الكاميرا قيد التنفيذ.</p>
 </section>
 
 <!-- 7. Safety + privacy -->
@@ -210,7 +224,7 @@ body:hover #hint{opacity:.6}
   <h2>الذكاء الاصطناعي بيطلب، <span class="go">وطبقة السلامة بتقرّر.</span></h2>
   <div class="grid g2" style="margin-top:56px">
     <div class="card">
-      <span class="tag go">السلامة (مبنية ومجرّبة)</span>
+      <div class="label go">السلامة · مبنية ومجرّبة</div>
       <ul class="clean">
         <li><span class="pip" style="background:var(--go)"></span><p>أخضر أدنى <span class="num">10</span> ث وأقصى <span class="num">60</span> ث. ولا شارع بينسى</p></li>
         <li><span class="pip" style="background:var(--go)"></span><p>كل تحويل: أصفر <span class="num">3</span> ث ثم أحمر كامل <span class="num">1</span> ث</p></li>
@@ -220,8 +234,8 @@ body:hover #hint{opacity:.6}
       <p style="font-size:20px;margin-top:14px" class="muted">المشاة واللفّات: أول إضافة قبل أي تقاطع حقيقي.</p>
     </div>
     <div class="card">
-      <span class="tag n">الخصوصية</span>
-      <h3 style="font-size:44px;margin:10px 0 24px">بنعدّ سيارات، مش ناس.</h3>
+      <div class="label">الخصوصية</div>
+      <h3 style="font-size:44px;margin:10px 0 24px">بنعدّ سيارات وبس.</h3>
       <ul class="clean">
         <li><span class="pip" style="background:var(--off)"></span><p>ولا نمر، ولا وجوه، ولا تتبّع</p></li>
         <li><span class="pip" style="background:var(--off)"></span><p>بنحتفظ بأرقام بس: عدد، طابور، وقت انتظار</p></li>
@@ -246,8 +260,8 @@ body:hover #hint{opacity:.6}
 
 <!-- 9. Result -->
 <section class="slide" data-title="النتيجة">
-  <div class="kicker">النتيجة بالمحاكاة · حركة ما شافها فارس بالتدريب</div>
-  <h2>بزحمة الشارع الرئيسي، <span class="go">فارس بيقصّر الانتظار.</span></h2>
+  <div class="kicker">النتيجة بالمحاكاة · زحمة الشارع الرئيسي · حركة ما شافها فارس بالتدريب</div>
+  <h2><span class="go">فارس بيقصّر الانتظار.</span></h2>
   <div class="grid g2" style="margin-top:50px;align-items:start">
     <div class="grid" style="gap:28px">
       <div class="stat" style="padding:36px 40px"><div class="big go" style="font-size:120px"><span class="num">10%</span></div><p>أقل وقت انتظار للسيارة</p></div>
@@ -286,7 +300,7 @@ body:hover #hint{opacity:.6}
       <p style="font-size:20px;margin-top:22px" class="muted">ساعات سيارة. الناس بالسيارة أكثر، فالرقم الحقيقي أعلى.</p>
     </div>
   </div>
-  <div class="source">إسقاط تقديري مش نتيجة مقاسة: <span class="num">40</span> ث تأخير للسيارة، <span class="num">40,000</span> سيارة للتقاطع يومياً، <span class="num">300</span> يوم، <span class="num">0.76</span> لتر/ساعة (Argonne)، <span class="num">2.35</span> كغ CO₂/لتر (EPA). FHWA: التحكّم التكيّفي بيحسّن وقت الرحلة أكثر من <span class="num">10%</span> بالمعدّل.</div>
+  <div class="source">إسقاط تقديري على فرضيات: <span class="num">40</span> ث تأخير للسيارة، <span class="num">40,000</span> سيارة للتقاطع يومياً، <span class="num">300</span> يوم، <span class="num">0.76</span> لتر/ساعة (Argonne)، <span class="num">2.35</span> كغ CO₂/لتر (EPA). FHWA: التحكّم التكيّفي بيحسّن وقت الرحلة أكثر من <span class="num">10%</span> بالمعدّل.</div>
 </section>
 
 <!-- 11. Who -->
@@ -294,10 +308,10 @@ body:hover #hint{opacity:.6}
   <div class="kicker">مين؟</div>
   <h2>مين بيدفع، مين بيستخدم، ومين بيستفيد.</h2>
   <div class="grid g4" style="margin-top:64px">
-    <div class="card"><span class="tag n">بيدفع</span><h3>أمانة عمّان</h3><p>صاحبة الإشارات ومركز التحكّم والكاميرات.</p></div>
-    <div class="card"><span class="tag n">شريك</span><h3>إدارة السير</h3><p>أقل أزمات بتحتاج شرطي ينظّمها بإيده.</p></div>
-    <div class="card"><span class="tag n">بيستخدم</span><h3>مشغّل غرفة التحكّم</h3><p>بيشوف شو قرّر فارس وليش، وبيقدر يرجّعه بكبسة.</p></div>
-    <div class="card"><span class="tag go">بيستفيد</span><h3>كل اللي واقف عالإشارة</h3><p>الموظفين، وطلاب المدارس والجامعات. بدون ما ينزّلوا ولا تطبيق.</p></div>
+    <div class="card"><div class="label">بيدفع</div><h3>أمانة عمّان</h3><p>صاحبة الإشارات ومركز التحكّم والكاميرات.</p></div>
+    <div class="card"><div class="label">شريك</div><h3>إدارة السير</h3><p>أقل أزمات بتحتاج شرطي ينظّمها بإيده.</p></div>
+    <div class="card"><div class="label">بيستخدم</div><h3>مشغّل غرفة التحكّم</h3><p>بيشوف الطوابير والإشارات والتنبيهات لحظة بلحظة، وبيقدر يحوّل عالجدول الثابت.</p></div>
+    <div class="card"><div class="label go">بيستفيد</div><h3>كل اللي واقف عالإشارة</h3><p>الموظفين، وطلاب المدارس والجامعات. بدون ما ينزّلوا ولا تطبيق.</p></div>
   </div>
 </section>
 
@@ -319,25 +333,35 @@ body:hover #hint{opacity:.6}
 <section class="slide" data-title="التكلفة">
   <div class="kicker">مين بيدفع وقدّيش</div>
   <h2><span class="go"><span class="num">200</span> دينار بالشهر</span> للتقاطع.</h2>
-  <div class="grid g2" style="margin-top:56px;align-items:start">
+  <div class="grid g2" style="margin-top:44px;align-items:stretch;grid-template-columns:1fr 1.15fr">
     <div class="card">
       <ul class="clean">
         <li><p style="flex:1">تركيب لمرة وحدة</p><p class="num" style="font-weight:600">JD 3,000</p></li>
         <li><p style="flex:1">ترخيص سنوي</p><p class="num" style="font-weight:600">JD 2,400</p></li>
         <li><p style="flex:1">أول <span class="num">6</span> تقاطعات (الدوار السابع)</p><p style="font-weight:600">خصم <span class="num">50%</span></p></li>
-        <li><p style="flex:1">تكلفة <span class="num">5</span> سنين كاملة</p><p class="num go" style="font-weight:700">JD 15,000</p></li>
       </ul>
-      <p style="font-size:22px;margin-top:18px" class="muted">الأنظمة المستوردة: تقريباً <span class="num">JD 18,000–43,000</span> للتقاطع، شراء بس، بدون صيانة (FHWA، أسعار 2010).</p>
+      <div style="margin-top:26px">
+        <svg class="chart" viewBox="0 0 720 170" width="100%" role="img" aria-label="تكلفة التقاطع: فارس 15 ألف دينار لخمس سنين كاملة، والأنظمة المستوردة 18 إلى 43 ألف شراء بس.">
+          <text x="720" y="26" text-anchor="start" font-size="21" fill="#F2F4F7" font-weight="600">فارس · <tspan direction="ltr">5</tspan> سنين كاملة</text>
+          <rect class="hbar" x="487" y="40" width="213" height="34" rx="8" fill="#2BD576"/>
+          <text class="fadein" x="475" y="64" text-anchor="end" font-size="21" font-weight="700" fill="#2BD576" direction="ltr">JD 15K</text>
+          <text x="720" y="112" text-anchor="start" font-size="21" fill="#F2F4F7" font-weight="600">نظام مستورد · شراء بس</text>
+          <rect class="hbar" x="88" y="126" width="612" height="34" rx="8" fill="#FF5A5F" fill-opacity=".35"/>
+          <rect class="hbar" x="444" y="126" width="256" height="34" rx="8" fill="#FF5A5F"/>
+          <text class="fadein" x="76" y="150" text-anchor="end" font-size="21" font-weight="700" fill="#FF5A5F" direction="ltr">JD 18–43K</text>
+        </svg>
+      </div>
+      <p style="font-size:17px;margin-top:10px" class="muted">المستورد: FHWA، أسعار 2010، بدون صيانة.</p>
     </div>
     <div class="card">
-      <table>
-        <tr><th>السنة</th><th>تقاطعات</th><th>دخل</th></tr>
-        <tr><td><span class="num">1</span> · الدوار السابع</td><td><span class="num">6</span></td><td class="v"><span class="num">JD 16K</span></td></tr>
-        <tr><td><span class="num">2</span> · أول محاور</td><td><span class="num">40</span></td><td class="v"><span class="num">JD 198K</span></td></tr>
-        <tr><td><span class="num">3</span> · عمّان</td><td><span class="num">120</span></td><td class="v"><span class="num">JD 528K</span></td></tr>
-        <tr><td>عمّان كاملة</td><td><span class="num">200</span></td><td class="v go"><span class="num">JD 480K</span> / سنة</td></tr>
-      </table>
-      <p style="font-size:22px;margin-top:18px" class="muted">بنغطّي تكاليفنا عند حوالي <span class="num">105</span> تقاطع، يعني نص عمّان.</p>
+      <div class="label go">الدخل المتوقع بالسنة</div>
+      <svg class="chart" viewBox="0 0 760 500" width="100%" role="img" aria-label="الدخل المتوقع: 16 ألف دينار بالسنة الأولى، 198 ألف بالثانية، 528 ألف بالثالثة، و480 ألف بالسنة لما تغطّي عمّان كاملة. خط التكاليف حوالي 250 ألف.">
+        <line x1="20" y1="420" x2="740" y2="420" stroke="#2A313C" stroke-width="3"/>
+        <rect class="bar b1" x="595" y="410.3" width="110" height="9.7" rx="10" fill="#2BD576"/><text class="fadein" x="650" y="394" text-anchor="middle" font-size="26" font-weight="700" fill="#F2F4F7" direction="ltr">JD 16K</text><text x="650" y="458" text-anchor="middle" font-size="24" font-weight="600" fill="#F2F4F7">سنة 1</text><text x="650" y="488" text-anchor="middle" font-size="19" fill="#8A94A6">6 تقاطعات</text><rect class="bar b2" x="420" y="301.2" width="110" height="118.8" rx="10" fill="#2BD576"/><text class="fadein" x="475" y="339" text-anchor="middle" font-size="26" font-weight="700" fill="#0E1116" direction="ltr">JD 198K</text><text x="475" y="458" text-anchor="middle" font-size="24" font-weight="600" fill="#F2F4F7">سنة 2</text><text x="475" y="488" text-anchor="middle" font-size="19" fill="#8A94A6">40 تقاطع</text><rect class="bar b3" x="245" y="103.2" width="110" height="316.8" rx="10" fill="#2BD576"/><text class="fadein" x="300" y="141" text-anchor="middle" font-size="26" font-weight="700" fill="#0E1116" direction="ltr">JD 528K</text><text x="300" y="458" text-anchor="middle" font-size="24" font-weight="600" fill="#F2F4F7">سنة 3</text><text x="300" y="488" text-anchor="middle" font-size="19" fill="#8A94A6">120 تقاطع</text><rect class="bar b4" x="70" y="132.0" width="110" height="288.0" rx="10" fill="#2BD576" fill-opacity=".35" stroke="#2BD576" stroke-width="3"/><text class="fadein" x="125" y="170" text-anchor="middle" font-size="26" font-weight="700" fill="#F2F4F7" direction="ltr">JD 480K</text><text x="125" y="458" text-anchor="middle" font-size="24" font-weight="600" fill="#F2F4F7">عمّان كاملة</text><text x="125" y="488" text-anchor="middle" font-size="19" fill="#8A94A6">200 · كل سنة</text>
+        <line class="fadein" x1="20" y1="270" x2="740" y2="270" stroke="#FFB020" stroke-width="3"/>
+        <text class="fadein" x="740" y="258" text-anchor="start" font-size="20" font-weight="600" fill="#FFB020">تكاليفنا بالسنة الثالثة ≈ JD 250K (تقدير)</text>
+      </svg>
+      <p style="font-size:22px;margin-top:8px" class="muted">بنغطّي تكاليفنا من التراخيص عند حوالي <span class="num">105</span> تقاطع، يعني نص عمّان.</p>
     </div>
   </div>
 </section>
@@ -348,7 +372,7 @@ body:hover #hint{opacity:.6}
   <h2>شو شغّال اليوم، وشو لسّا ضعيف.</h2>
   <div class="grid g2" style="margin-top:50px">
     <div class="card">
-      <span class="tag go">شغّال اليوم</span>
+      <div class="label go">شغّال اليوم</div>
       <ul class="clean">
         <li><span class="pip" style="background:var(--go)"></span><p>محاكاة لممر فيه <span class="num">3</span> تقاطعات وحركة متغيّرة</p></li>
         <li><span class="pip" style="background:var(--go)"></span><p>ذكاء اصطناعي مدرّب ومقارن بعدل على حركة جديدة</p></li>
@@ -357,7 +381,7 @@ body:hover #hint{opacity:.6}
       </ul>
     </div>
     <div class="card">
-      <span class="tag stop">لسّا ضعيف أو عالورق</span>
+      <div class="label stop">لسّا ضعيف أو عالورق</div>
       <ul class="clean">
         <li><span class="pip" style="background:var(--stop)"></span><p>قاعدة الحسّاسات البسيطة لسّا أحسن من فارس</p></li>
         <li><span class="pip" style="background:var(--stop)"></span><p>بالحركة المتوازنة فارس أسوأ من الجدول الثابت</p></li>
@@ -373,14 +397,12 @@ body:hover #hint{opacity:.6}
 <section class="slide" data-title="ختام" style="justify-content:center;align-items:center;text-align:center">
   <div class="logo live" style="font-size:200px"><span class="f">ڡ<span class="dot"></span></span>ارس</div>
   <p style="font-size:54px;font-weight:500;margin-top:36px">الأخضر للي مستنّي</p>
-  <hr class="lane" style="width:420px;margin:50px auto">
-  <p style="font-size:34px">جاهزين نبلّش من <span class="go">الدوار السابع</span>.</p>
+  <p style="font-size:34px;margin-top:56px">جاهزين نبلّش من <span class="go">الدوار السابع</span>.</p>
   <p class="ph" style="margin-top:50px;padding:12px 30px;font-size:22px">أسماء الفريق</p>
 </section>
 
 </div></div>
 <div id="bar"></div>
-<div id="hint">← التالي · → السابق · F شاشة كاملة</div>
 
 <script>
 (function(){
@@ -395,7 +417,7 @@ body:hover #hint{opacity:.6}
   function restartLogo(s){s.querySelectorAll('.logo.live .dot').forEach(function(d){d.style.animation='none';void d.offsetWidth;d.style.animation='';});}
   function go(n){
     i=Math.max(0,Math.min(slides.length-1,n));
-    slides.forEach(function(s,k){s.classList.toggle('on',k===i);});
+    slides.forEach(function(s,k){s.classList.toggle('on',k===i);s.classList.toggle('past',k<i);});
     restartLogo(slides[i]);
     bar.style.width=((i+1)/slides.length*100)+'%';
     try{history.replaceState(null,'','#'+(i+1));}catch(e){}
@@ -407,7 +429,6 @@ body:hover #hint{opacity:.6}
     else if(k==='Home'){go(0);}else if(k==='End'){go(slides.length-1);}
     else if(k==='f'||k==='F'){if(!document.fullscreenElement)document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen();else document.exitFullscreen();}
   });
-  addEventListener('click',function(e){ if(e.clientX<innerWidth/2)go(i+1);else go(i-1); });
   addEventListener('resize',fit);
   fit();
   var h=parseInt((location.hash||'').slice(1),10);go(isNaN(h)?0:h-1);

@@ -39,7 +39,8 @@ Rules:
 - Use one signal colour per number or element. Never use red, amber and green for decoration.
 - On slides, problem numbers are `--stop`, waiting time is `--wait`, our results are `--go`.
 - In the app, a junction's state uses the same three. The traffic-radio words make good labels: **سالكة** (go), **في أزمة** (stop), **بتستنّى** (wait).
-- Coloured text should be at least 18 px or bold. All three signal colours pass AA on `--bg`.
+- Coloured text should be at least 18 px or bold.
+- **No pill/badge chips.** Label a card with a small signal dot + plain muted text instead. All three signal colours pass AA on `--bg`.
 
 ## Typography
 - **IBM Plex Sans Arabic** (Google Fonts), weights 400 / 500 / 600 / 700. Its Latin is Plex Sans, so English words and numbers match.
@@ -61,14 +62,14 @@ Short, direct, a bit warm, never cute when it's about safety.
 | Where | Example |
 |---|---|
 | Slide headline | إشارة خضرا لشارع فاضي |
-| Slide headline | الكاميرات موجودة. الناقص العقل اللي بيقرّر |
+| Slide headline | الكاميرات موجودة عند الأمانة، وجاهزة لفارس |
 | App: AI explains itself | زدت الأخضر 12 ثانية لشارع المدينة لأنه الطابور صار 18 سيارة والفرعي فاضي |
 | App: override button | رجّع عالخطة الثابتة |
 | App: status | سالكة · بتستنّى · في أزمة |
 | App: camera fallback | الكاميرا مش واضحة، رجعنا عالخطة الثابتة لحالنا |
 | App: empty state | ولا تقاطع بحاجة إلك هلأ |
 
-Rules: no English loanwords in the UI where a natural Jordanian word exists (e.g. "طابور", not "queue"). Technical terms used by GAM engineers (دورة، طور، أخضر أدنى) stay as they are.
+Rules: **never use the "it's not just X, it's Y" / "X, not Y" / "X exists. What's missing is Y" patterns** (they read as AI-written); say the thing directly, e.g. «الأزمة إزعاج وفاتورة على البلد كلها». No English loanwords in the UI where a natural Jordanian word exists (e.g. "طابور", not "queue"). Technical terms used by GAM engineers (دورة، طور، أخضر أدنى) stay as they are.
 
 ## CSS starter
 ```css
