@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='utf-8'?>
+<configuration>
+  <input>
+    <net-file value="../networks/corridor.net.xml" />
+    <route-files value="../routes/balanced.rou.xml" />
+  </input>
+  <time>
+    <begin value="0" />
+    <end value="900" />
+    <step-length value="1" />
+  </time>
+  <random_number>
+    <seed value="1001" />
+  </random_number>
+</configuration>
