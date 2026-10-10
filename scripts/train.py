@@ -125,7 +125,7 @@ def main() -> None:
         "networks": {network["name"]: network["intersections"] for network in networks},
         "versions": {
             "python": platform.python_version(),
-            "torch": torch.__version__,
+            "torch": str(torch.__version__),
             "sumo": version("eclipse-sumo"),
         },
     }

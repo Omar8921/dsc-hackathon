@@ -16,10 +16,10 @@
   },
   "baselines": {
     "fixed_time": {
-      "green_s": 30
+      "green_s": 12
     },
     "actuated": {
-      "detector_distance_m": 40
+      "detector_distance_m": 60
     }
   }
 }

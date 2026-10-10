@@ -13,7 +13,7 @@ import torch
 from torch import nn
 from torch.distributions import Categorical
 
-from src.observations import OBSERVATION_FIELDS
+from src.observations import OBSERVATION_FIELDS, build_observation
 
 
 GREEN_PHASE_FIELDS = [OBSERVATION_FIELDS.index("signal.green_phase_0"), OBSERVATION_FIELDS.index("signal.green_phase_1")]
@@ -237,9 +237,40 @@ def save_checkpoint(path: Path, model: ActorCritic, optimizer: torch.optim.Optim
 def load_policy(path: Path) -> tuple[ActorCritic, dict]:
     """Load a saved policy for evaluation; metadata holds sizes and settings."""
 
-    checkpoint = torch.load(path, map_location="cpu")
+    # Earlier checkpoints stored torch.__version__ as its own string subclass,
+    # which the safe loader rejects unless explicitly allowed.
+    with torch.serialization.safe_globals([torch.torch_version.TorchVersion]):
+        checkpoint = torch.load(path, map_location="cpu", weights_only=True)
+
     metadata = checkpoint["metadata"]
     model = ActorCritic(metadata["observation_size"], metadata["action_count"], metadata["hidden_size"])
     model.load_state_dict(checkpoint["model"])
     model.eval()
     return model, metadata
+
+
+class PolicyController:
+    """Request a phase for every intersection from a trained policy.
+
+    Decides once per decision interval, like during training, and takes the
+    most likely action instead of sampling.
+    """
+
+    def __init__(self, model: ActorCritic, settings: dict, decision_interval_s: float) -> None:
+        self.model = model
+        self.settings = settings
+        self.decision_interval_s = decision_interval_s
+        self.next_decision_s = 0.0
+
+    def requests(self, time_s: float, signal_states: dict, vehicles: list[dict], states: dict) -> dict[str, int]:
+        if time_s + 1e-9 < self.next_decision_s:
+            return {}
+
+        self.next_decision_s = time_s + self.decision_interval_s
+        agent_ids = sorted(states)
+        batch = torch.tensor(
+            [build_observation(states[agent_id], self.settings) for agent_id in agent_ids],
+            dtype=torch.float32,
+        )
+        actions, _, _ = self.model.act(batch, deterministic=True)
+        return {agent_id: int(actions[i]) for i, agent_id in enumerate(agent_ids)}

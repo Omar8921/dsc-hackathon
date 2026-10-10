@@ -1,0 +1,729 @@
+{
+  "checkpoint": "models\\ppo_main\\checkpoint_0120.pt",
+  "runs": [
+    {
+      "scenario": "test_balanced_s9001",
+      "controller": "fixed-time",
+      "mean_wait_s": 6.779714738510301,
+      "p95_wait_s": 18.5,
+      "mean_time_loss_s": 17.830554675118858,
+      "completed": 631,
+      "unfinished": 43,
+      "overrides": 0,
+      "illegal": 0
+    },
+    {
+      "scenario": "test_balanced_s9001",
+      "controller": "actuated",
+      "mean_wait_s": 5.547880690737833,
+      "p95_wait_s": 26.0,
+      "mean_time_loss_s": 13.840612244897958,
+      "completed": 637,
+      "unfinished": 37,
+      "overrides": 0,
+      "illegal": 0
+    },
+    {
+      "scenario": "test_balanced_s9001",
+      "controller": "ppo",
+      "mean_wait_s": 8.562009419152277,
+      "p95_wait_s": 32.0,
+      "mean_time_loss_s": 17.827331240188382,
+      "completed": 637,
+      "unfinished": 37,
+      "overrides": 76,
+      "illegal": 0
+    },
+    {
+      "scenario": "test_balanced_s9002",
+      "controller": "fixed-time",
+      "mean_wait_s": 5.697068403908795,
+      "p95_wait_s": 17.350000000000023,
+      "mean_time_loss_s": 15.428501628664495,
+      "completed": 614,
+      "unfinished": 37,
+      "overrides": 0,
+      "illegal": 0
+    },
+    {
+      "scenario": "test_balanced_s9002",
+      "controller": "actuated",
+      "mean_wait_s": 3.8811074918566777,
+      "p95_wait_s": 17.0,
+      "mean_time_loss_s": 11.752035830618892,
+      "completed": 614,
+      "unfinished": 37,
+      "overrides": 0,
+      "illegal": 0
+    },
+    {
+      "scenario": "test_balanced_s9002",
+      "controller": "ppo",
+      "mean_wait_s": 8.153846153846153,
+      "p95_wait_s": 30.5,
+      "mean_time_loss_s": 17.112193126022913,
+      "completed": 611,
+      "unfinished": 40,
+      "overrides": 86,
+      "illegal": 0
+    },
+    {
+      "scenario": "test_balanced_s9003",
+      "controller": "fixed-time",
+      "mean_wait_s": 6.3904,
+      "p95_wait_s": 18.0,
+      "mean_time_loss_s": 17.271872000000002,
+      "completed": 625,
+      "unfinished": 36,
+      "overrides": 0,
+      "illegal": 0
+    },
+    {
+      "scenario": "test_balanced_s9003",
+      "controller": "actuated",
+      "mean_wait_s": 4.944,
+      "p95_wait_s": 20.0,
+      "mean_time_loss_s": 13.321072000000001,
+      "completed": 625,
+      "unfinished": 36,
+      "overrides": 1,
+      "illegal": 0
+    },
+    {
+      "scenario": "test_balanced_s9003",
+      "controller": "ppo",
+      "mean_wait_s": 9.742301458670989,
+      "p95_wait_s": 36.0,
+      "mean_time_loss_s": 20.10233387358185,
+      "completed": 617,
+      "unfinished": 44,
+      "overrides": 92,
+      "illegal": 0
+    },
+    {
+      "scenario": "test_ew_heavy_s9011",
+      "controller": "fixed-time",
+      "mean_wait_s": 13.039525691699605,
+      "p95_wait_s": 37.75,
+      "mean_time_loss_s": 32.89654150197629,
+      "completed": 506,
+      "unfinished": 56,
+      "overrides": 0,
+      "illegal": 0
+    },
+    {
+      "scenario": "test_ew_heavy_s9011",
+      "controller": "actuated",
+      "mean_wait_s": 7.30635838150289,
+      "p95_wait_s": 26.0,
+      "mean_time_loss_s": 20.009094412331404,
+      "completed": 519,
+      "unfinished": 43,
+      "overrides": 1,
+      "illegal": 0
+    },
+    {
+      "scenario": "test_ew_heavy_s9011",
+      "controller": "ppo",
+      "mean_wait_s": 12.134099616858238,
+      "p95_wait_s": 32.0,
+      "mean_time_loss_s": 26.796666666666667,
+      "completed": 522,
+      "unfinished": 40,
+      "overrides": 65,
+      "illegal": 0
+    },
+    {
+      "scenario": "test_ew_heavy_s9012",
+      "controller": "fixed-time",
+      "mean_wait_s": 11.12375249500998,
+      "p95_wait_s": 36.0,
+      "mean_time_loss_s": 29.990339321357286,
+      "completed": 501,
+      "unfinished": 69,
+      "overrides": 0,
+      "illegal": 0
+    },
+    {
+      "scenario": "test_ew_heavy_s9012",
+      "controller": "actuated",
+      "mean_wait_s": 7.5141242937853105,
+      "p95_wait_s": 27.0,
+      "mean_time_loss_s": 21.0575329566855,
+      "completed": 531,
+      "unfinished": 39,
+      "overrides": 2,
+      "illegal": 0
+    },
+    {
+      "scenario": "test_ew_heavy_s9012",
+      "controller": "ppo",
+      "mean_wait_s": 12.720306513409962,
+      "p95_wait_s": 34.94999999999999,
+      "mean_time_loss_s": 27.21300766283525,
+      "completed": 522,
+      "unfinished": 48,
+      "overrides": 57,
+      "illegal": 0
+    },
+    {
+      "scenario": "test_ew_heavy_s9013",
+      "controller": "fixed-time",
+      "mean_wait_s": 18.05421686746988,
+      "p95_wait_s": 49.0,
+      "mean_time_loss_s": 44.912610441767065,
+      "completed": 498,
+      "unfinished": 96,
+      "overrides": 0,
+      "illegal": 0
+    },
+    {
+      "scenario": "test_ew_heavy_s9013",
+      "controller": "actuated",
+      "mean_wait_s": 7.599627560521415,
+      "p95_wait_s": 30.399999999999977,
+      "mean_time_loss_s": 20.369683426443203,
+      "completed": 537,
+      "unfinished": 57,
+      "overrides": 3,
+      "illegal": 0
+    },
+    {
+      "scenario": "test_ew_heavy_s9013",
+      "controller": "ppo",
+      "mean_wait_s": 13.031716417910447,
+      "p95_wait_s": 31.0,
+      "mean_time_loss_s": 29.235410447761193,
+      "completed": 536,
+      "unfinished": 58,
+      "overrides": 59,
+      "illegal": 0
+    },
+    {
+      "scenario": "test_shift_s9021",
+      "controller": "fixed-time",
+      "mean_wait_s": 10.213141025641026,
+      "p95_wait_s": 36.0,
+      "mean_time_loss_s": 25.503205128205128,
+      "completed": 624,
+      "unfinished": 43,
+      "overrides": 0,
+      "illegal": 0
+    },
+    {
+      "scenario": "test_shift_s9021",
+      "controller": "actuated",
+      "mean_wait_s": 6.576243980738362,
+      "p95_wait_s": 25.899999999999977,
+      "mean_time_loss_s": 16.268298555377207,
+      "completed": 623,
+      "unfinished": 44,
+      "overrides": 1,
+      "illegal": 0
+    },
+    {
+      "scenario": "test_shift_s9021",
+      "controller": "ppo",
+      "mean_wait_s": 10.03074433656958,
+      "p95_wait_s": 36.0,
+      "mean_time_loss_s": 20.85593851132686,
+      "completed": 618,
+      "unfinished": 49,
+      "overrides": 58,
+      "illegal": 0
+    },
+    {
+      "scenario": "test_shift_s9022",
+      "controller": "fixed-time",
+      "mean_wait_s": 9.72013093289689,
+      "p95_wait_s": 33.0,
+      "mean_time_loss_s": 25.04291325695581,
+      "completed": 611,
+      "unfinished": 43,
+      "overrides": 0,
+      "illegal": 0
+    },
+    {
+      "scenario": "test_shift_s9022",
+      "controller": "actuated",
+      "mean_wait_s": 5.0308441558441555,
+      "p95_wait_s": 22.0,
+      "mean_time_loss_s": 14.447662337662338,
+      "completed": 616,
+      "unfinished": 38,
+      "overrides": 1,
+      "illegal": 0
+    },
+    {
+      "scenario": "test_shift_s9022",
+      "controller": "ppo",
+      "mean_wait_s": 9.042833607907744,
+      "p95_wait_s": 32.0,
+      "mean_time_loss_s": 20.282240527182868,
+      "completed": 607,
+      "unfinished": 47,
+      "overrides": 65,
+      "illegal": 0
+    },
+    {
+      "scenario": "test_shift_s9023",
+      "controller": "fixed-time",
+      "mean_wait_s": 7.124333925399645,
+      "p95_wait_s": 21.899999999999977,
+      "mean_time_loss_s": 19.3097513321492,
+      "completed": 563,
+      "unfinished": 33,
+      "overrides": 0,
+      "illegal": 0
+    },
+    {
+      "scenario": "test_shift_s9023",
+      "controller": "actuated",
+      "mean_wait_s": 4.502673796791444,
+      "p95_wait_s": 18.0,
+      "mean_time_loss_s": 13.214670231729055,
+      "completed": 561,
+      "unfinished": 35,
+      "overrides": 1,
+      "illegal": 0
+    },
+    {
+      "scenario": "test_shift_s9023",
+      "controller": "ppo",
+      "mean_wait_s": 8.676156583629894,
+      "p95_wait_s": 35.0,
+      "mean_time_loss_s": 18.47711743772242,
+      "completed": 562,
+      "unfinished": 34,
+      "overrides": 63,
+      "illegal": 0
+    }
+  ],
+  "table": [
+    {
+      "scenario": "test_balanced",
+      "controller": "fixed-time",
+      "mean_wait_s": {
+        "mean": 6.289061047473031,
+        "sd": 0.5483912462202203,
+        "n": 3
+      },
+      "p95_wait_s": {
+        "mean": 17.950000000000006,
+        "sd": 0.576628129733528,
+        "n": 3
+      },
+      "mean_time_loss_s": {
+        "mean": 16.843642767927786,
+        "sd": 1.2569804755428946,
+        "n": 3
+      },
+      "completed": {
+        "mean": 623.3333333333334,
+        "sd": 8.621678104251709,
+        "n": 3
+      },
+      "unfinished": {
+        "mean": 38.666666666666664,
+        "sd": 3.7859388972001824,
+        "n": 3
+      },
+      "overrides": {
+        "mean": 0.0,
+        "sd": 0.0,
+        "n": 3
+      },
+      "illegal": {
+        "mean": 0.0,
+        "sd": 0.0,
+        "n": 3
+      }
+    },
+    {
+      "scenario": "test_balanced",
+      "controller": "actuated",
+      "mean_wait_s": {
+        "mean": 4.790996060864837,
+        "sd": 0.843854773151333,
+        "n": 3
+      },
+      "p95_wait_s": {
+        "mean": 21.0,
+        "sd": 4.58257569495584,
+        "n": 3
+      },
+      "mean_time_loss_s": {
+        "mean": 12.971240025172284,
+        "sd": 1.0873475376022128,
+        "n": 3
+      },
+      "completed": {
+        "mean": 625.3333333333334,
+        "sd": 11.50362261782493,
+        "n": 3
+      },
+      "unfinished": {
+        "mean": 36.666666666666664,
+        "sd": 0.5773502691896257,
+        "n": 3
+      },
+      "overrides": {
+        "mean": 0.3333333333333333,
+        "sd": 0.5773502691896257,
+        "n": 3
+      },
+      "illegal": {
+        "mean": 0.0,
+        "sd": 0.0,
+        "n": 3
+      }
+    },
+    {
+      "scenario": "test_balanced",
+      "controller": "ppo",
+      "mean_wait_s": {
+        "mean": 8.81938567722314,
+        "sd": 0.8249117937818925,
+        "n": 3
+      },
+      "p95_wait_s": {
+        "mean": 32.833333333333336,
+        "sd": 2.8431203515386634,
+        "n": 3
+      },
+      "mean_time_loss_s": {
+        "mean": 18.34728607993105,
+        "sd": 1.5614096832932554,
+        "n": 3
+      },
+      "completed": {
+        "mean": 621.6666666666666,
+        "sd": 13.613718571108091,
+        "n": 3
+      },
+      "unfinished": {
+        "mean": 40.333333333333336,
+        "sd": 3.511884584284246,
+        "n": 3
+      },
+      "overrides": {
+        "mean": 84.66666666666667,
+        "sd": 8.082903768654761,
+        "n": 3
+      },
+      "illegal": {
+        "mean": 0.0,
+        "sd": 0.0,
+        "n": 3
+      }
+    },
+    {
+      "scenario": "test_ew_heavy",
+      "controller": "fixed-time",
+      "mean_wait_s": {
+        "mean": 14.072498351393156,
+        "sd": 3.5788417806938284,
+        "n": 3
+      },
+      "p95_wait_s": {
+        "mean": 40.916666666666664,
+        "sd": 7.054844671098956,
+        "n": 3
+      },
+      "mean_time_loss_s": {
+        "mean": 35.93316375503355,
+        "sd": 7.911027106424035,
+        "n": 3
+      },
+      "completed": {
+        "mean": 501.6666666666667,
+        "sd": 4.041451884327381,
+        "n": 3
+      },
+      "unfinished": {
+        "mean": 73.66666666666667,
+        "sd": 20.404247923737188,
+        "n": 3
+      },
+      "overrides": {
+        "mean": 0.0,
+        "sd": 0.0,
+        "n": 3
+      },
+      "illegal": {
+        "mean": 0.0,
+        "sd": 0.0,
+        "n": 3
+      }
+    },
+    {
+      "scenario": "test_ew_heavy",
+      "controller": "actuated",
+      "mean_wait_s": {
+        "mean": 7.473370078603206,
+        "sd": 0.15082235372079933,
+        "n": 3
+      },
+      "p95_wait_s": {
+        "mean": 27.799999999999994,
+        "sd": 2.3065125189341464,
+        "n": 3
+      },
+      "mean_time_loss_s": {
+        "mean": 20.47877026515337,
+        "sd": 0.532663870660163,
+        "n": 3
+      },
+      "completed": {
+        "mean": 529.0,
+        "sd": 9.16515138991168,
+        "n": 3
+      },
+      "unfinished": {
+        "mean": 46.333333333333336,
+        "sd": 9.451631252505218,
+        "n": 3
+      },
+      "overrides": {
+        "mean": 2.0,
+        "sd": 1.0,
+        "n": 3
+      },
+      "illegal": {
+        "mean": 0.0,
+        "sd": 0.0,
+        "n": 3
+      }
+    },
+    {
+      "scenario": "test_ew_heavy",
+      "controller": "ppo",
+      "mean_wait_s": {
+        "mean": 12.62870751605955,
+        "sd": 0.4557650300533169,
+        "n": 3
+      },
+      "p95_wait_s": {
+        "mean": 32.65,
+        "sd": 2.0536552777912784,
+        "n": 3
+      },
+      "mean_time_loss_s": {
+        "mean": 27.748361592421038,
+        "sd": 1.3045384930691064,
+        "n": 3
+      },
+      "completed": {
+        "mean": 526.6666666666666,
+        "sd": 8.082903768654761,
+        "n": 3
+      },
+      "unfinished": {
+        "mean": 48.666666666666664,
+        "sd": 9.018499505645789,
+        "n": 3
+      },
+      "overrides": {
+        "mean": 60.333333333333336,
+        "sd": 4.163331998932265,
+        "n": 3
+      },
+      "illegal": {
+        "mean": 0.0,
+        "sd": 0.0,
+        "n": 3
+      }
+    },
+    {
+      "scenario": "test_shift",
+      "controller": "fixed-time",
+      "mean_wait_s": {
+        "mean": 9.01920196131252,
+        "sd": 1.6594150755703447,
+        "n": 3
+      },
+      "p95_wait_s": {
+        "mean": 30.299999999999994,
+        "sd": 7.427651041883981,
+        "n": 3
+      },
+      "mean_time_loss_s": {
+        "mean": 23.285289905770046,
+        "sd": 3.4506010149602924,
+        "n": 3
+      },
+      "completed": {
+        "mean": 599.3333333333334,
+        "sd": 32.129944496269104,
+        "n": 3
+      },
+      "unfinished": {
+        "mean": 39.666666666666664,
+        "sd": 5.773502691896257,
+        "n": 3
+      },
+      "overrides": {
+        "mean": 0.0,
+        "sd": 0.0,
+        "n": 3
+      },
+      "illegal": {
+        "mean": 0.0,
+        "sd": 0.0,
+        "n": 3
+      }
+    },
+    {
+      "scenario": "test_shift",
+      "controller": "actuated",
+      "mean_wait_s": {
+        "mean": 5.369920644457987,
+        "sd": 1.077568084060784,
+        "n": 3
+      },
+      "p95_wait_s": {
+        "mean": 21.966666666666658,
+        "sd": 3.9501054838235956,
+        "n": 3
+      },
+      "mean_time_loss_s": {
+        "mean": 14.643543708256201,
+        "sd": 1.5362091713877548,
+        "n": 3
+      },
+      "completed": {
+        "mean": 600.0,
+        "sd": 33.95585369269929,
+        "n": 3
+      },
+      "unfinished": {
+        "mean": 39.0,
+        "sd": 4.58257569495584,
+        "n": 3
+      },
+      "overrides": {
+        "mean": 1.0,
+        "sd": 0.0,
+        "n": 3
+      },
+      "illegal": {
+        "mean": 0.0,
+        "sd": 0.0,
+        "n": 3
+      }
+    },
+    {
+      "scenario": "test_shift",
+      "controller": "ppo",
+      "mean_wait_s": {
+        "mean": 9.249911509369072,
+        "sd": 0.7006339544004186,
+        "n": 3
+      },
+      "p95_wait_s": {
+        "mean": 34.333333333333336,
+        "sd": 2.0816659994661326,
+        "n": 3
+      },
+      "mean_time_loss_s": {
+        "mean": 19.871765492077383,
+        "sd": 1.241396286803606,
+        "n": 3
+      },
+      "completed": {
+        "mean": 595.6666666666666,
+        "sd": 29.670411748631555,
+        "n": 3
+      },
+      "unfinished": {
+        "mean": 43.333333333333336,
+        "sd": 8.144527815247077,
+        "n": 3
+      },
+      "overrides": {
+        "mean": 62.0,
+        "sd": 3.605551275463989,
+        "n": 3
+      },
+      "illegal": {
+        "mean": 0.0,
+        "sd": 0.0,
+        "n": 3
+      }
+    }
+  ],
+  "improvement_percent": [
+    {
+      "scenario": "test_balanced",
+      "baseline": "fixed-time",
+      "metric": "mean_wait_s",
+      "value": -40.23374253564931
+    },
+    {
+      "scenario": "test_balanced",
+      "baseline": "fixed-time",
+      "metric": "mean_time_loss_s",
+      "value": -8.927067218893828
+    },
+    {
+      "scenario": "test_balanced",
+      "baseline": "actuated",
+      "metric": "mean_wait_s",
+      "value": -84.08250737804042
+    },
+    {
+      "scenario": "test_balanced",
+      "baseline": "actuated",
+      "metric": "mean_time_loss_s",
+      "value": -41.44589140533895
+    },
+    {
+      "scenario": "test_ew_heavy",
+      "baseline": "fixed-time",
+      "metric": "mean_wait_s",
+      "value": 10.25966249404942
+    },
+    {
+      "scenario": "test_ew_heavy",
+      "baseline": "fixed-time",
+      "metric": "mean_time_loss_s",
+      "value": 22.777850061883225
+    },
+    {
+      "scenario": "test_ew_heavy",
+      "baseline": "actuated",
+      "metric": "mean_wait_s",
+      "value": -68.9827665863416
+    },
+    {
+      "scenario": "test_ew_heavy",
+      "baseline": "actuated",
+      "metric": "mean_time_loss_s",
+      "value": -35.49818291402776
+    },
+    {
+      "scenario": "test_shift",
+      "baseline": "fixed-time",
+      "metric": "mean_wait_s",
+      "value": -2.557981837485965
+    },
+    {
+      "scenario": "test_shift",
+      "baseline": "fixed-time",
+      "metric": "mean_time_loss_s",
+      "value": 14.659574467427177
+    },
+    {
+      "scenario": "test_shift",
+      "baseline": "actuated",
+      "metric": "mean_wait_s",
+      "value": -72.2541564727855
+    },
+    {
+      "scenario": "test_shift",
+      "baseline": "actuated",
+      "metric": "mean_time_loss_s",
+      "value": -35.70325522280136
+    }
+  ]
+}

@@ -19,11 +19,13 @@ def build_snapshot(
     real_seconds_per_step: float,
     control: dict[str, dict] | None = None,
     states: dict | None = None,
+    alerts: list[dict] | None = None,
 ) -> dict:
     """Combine one step of adapter readings into a telemetry snapshot.
 
     control is the safety controller's summary per signal ID, if one is running;
-    states are the IntersectionState objects for the same step.
+    states are the IntersectionState objects for the same step; alerts are the
+    congestion events so far, or None when the detector is off.
     """
 
     vehicles = adapter.read_vehicles()
@@ -77,6 +79,7 @@ def build_snapshot(
         "signals": signals,
         "lanes": lanes,
         "vehicles": vehicles,
+        "alerts": alerts,
     }
 
 

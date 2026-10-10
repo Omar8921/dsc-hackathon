@@ -70,6 +70,35 @@
         }
       ]
     },
+    "demo_incident": {
+      "seed": 1003,
+      "end_s": 900,
+      "intervals": [
+        {
+          "begin_s": 0,
+          "end_s": 900,
+          "flows_vph": {
+            "eastbound": 450,
+            "westbound": 450,
+            "southbound_A0": 200,
+            "northbound_A0": 200,
+            "southbound_B0": 200,
+            "northbound_B0": 600,
+            "southbound_C0": 200,
+            "northbound_C0": 200
+          }
+        }
+      ],
+      "incidents": [
+        {
+          "route": "northbound_B0",
+          "depart_s": 280,
+          "lane": "B0top1_0",
+          "position_m": 15,
+          "duration_s": 240
+        }
+      ]
+    },
     "test_balanced": {
       "seeds": [9001, 9002, 9003],
       "end_s": 900,

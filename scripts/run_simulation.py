@@ -12,6 +12,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_SCENARIO_PATH = PROJECT_ROOT / "simulation" / "scenarios" / "balanced.sumocfg"
 INTERSECTIONS_PATH = PROJECT_ROOT / "configs" / "intersections.json"
 CONTROLLER_CONFIG_PATH = PROJECT_ROOT / "configs" / "controller.json"
+ALERTS_CONFIG_PATH = PROJECT_ROOT / "configs" / "alerts.json"
 VIEWER_PAGE = PROJECT_ROOT / "viewer" / "index.html"
 
 # Scripts run directly, so make the project's src package importable.
@@ -42,6 +43,11 @@ def parse_arguments() -> argparse.Namespace:
         choices=CONTROLLERS,
         default="fixed-time",
         help="Signal controller. Default: fixed-time.",
+    )
+    parser.add_argument(
+        "--checkpoint",
+        type=Path,
+        help="Trained policy checkpoint (.pt); required with --controller ppo.",
     )
     parser.add_argument(
         "--headless",
@@ -104,6 +110,12 @@ def print_summary(summary: dict, output_dir: Path) -> None:
         f"Safety: {safety['illegal_transitions']} illegal transitions, "
         f"overrides {safety['overrides'] or 'none'}"
     )
+
+    for event in summary.get("alerts", []):
+        print(
+            f"Congestion alert {event['event_id']}: {event['intersection_id']} from "
+            f"{event['started_s']:.0f} s for {event['duration_s']:.0f} s, {event['status']}"
+        )
     print(f"Metrics: {output_dir / 'metrics.json'}")
 
 
@@ -127,6 +139,12 @@ def main() -> None:
         "scenario": scenario_path.stem,
         "controller": arguments.controller,
     }
+
+    if arguments.controller == "ppo":
+        if arguments.checkpoint is None or not arguments.checkpoint.is_file():
+            raise FileNotFoundError("--controller ppo needs --checkpoint pointing to a .pt file.")
+
+        run["checkpoint"] = str(arguments.checkpoint.resolve())
     output_dir = (
         arguments.output_dir.resolve()
         if arguments.output_dir
@@ -136,12 +154,20 @@ def main() -> None:
     )
     intersections = load_json(INTERSECTIONS_PATH)
     controller_config = load_json(CONTROLLER_CONFIG_PATH)
+    # Congestion alerts run only once a reference has been calibrated.
+    alerts_config = load_json(ALERTS_CONFIG_PATH) if ALERTS_CONFIG_PATH.is_file() else None
 
     print(f"Scenario: {scenario_path}", flush=True)
 
     if arguments.headless:
         summary = run_episode(
-            scenario_path, run, intersections, controller_config, output_dir, quiet=True
+            scenario_path,
+            run,
+            intersections,
+            controller_config,
+            output_dir,
+            quiet=True,
+            alerts_config=alerts_config,
         )
         print_summary(summary, output_dir)
         return
@@ -149,7 +175,7 @@ def main() -> None:
     server = TelemetryServer(arguments.host, arguments.port, VIEWER_PAGE)
     pacing = {"next_tick": None}
 
-    def publish(adapter, control, states, status) -> None:
+    def publish(adapter, control, states, alerts, status) -> None:
         # The network is only known once SUMO has started.
         if pacing["next_tick"] is None:
             server.set_network(adapter.read_network())
@@ -159,7 +185,7 @@ def main() -> None:
 
         seconds_per_step = adapter.step_length_s / arguments.speed
         server.publish(
-            build_snapshot(adapter, run, status, seconds_per_step, control, states)
+            build_snapshot(adapter, run, status, seconds_per_step, control, states, alerts)
         )
 
         pacing["next_tick"] += seconds_per_step
@@ -173,7 +199,13 @@ def main() -> None:
 
     try:
         summary = run_episode(
-            scenario_path, run, intersections, controller_config, output_dir, on_step=publish
+            scenario_path,
+            run,
+            intersections,
+            controller_config,
+            output_dir,
+            on_step=publish,
+            alerts_config=alerts_config,
         )
         print_summary(summary, output_dir)
         print(

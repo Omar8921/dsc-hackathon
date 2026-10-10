@@ -31,6 +31,10 @@ def validate_scenario(name: str, scenario: dict, route_ids: set[str]) -> None:
 
         previous_end_s = end_s
 
+    for incident in scenario.get("incidents", []):
+        if incident["route"] not in route_ids:
+            raise ValueError(f"{name}: incident uses unknown route {incident['route']!r}.")
+
 
 def sample_departures(route_id: str, seed: int, intervals: list[dict]) -> list[float]:
     """Sample Poisson departure times for one route across all intervals."""
@@ -82,11 +86,15 @@ def write_routes(path: Path, config: dict, scenario: dict) -> dict[str, int]:
         counts[route_id] = len(departures)
 
         for index, depart_s in enumerate(departures):
-            vehicles.append((depart_s, f"{route_id}.{index}", route_id))
+            vehicles.append((depart_s, f"{route_id}.{index}", route_id, None))
+
+    # An incident is one extra vehicle that stops on a lane, blocking it.
+    for index, incident in enumerate(scenario.get("incidents", [])):
+        vehicles.append((incident["depart_s"], f"incident.{index}", incident["route"], incident))
 
     # SUMO expects vehicles sorted by departure time.
-    for depart_s, vehicle_id, route_id in sorted(vehicles):
-        ET.SubElement(
+    for depart_s, vehicle_id, route_id, incident in sorted(vehicles, key=lambda item: item[:3]):
+        element = ET.SubElement(
             root,
             "vehicle",
             id=vehicle_id,
@@ -95,6 +103,15 @@ def write_routes(path: Path, config: dict, scenario: dict) -> dict[str, int]:
             depart=f"{depart_s:.2f}",
             departSpeed="max",
         )
+
+        if incident is not None:
+            ET.SubElement(
+                element,
+                "stop",
+                lane=incident["lane"],
+                endPos=str(incident["position_m"]),
+                duration=str(incident["duration_s"]),
+            )
 
     ET.indent(root)
     ET.ElementTree(root).write(path, encoding="utf-8", xml_declaration=True)

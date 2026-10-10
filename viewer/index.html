@@ -154,6 +154,22 @@
 
   #inspector:empty::before { content: "Click a car, a lane, or an intersection."; color: var(--ink-3); }
 
+  .alert-row {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 2px 10px;
+    padding: 7px 0;
+    border-top: 1px solid var(--rule-soft);
+    font-size: 12px;
+  }
+  .alert-row:first-child { padding-top: 0; border-top: 0; }
+  .alert-status { font: 600 11px var(--mono); }
+  .alert-status.active { color: var(--bad); }
+  .alert-status.resolved { color: var(--ink-3); }
+  .alert-time { font-family: var(--mono); color: var(--ink-2); }
+  .alert-detail { grid-column: 1 / -1; font: 11.5px var(--mono); color: var(--ink-2); }
+  #alerts:empty::before { content: "No alerts."; color: var(--ink-3); }
+
   @media (max-width: 820px) {
     #app { flex-direction: column; }
     #panel { width: 100%; height: 45%; border-left: 0; border-top: 1px solid var(--ink); }
@@ -199,6 +215,11 @@
         <dt>Waiting to enter</dt><dd id="fact-pending">&ndash;</dd>
         <dt>Mean wait, cars on the road</dt><dd id="fact-wait">&ndash;</dd>
       </dl>
+    </section>
+
+    <section class="section">
+      <h2>Congestion alerts <small id="alerts-note"></small></h2>
+      <div id="alerts"></div>
     </section>
 
     <section class="section">
@@ -1058,9 +1079,30 @@
     }
   }
 
+  // Intersections with an active congestion alert.
+  function activeAlerts() {
+    const alerts = (state.snapshot && state.snapshot.alerts) || [];
+    return new Set(alerts.filter((alert) => alert.status === "active").map((alert) => alert.intersection_id));
+  }
+
+  function drawAlertRings(now) {
+    const active = activeAlerts();
+    if (!active.size) return;
+    ctx.strokeStyle = `rgba(179, 38, 30, ${0.55 + 0.35 * Math.sin(now / 250)})`;
+    ctx.lineWidth = 3 / state.view.scale;
+    const radius = (state.net.half + SIDEWALK_M) * ROAD_SCALE + 4;
+    for (const junction of state.net.junctions) {
+      if (!junction.signal || !active.has(junction.id)) continue;
+      ctx.beginPath();
+      ctx.arc(junction.drawCenter[0], junction.drawCenter[1], radius, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+  }
+
   function drawLabels() {
     const scale = state.view.scale;
     const clearance = (state.net.half + SIDEWALK_M) * ROAD_SCALE * scale + 12;
+    const active = activeAlerts();
     ctx.font = `600 11px ${MONO}`;
     ctx.textBaseline = "middle";
     ctx.textAlign = "left";
@@ -1070,7 +1112,9 @@
       if (!junction.signal) continue;
       const [sx, sy] = toScreen(...junction.drawCenter);
       const signal = state.snapshot && state.snapshot.signals.find((item) => item.id === junction.signal);
-      const text = signal ? `${junction.id}  ${signal.queue_count} queued` : junction.id;
+      const alerting = active.has(junction.id);
+      const queued = signal ? `  ${signal.queue_count} queued` : "";
+      const text = alerting ? `${junction.id}  congestion${queued}` : `${junction.id}${queued}`;
       const x = sx + clearance;
       const y = sy - clearance;
       const w = Math.ceil(ctx.measureText(text).width) + 12;
@@ -1080,12 +1124,31 @@
       ctx.moveTo(sx + 13, sy - 13);
       ctx.lineTo(x, y);
       ctx.stroke();
-      ctx.fillStyle = "#ffffff";
+      ctx.fillStyle = alerting ? "#b3261e" : "#ffffff";
       ctx.fillRect(x, y - 10, w, 20);
       ctx.strokeRect(x + 0.5, y - 9.5, w - 1, 19);
-      ctx.fillStyle = MAP.ink;
+      ctx.fillStyle = alerting ? "#ffffff" : MAP.ink;
       ctx.fillText(text, x + 6, y + 0.5);
     }
+  }
+
+  function renderAlerts(alerts) {
+    const container = document.getElementById("alerts");
+    const note = document.getElementById("alerts-note");
+    if (!alerts) {
+      note.textContent = "detector off";
+      container.innerHTML = "";
+      return;
+    }
+    const active = alerts.filter((alert) => alert.status === "active").length;
+    note.textContent = active ? `${active} active` : "watching";
+    container.innerHTML = alerts.slice().reverse().map((alert) => `
+      <div class="alert-row">
+        <span class="alert-status ${alert.status}">${alert.status === "active" ? "ACTIVE" : "resolved"}</span>
+        <span>${escapeHtml(alert.intersection_id)}, persistent congestion${alert.status === "active" ? `, ${escapeHtml(alert.severity)}` : ""}</span>
+        <span class="alert-time">${clockText(alert.started_s)}</span>
+        <span class="alert-detail">worst approach ${Math.round(alert.observed_queue * 100)}% full, trigger ${Math.round(alert.reference_threshold * 100)}%, ${Math.round(alert.duration_s)} s</span>
+      </div>`).join("");
   }
 
   function drawMapFurniture() {
@@ -1137,6 +1200,7 @@
       drawRoads();
       drawHighlight(state.hover, false, now);
       drawCars(now);
+      drawAlertRings(now);
       drawHighlight(state.selected, true, now);
 
       useScreenTransform();
@@ -1406,6 +1470,7 @@
     document.getElementById("fact-arrived").textContent = s.totals.arrived;
     document.getElementById("fact-pending").textContent = s.totals.waiting_to_insert;
     document.getElementById("fact-wait").textContent = `${s.totals.mean_waiting_s.toFixed(1)} s`;
+    renderAlerts(s.alerts);
 
     const rows = [
       ["Queued", (a) => a.queue],

@@ -16,7 +16,11 @@ class FixedTimeController:
         self.green_s = green_s
 
     def requests(
-        self, time_s: float, signal_states: dict[str, SignalState], vehicles: list[dict]
+        self,
+        time_s: float,
+        signal_states: dict[str, SignalState],
+        vehicles: list[dict],
+        states: dict | None = None,
     ) -> dict[str, int]:
         requests = {}
 
@@ -49,7 +53,11 @@ class ActuatedController:
         self.detector_distance_m = detector_distance_m
 
     def requests(
-        self, time_s: float, signal_states: dict[str, SignalState], vehicles: list[dict]
+        self,
+        time_s: float,
+        signal_states: dict[str, SignalState],
+        vehicles: list[dict],
+        states: dict | None = None,
     ) -> dict[str, int]:
         # Vehicles inside each lane's detector zone, keyed by lane.
         detected: dict[str, int] = {}

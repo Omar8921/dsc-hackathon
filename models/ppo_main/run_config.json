@@ -1,0 +1,307 @@
+{
+  "run_id": "20261010-021151",
+  "seed": 7,
+  "observation_size": 44,
+  "action_count": 2,
+  "hidden_size": 64,
+  "training_config": {
+    "seed": 7,
+    "updates": 100,
+    "episodes_per_update": 2,
+    "checkpoint_every_updates": 10,
+    "networks": [
+      {
+        "name": "corridor",
+        "intersections": "configs/intersections.json",
+        "scenarios": "configs/scenarios.json"
+      }
+    ],
+    "ppo": {
+      "hidden_size": 64,
+      "learning_rate": 0.0003,
+      "gamma": 0.99,
+      "gae_lambda": 0.95,
+      "clip_range": 0.2,
+      "entropy_coef": 0.01,
+      "value_coef": 0.5,
+      "epochs": 10,
+      "minibatch_size": 64,
+      "max_grad_norm": 0.5
+    },
+    "reward": {
+      "congestion_weight": 0.25,
+      "congestion_threshold": 0.8,
+      "jam_occupancy": 0.667
+    },
+    "demand": {
+      "episode_length_s": 900,
+      "profiles": [
+        "balanced",
+        "ew_heavy",
+        "ns_heavy",
+        "shift"
+      ],
+      "balanced_vph": [
+        200,
+        450
+      ],
+      "major_vph": [
+        450,
+        700
+      ],
+      "minor_vph": [
+        100,
+        250
+      ],
+      "route_jitter": 0.15
+    }
+  },
+  "controller_config": {
+    "safety": {
+      "min_green_s": 10,
+      "max_green_s": 60,
+      "yellow_s": 3,
+      "all_red_s": 1,
+      "fallback_green_s": 30
+    },
+    "policy": {
+      "decision_interval_s": 10
+    },
+    "observation": {
+      "arrival_window_s": 30,
+      "arrival_reference_vps": 0.5,
+      "wait_reference_s": 120
+    },
+    "baselines": {
+      "fixed_time": {
+        "green_s": 30
+      },
+      "actuated": {
+        "detector_distance_m": 40
+      }
+    }
+  },
+  "networks": {
+    "corridor": {
+      "network_file": "simulation/networks/corridor.net.xml",
+      "vehicle_spacing_m": 7.5,
+      "intersections": {
+        "A0": {
+          "junction_id": "A0",
+          "signal_id": "A0",
+          "approaches": {
+            "N": {
+              "incoming_lanes": [
+                "top0A0_0"
+              ],
+              "receiving_lanes": [
+                "A0bottom0_0"
+              ],
+              "neighbor": null,
+              "storage_capacity": 25
+            },
+            "E": {
+              "incoming_lanes": [
+                "B0A0_0"
+              ],
+              "receiving_lanes": [
+                "A0left0_0"
+              ],
+              "neighbor": "B0",
+              "storage_capacity": 38
+            },
+            "S": {
+              "incoming_lanes": [
+                "bottom0A0_0"
+              ],
+              "receiving_lanes": [
+                "A0top0_0"
+              ],
+              "neighbor": null,
+              "storage_capacity": 25
+            },
+            "W": {
+              "incoming_lanes": [
+                "left0A0_0"
+              ],
+              "receiving_lanes": [
+                "A0B0_0"
+              ],
+              "neighbor": null,
+              "storage_capacity": 25
+            }
+          },
+          "actions": [
+            {
+              "action": 0,
+              "name": "north_south",
+              "served_approaches": [
+                "N",
+                "S"
+              ],
+              "green_phase": 0,
+              "yellow_phase": 1,
+              "all_red_phase": 2
+            },
+            {
+              "action": 1,
+              "name": "east_west",
+              "served_approaches": [
+                "E",
+                "W"
+              ],
+              "green_phase": 3,
+              "yellow_phase": 4,
+              "all_red_phase": 5
+            }
+          ]
+        },
+        "B0": {
+          "junction_id": "B0",
+          "signal_id": "B0",
+          "approaches": {
+            "N": {
+              "incoming_lanes": [
+                "top1B0_0"
+              ],
+              "receiving_lanes": [
+                "B0bottom1_0"
+              ],
+              "neighbor": null,
+              "storage_capacity": 25
+            },
+            "E": {
+              "incoming_lanes": [
+                "C0B0_0"
+              ],
+              "receiving_lanes": [
+                "B0A0_0"
+              ],
+              "neighbor": "C0",
+              "storage_capacity": 38
+            },
+            "S": {
+              "incoming_lanes": [
+                "bottom1B0_0"
+              ],
+              "receiving_lanes": [
+                "B0top1_0"
+              ],
+              "neighbor": null,
+              "storage_capacity": 25
+            },
+            "W": {
+              "incoming_lanes": [
+                "A0B0_0"
+              ],
+              "receiving_lanes": [
+                "B0C0_0"
+              ],
+              "neighbor": "A0",
+              "storage_capacity": 38
+            }
+          },
+          "actions": [
+            {
+              "action": 0,
+              "name": "north_south",
+              "served_approaches": [
+                "N",
+                "S"
+              ],
+              "green_phase": 0,
+              "yellow_phase": 1,
+              "all_red_phase": 2
+            },
+            {
+              "action": 1,
+              "name": "east_west",
+              "served_approaches": [
+                "E",
+                "W"
+              ],
+              "green_phase": 3,
+              "yellow_phase": 4,
+              "all_red_phase": 5
+            }
+          ]
+        },
+        "C0": {
+          "junction_id": "C0",
+          "signal_id": "C0",
+          "approaches": {
+            "N": {
+              "incoming_lanes": [
+                "top2C0_0"
+              ],
+              "receiving_lanes": [
+                "C0bottom2_0"
+              ],
+              "neighbor": null,
+              "storage_capacity": 25
+            },
+            "E": {
+              "incoming_lanes": [
+                "right0C0_0"
+              ],
+              "receiving_lanes": [
+                "C0B0_0"
+              ],
+              "neighbor": null,
+              "storage_capacity": 25
+            },
+            "S": {
+              "incoming_lanes": [
+                "bottom2C0_0"
+              ],
+              "receiving_lanes": [
+                "C0top2_0"
+              ],
+              "neighbor": null,
+              "storage_capacity": 25
+            },
+            "W": {
+              "incoming_lanes": [
+                "B0C0_0"
+              ],
+              "receiving_lanes": [
+                "C0right0_0"
+              ],
+              "neighbor": "B0",
+              "storage_capacity": 38
+            }
+          },
+          "actions": [
+            {
+              "action": 0,
+              "name": "north_south",
+              "served_approaches": [
+                "N",
+                "S"
+              ],
+              "green_phase": 0,
+              "yellow_phase": 1,
+              "all_red_phase": 2
+            },
+            {
+              "action": 1,
+              "name": "east_west",
+              "served_approaches": [
+                "E",
+                "W"
+              ],
+              "green_phase": 3,
+              "yellow_phase": 4,
+              "all_red_phase": 5
+            }
+          ]
+        }
+      }
+    }
+  },
+  "versions": {
+    "python": "3.12.9",
+    "torch": "2.14.1+cpu",
+    "sumo": "1.28.0"
+  }
+}

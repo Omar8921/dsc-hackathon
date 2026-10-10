@@ -1,0 +1,21 @@
+{
+  "settings": {
+    "min_normalized_queue": 0.5,
+    "persist_s": 30,
+    "clear_s": 30
+  },
+  "reference_p95": {
+    "A0": 0.12,
+    "B0": 0.12,
+    "C0": 0.12
+  },
+  "calibration": {
+    "created": "2026-10-10T02:29:36",
+    "controller": "actuated",
+    "scenarios": [
+      "balanced",
+      "ew_heavy"
+    ],
+    "statistic": "95th percentile of the worst approach's queue / storage, per simulated second"
+  }
+}

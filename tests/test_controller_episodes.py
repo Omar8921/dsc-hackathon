@@ -8,7 +8,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from src.runner import CONTROLLERS, run_episode
+from src.runner import BASELINES, run_episode
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -26,7 +26,7 @@ class ControllerEpisodeTest(unittest.TestCase):
         cls.controller_config = load_json(PROJECT_ROOT / "configs" / "controller.json")
 
     def test_baselines_complete_scenarios_with_legal_transitions(self) -> None:
-        for controller in CONTROLLERS:
+        for controller in BASELINES:
             for scenario in SCENARIOS:
                 with self.subTest(controller=controller, scenario=scenario):
                     with tempfile.TemporaryDirectory() as folder:
