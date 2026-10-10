@@ -17,7 +17,7 @@ SUMO (1 s steps) ──► traffic state per junction (queue, count, occupancy, 
                          │          │
                          │          ▼
                          │   Safety controller: min green 10 s · max green 60 s · yellow 3 s · all-red 1 s
-                         │   · invalid request → fixed-timer fallback · logs requested vs applied + reason
+                         │   · invalid AI output → fixed-timer fallback · logs chosen vs shown phase + reason
                          │          │
                          │          ▼
                          │       SUMO lights
