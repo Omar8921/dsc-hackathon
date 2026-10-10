@@ -122,6 +122,7 @@
   .brand[data-status="disconnected"] .dot { animation: cycle 2.4s ease-in-out infinite; }
   @keyframes cycle { 0%, 30% { background: var(--stop); } 34%, 63% { background: var(--wait); } 67%, 100% { background: var(--go); } }
   .tagline { margin-top: 6px; color: var(--muted); font-size: 12px; }
+  .howto { margin: 12px 0 0; padding: 8px 10px; border-radius: 8px; background: var(--surface-2); color: var(--text); font-size: 12px; }
 
   h2 {
     display: flex;
@@ -265,13 +266,14 @@
         <span id="status" class="status">connecting</span>
       </div>
       <div class="tagline">AI traffic signals · live simulation</div>
+      <p class="howto">Pick a traffic situation and who controls the lights, then press Start.</p>
       <div id="controls">
-        <label class="field"><span>Scenario</span><select id="select-scenario"></select></label>
+        <label class="field"><span>Traffic situation</span><select id="select-scenario"></select></label>
         <p id="scenario-description" class="hint"></p>
         <label class="field"><span>Who controls the lights</span><select id="select-controller"></select></label>
         <div class="control-row">
           <label class="field"><span>Speed</span><select id="select-speed"></select></label>
-          <button type="button" id="run-button">Run</button>
+          <button type="button" id="run-button">Start</button>
         </div>
       </div>
     </section>
@@ -306,7 +308,7 @@
       <div id="junctions"></div>
     </section>
 
-    <section class="section">
+    <section class="section" id="selected-section" hidden>
       <h2>Selected</h2>
       <div id="inspector"></div>
     </section>
@@ -1408,11 +1410,11 @@
 
     if (!request.requested_action) {
       return request.override_reason === "max_green"
-        ? `${when} · Safety rule: ${OVERRIDE_TEXT.max_green}.`
-        : `${when} · ${who} sent an invalid request; ${OVERRIDE_TEXT.invalid_request}.`;
+        ? `${when} · Timing rule: ${OVERRIDE_TEXT.max_green}.`
+        : `${when} · ${who} gave an invalid output; ${OVERRIDE_TEXT.invalid_request}.`;
     }
     const outcome = request.override_reason ? OVERRIDE_TEXT[request.override_reason] || request.override_reason : "done";
-    return `${when} · ${who} asked for ${actionLabel(request.requested_action)} green → ${outcome}.`;
+    return `${when} · ${who} chose ${actionLabel(request.requested_action)} green → ${outcome}.`;
   }
 
   // Readable rows for judges; technical SUMO rows are added when details are on.
@@ -1536,6 +1538,7 @@
   function renderInspector() {
     const detail = describe(state.selected);
     document.getElementById("inspector").innerHTML = detail ? detailHtml(detail) : "";
+    document.getElementById("selected-section").hidden = !detail;
   }
 
   // ---------------------------------------------------------------------
