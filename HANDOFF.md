@@ -2,20 +2,20 @@
 
 Rolling "where are we" note. Read this first and **update it at the end of every session** (overwrite the Status section).
 
-_Last updated: 2026-10-10 (Day 2), Faris planning, iteration 1._
+_Last updated: 2026-10-10 (Day 2), iteration 2: docs aligned with the build._
 
 ## Status
-- **Idea: فارس / Faris**, AI adaptive traffic signals on GAM's existing cameras, sold B2G. Branch `iteration-1` holds only this idea; older rounds are on `ideation/research`.
-- **Iteration 1 done** → [iteration_1/](iteration_1/README.md): 01 problem, 02 users, 03 feasibility, 04 impact, 05 branding, 06 revenue/costs, 07 pitch deck (HTML, Arabic RTL).
-- Key decisions ([docs/decision-log.md](docs/decision-log.md)): GAM buyer, PSD partner; fully automatic within safety limits; 7th Circle cluster first; JD 3,000 setup + JD 200/month per junction; don't mention the existing pilot.
-- **Not decided yet:** feature list, modules, tech stack, user flow, pitch storyline and script.
+- **Code:** branch `feat/traffic-ai` (Omar): SUMO 3-junction corridor, shared PPO controller, safety controller, tuned timer + sensor-rule baselines, held-out evaluation, congestion alerts, live viewer (English). How to run: [iteration_2/08](iteration_2/08-stack-run-and-deploy.md).
+- **Docs:** [iteration_2/](iteration_2/README.md) redoes iteration 1 against the code. Start with [00-what-is-built](iteration_2/00-what-is-built.md).
+- **Measured:** AI vs tuned timer on held-out rush hour = −10% waiting, −23% time lost; 40% worse on balanced; the sensor rule beats the AI everywhere; 0 illegal transitions in 27 runs.
+- **Missing for the pitch:** Arabic console page, YOLO counting clip, backup demo video, storyline and script.
 
 ## Next actions
-1. Lock features and modules, then build: SUMO baseline (Webster) vs our controller, vehicle counting on recorded footage, Arabic operator console.
-2. Put the SUMO X% into deck slide 9 and impact doc 04 (replacing the scenarios).
-3. Fix 01: remove the pilot references, replace the local-path source, change "16 hours/yr" to the 5–14 h range.
-4. Name the 7th Circle's neighbouring junctions; verify the FHWA cost page; add team names to the deck.
-5. Check the venue's internet for the deck font, or bundle IBM Plex Sans Arabic locally.
+1. Build the Arabic console (iframe + `/api/snapshot`, labels and templates in [iteration_2/05](iteration_2/05-branding.md)).
+2. Pretrained YOLO counting clip on real footage (watch the AGPL licence note in [iteration_2/07](iteration_2/07-features-and-modules.md)).
+3. Team confirms the framing decision (decision log, 2026-10-10).
+4. Record the demo (rush hour timer → AI; incident → alert) as a backup.
+5. Storyline and script; team names in the deck; the 7th Circle's neighbouring junctions; verify the FHWA cost page.
 
 ## Key facts (sources in docs/sources.md)
 - GAM: ~5,600 cameras (75% not for violations, mostly counting), central control for 200+ intersections.

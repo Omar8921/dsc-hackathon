@@ -16,3 +16,7 @@ Every factual claim in our docs links to a source. Each file in `iteration_1/` a
 - ASCT capital cost per intersection, FHWA 2010 $ (⚠️ verify in browser; 403 to fetch) — https://www.itskrs.its.dot.gov/2015-sc00355
 - Jordan software-engineer pay JD 800–2,000/month — https://qureos.com/career-guide/top-in-demand-jobs-in-jordan
 - Jetson Orin Nano Super $249 — https://www.sparkfun.com/nvidia-jetson-orin-nano-developer-kit.html
+
+## Our own results
+- Held-out evaluation, PPO vs fixed-time vs actuated — `results/eval_final/summary.md` on branch `feat/traffic-ai` (commit 3a789e8)
+- Design and limits — `docs/TRAFFIC_AI_DESIGN.md` and `README.md` on branch `feat/traffic-ai`

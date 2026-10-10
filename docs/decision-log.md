@@ -13,3 +13,6 @@ Earlier idea rounds (A–O, Najm, Khatti, etc.) live on branch `ideation/researc
 - 2026-10-10 — Pricing: JD 3,000 setup + JD 2,400/yr licence per junction. 7th Circle pilot at 50%. 6-person year 1 (≈ JD 108k). → [06](../iteration_1/06-revenue-and-costs.md) — team
 - 2026-10-10 — Pitch storyline, hook and script **deferred**. Deck v1 built as reorderable slides. → [07](../iteration_1/07-pitch-deck.html) — team
 - 2026-10-10 — Clean branch `iteration-1` holds only Faris context; iteration-1 outputs live in `iteration_1/`. — team
+- 2026-10-10 — **Iteration 2: docs aligned with the build on `feat/traffic-ai`** (commit 3a789e8). Measured: AI beats a tuned timer only on main-road rush hour (−10% wait, −23% time lost), is 40% worse on balanced traffic, and the sensor rule beats it everywhere. The pitch now quotes these, losses included → [iteration_2](../iteration_2/README.md). — research
+- 2026-10-10 — Framing (proposed, team to confirm): Faris = platform; per junction it runs the controller that measures best; headline = the AI's rush-hour result; the sensor rule is never labelled as the AI. — research
+- 2026-10-10 — Deck slide 6 drops "ينسّق" (coordination not proven) for "يحمي" (safety) and "ينبّه" (alerts). — research
