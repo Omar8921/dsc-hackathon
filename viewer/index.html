@@ -1,0 +1,1244 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Traffic Signal Viewer</title>
+<style>
+  :root {
+    --bg: #0a0e13;
+    --panel: #10151c;
+    --raised: #161d27;
+    --border: #222b37;
+    --text: #e6edf3;
+    --muted: #8a97a8;
+    --accent: #4cc9f0;
+    --green: #3ddc84;
+    --amber: #ffd166;
+    --red: #ff5d5d;
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    height: 100%;
+    overflow: hidden;
+    background: var(--bg);
+    color: var(--text);
+    font: 13px/1.45 ui-sans-serif, system-ui, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  }
+
+  .num { font-variant-numeric: tabular-nums; }
+  .muted { color: var(--muted); }
+
+  #app { display: flex; height: 100%; }
+
+  /* Map stage */
+  #stage { position: relative; flex: 1; min-width: 0; min-height: 0; }
+  #map { display: block; width: 100%; height: 100%; cursor: grab; touch-action: none; }
+  #map.dragging { cursor: grabbing; }
+  #map.pointing { cursor: pointer; }
+
+  .overlay {
+    position: absolute;
+    background: rgba(16, 21, 28, 0.88);
+    border: 1px solid var(--border);
+    backdrop-filter: blur(6px);
+  }
+
+  #banner {
+    top: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 6px 14px;
+    border-radius: 999px;
+    color: var(--muted);
+    font-size: 12px;
+    white-space: nowrap;
+    pointer-events: none;
+  }
+
+  #legend { left: 14px; bottom: 14px; padding: 10px 12px; border-radius: 12px; max-width: calc(100% - 80px); }
+  .segmented { display: inline-flex; gap: 2px; padding: 2px; border-radius: 8px; background: var(--bg); border: 1px solid var(--border); }
+  .segmented button {
+    all: unset;
+    cursor: pointer;
+    padding: 3px 10px;
+    border-radius: 6px;
+    color: var(--muted);
+    font-size: 12px;
+  }
+  .segmented button[aria-pressed="true"] { background: var(--raised); color: var(--text); }
+  .segmented button:focus-visible { outline: 2px solid var(--accent); }
+  #legend-body { margin-top: 8px; font-size: 11px; color: var(--muted); }
+  .gradient { height: 6px; border-radius: 3px; margin: 4px 0 3px; min-width: 180px; }
+  .scale-labels { display: flex; justify-content: space-between; gap: 12px; }
+  .legend-row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .swatch { display: inline-block; width: 9px; height: 9px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
+  .route-grid { display: grid; grid-template-columns: repeat(2, auto); gap: 3px 16px; }
+
+  #zoom { right: 14px; bottom: 14px; display: flex; flex-direction: column; border-radius: 10px; overflow: hidden; }
+  #zoom button {
+    width: 34px;
+    height: 32px;
+    border: 0;
+    background: transparent;
+    color: var(--text);
+    font-size: 15px;
+    cursor: pointer;
+  }
+  #zoom button + button { border-top: 1px solid var(--border); }
+  #zoom button:hover { background: var(--raised); }
+
+  #tooltip {
+    min-width: 190px;
+    max-width: 290px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: rgba(16, 21, 28, 0.97);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+    font-size: 12px;
+    pointer-events: none;
+  }
+
+  [hidden] { display: none !important; }
+
+  /* Detail rows (tooltip and inspector) */
+  .detail-title { font-weight: 600; font-size: 13px; word-break: break-all; }
+  .detail-kind { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+  .rows { display: grid; grid-template-columns: auto 1fr; gap: 3px 12px; }
+  .rows dt { color: var(--muted); }
+  .rows dd { margin: 0; text-align: right; font-variant-numeric: tabular-nums; word-break: break-all; }
+
+  /* Side panel */
+  #panel {
+    width: 330px;
+    flex: none;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding: 18px 16px 24px;
+    overflow-y: auto;
+    background: var(--panel);
+    border-left: 1px solid var(--border);
+  }
+  h1 { margin: 0; font-size: 15px; font-weight: 650; letter-spacing: 0.01em; }
+  h2 { margin: 0 0 8px; font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+  .title-row { display: flex; align-items: center; gap: 9px; }
+  #run-meta { margin-top: 4px; font-size: 12px; }
+
+  .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--muted); flex: none; }
+  .dot.running { background: var(--green); box-shadow: 0 0 0 0 rgba(61, 220, 132, 0.6); animation: pulse 1.6s infinite; }
+  .dot.offline { background: var(--red); }
+  @keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(61, 220, 132, 0.55); }
+    70% { box-shadow: 0 0 0 8px rgba(61, 220, 132, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(61, 220, 132, 0); }
+  }
+
+  .clock { display: flex; align-items: baseline; gap: 8px; }
+  #clock { font-size: 28px; font-weight: 650; letter-spacing: -0.01em; }
+  .progress { height: 4px; margin-top: 8px; border-radius: 2px; background: var(--raised); overflow: hidden; }
+  #progress-fill { height: 100%; width: 0; background: linear-gradient(90deg, var(--accent), var(--green)); transition: width 0.2s linear; }
+
+  .kpis { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .kpi { padding: 10px 12px; border-radius: 10px; background: var(--raised); border: 1px solid var(--border); }
+  .kpi-value { font-size: 20px; font-weight: 650; }
+  .kpi-label { font-size: 11px; color: var(--muted); }
+
+  .signal-card {
+    padding: 11px 12px 8px;
+    margin-bottom: 8px;
+    border-radius: 10px;
+    background: var(--raised);
+    border: 1px solid var(--border);
+    cursor: pointer;
+  }
+  .signal-card:hover { border-color: #33404f; }
+  .signal-card.selected { border-color: var(--accent); }
+  .signal-head { display: flex; justify-content: space-between; align-items: baseline; }
+  .signal-name { font-weight: 650; font-size: 14px; }
+  .signal-phase { font-size: 11px; }
+  .lights { display: flex; flex-wrap: wrap; gap: 3px; margin: 8px 0; }
+  .light { width: 11px; height: 11px; border-radius: 3px; background: #3a4452; }
+  .light-gap { width: 6px; }
+  .signal-stats { display: flex; gap: 16px; align-items: baseline; }
+  .signal-stats .big { font-size: 18px; font-weight: 650; }
+  .spark { display: block; width: 100%; height: 34px; margin-top: 6px; }
+
+  #inspector:empty::before { content: "Click a car, lane, or intersection."; color: var(--muted); }
+
+  @media (max-width: 760px) {
+    #app { flex-direction: column; }
+    #panel { width: 100%; height: 45%; border-left: 0; border-top: 1px solid var(--border); }
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <main id="stage">
+    <canvas id="map" aria-label="Live traffic map"></canvas>
+    <div id="banner" class="overlay">Connecting to the simulation...</div>
+    <div id="legend" class="overlay">
+      <div class="segmented" role="group" aria-label="Color cars by">
+        <button type="button" data-mode="waiting" aria-pressed="true">Waiting</button>
+        <button type="button" data-mode="speed" aria-pressed="false">Speed</button>
+        <button type="button" data-mode="route" aria-pressed="false">Route</button>
+      </div>
+      <div id="legend-body"></div>
+    </div>
+    <div id="zoom" class="overlay">
+      <button type="button" id="zoom-in" aria-label="Zoom in">+</button>
+      <button type="button" id="zoom-out" aria-label="Zoom out">&minus;</button>
+      <button type="button" id="zoom-fit" aria-label="Fit network">&#x2922;</button>
+    </div>
+    <div id="tooltip" class="overlay" hidden></div>
+  </main>
+
+  <aside id="panel">
+    <header>
+      <div class="title-row"><span id="live-dot" class="dot"></span><h1>Traffic Signal Viewer</h1></div>
+      <div id="run-meta" class="muted">Waiting for data</div>
+    </header>
+
+    <section>
+      <div class="clock"><span id="clock" class="num">0 s</span><span id="clock-end" class="muted num"></span></div>
+      <div class="progress"><div id="progress-fill"></div></div>
+    </section>
+
+    <section class="kpis">
+      <div class="kpi"><div id="kpi-running" class="kpi-value num">&ndash;</div><div class="kpi-label">On the road</div></div>
+      <div class="kpi"><div id="kpi-arrived" class="kpi-value num">&ndash;</div><div class="kpi-label">Arrived</div></div>
+      <div class="kpi"><div id="kpi-pending" class="kpi-value num">&ndash;</div><div class="kpi-label">Waiting to enter</div></div>
+      <div class="kpi"><div id="kpi-wait" class="kpi-value num">&ndash;</div><div class="kpi-label">Mean wait, on the road</div></div>
+    </section>
+
+    <section>
+      <h2>Intersections</h2>
+      <div id="signals"></div>
+    </section>
+
+    <section>
+      <h2>Inspector</h2>
+      <div id="inspector"></div>
+    </section>
+  </aside>
+</div>
+
+<script>
+(() => {
+  "use strict";
+
+  // ---------------------------------------------------------------------
+  // Settings
+  // ---------------------------------------------------------------------
+
+  const POLL_MS = 100;
+  const HISTORY_LENGTH = 300;          // seconds of queue history per intersection
+  const CAR_LENGTH = 4.6;              // drawn a bit shorter than SUMO's 5 m so gaps stay visible
+  const CAR_WIDTH = 1.9;
+  const LONG_WAIT_S = 60;              // waiting time that maps to full red
+  const MAX_SCALE = 40;                // pixels per meter
+
+  const COLORS = {
+    groundCenter: "#111822",
+    ground: "#0a0e13",
+    grid: "rgba(255, 255, 255, 0.035)",
+    curb: "#1a2029",
+    asphalt: "#2a3039",
+    junction: "#2e3540",
+    centerLine: "rgba(232, 192, 72, 0.85)",
+    edgeLine: "rgba(255, 255, 255, 0.32)",
+    moving: "#4cc9f0",
+    waitShort: "#ffd166",
+    waitLong: "#ff5d5d",
+    slow: "#ff5d5d",
+    mid: "#ffd166",
+    fast: "#3ddc84",
+    accent: "#4cc9f0",
+  };
+
+  // SUMO signal state characters.
+  const SIGNAL_COLORS = {
+    G: "#3ddc84", g: "#2a9d5c", y: "#ffd166", Y: "#ffd166", u: "#ffa94d",
+    r: "#ff5d5d", R: "#ff5d5d", s: "#ff5d5d", o: "#5b6675", O: "#5b6675",
+  };
+  const SIGNAL_NAMES = {
+    G: "green (priority)", g: "green (yield)", y: "yellow", Y: "yellow", u: "red-yellow",
+    r: "red", R: "red", s: "stop", o: "off (blinking)", O: "off",
+  };
+
+  // Left-to-right order of movements across a lane, from the driver's view.
+  const DIRECTION_ORDER = { t: 0, l: 1, L: 2, s: 3, R: 4, r: 5 };
+  const DIRECTION_NAMES = { t: "U-turn", l: "left", L: "partial left", s: "straight", R: "partial right", r: "right" };
+
+  const ROUTE_PALETTE = ["#4cc9f0", "#f72585", "#ffbe0b", "#8ac926", "#b388ff", "#fb5607", "#2ec4b6", "#ff8fab", "#3a86ff", "#e9c46a"];
+
+  // ---------------------------------------------------------------------
+  // State
+  // ---------------------------------------------------------------------
+
+  const stage = document.getElementById("stage");
+  const canvas = document.getElementById("map");
+  const ctx = canvas.getContext("2d");
+  const tooltip = document.getElementById("tooltip");
+  const banner = document.getElementById("banner");
+
+  let width = 0;
+  let height = 0;
+  let dpr = 1;
+
+  const state = {
+    runId: null,
+    net: null,                 // prepared network geometry
+    snapshot: null,            // latest snapshot from the backend
+    signalStates: new Map(),   // signal id -> state string
+    cars: new Map(),           // vehicle id -> {px, py, pa, x, y, a, data, born}
+    stepStart: 0,
+    stepMs: 200,
+    view: { scale: 1, cx: 0, cy: 0 },
+    fitScale: 1,
+    autoFit: true,
+    colorMode: "waiting",
+    hover: null,               // {type, id}
+    selected: null,            // {type, id}
+    pointer: null,             // [x, y] in CSS pixels
+    history: new Map(),        // signal id -> queue counts
+    historyTime: -1,
+    routeColors: new Map(),
+    connected: false,
+  };
+
+  // ---------------------------------------------------------------------
+  // Small helpers
+  // ---------------------------------------------------------------------
+
+  const clamp = (value, low, high) => Math.min(high, Math.max(low, value));
+
+  const escapeHtml = (value) => String(value).replace(/[&<>"']/g, (ch) => (
+    { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch]
+  ));
+
+  const rgbCache = new Map();
+  function hexToRgb(hex) {
+    if (!rgbCache.has(hex)) {
+      const n = parseInt(hex.slice(1), 16);
+      rgbCache.set(hex, [(n >> 16) & 255, (n >> 8) & 255, n & 255]);
+    }
+    return rgbCache.get(hex);
+  }
+
+  function mix(hexA, hexB, t) {
+    const a = hexToRgb(hexA);
+    const b = hexToRgb(hexB);
+    const c = a.map((value, i) => Math.round(value + (b[i] - value) * t));
+    return `rgb(${c[0]}, ${c[1]}, ${c[2]})`;
+  }
+
+  function centroid(points) {
+    let x = 0;
+    let y = 0;
+    for (const [px, py] of points) { x += px; y += py; }
+    return [x / points.length, y / points.length];
+  }
+
+  // Shift a polyline sideways; a positive offset moves it left of travel.
+  function offsetPolyline(points, offset) {
+    return points.map((point, i) => {
+      const prev = points[Math.max(0, i - 1)];
+      const next = points[Math.min(points.length - 1, i + 1)];
+      const dx = next[0] - prev[0];
+      const dy = next[1] - prev[1];
+      const length = Math.hypot(dx, dy) || 1;
+      return [point[0] - (dy / length) * offset, point[1] + (dx / length) * offset];
+    });
+  }
+
+  function distanceToSegment(px, py, ax, ay, bx, by) {
+    const dx = bx - ax;
+    const dy = by - ay;
+    const lengthSq = dx * dx + dy * dy || 1;
+    const t = clamp(((px - ax) * dx + (py - ay) * dy) / lengthSq, 0, 1);
+    return Math.hypot(px - (ax + t * dx), py - (ay + t * dy));
+  }
+
+  function distanceToPolyline(px, py, points) {
+    let best = Infinity;
+    for (let i = 1; i < points.length; i++) {
+      const [ax, ay] = points[i - 1];
+      const [bx, by] = points[i];
+      best = Math.min(best, distanceToSegment(px, py, ax, ay, bx, by));
+    }
+    return best;
+  }
+
+  function pointInPolygon(px, py, points) {
+    let inside = false;
+    for (let i = 0, j = points.length - 1; i < points.length; j = i++) {
+      const [xi, yi] = points[i];
+      const [xj, yj] = points[j];
+      if ((yi > py) !== (yj > py) && px < ((xj - xi) * (py - yi)) / (yj - yi) + xi) {
+        inside = !inside;
+      }
+    }
+    return inside;
+  }
+
+  // ---------------------------------------------------------------------
+  // Coordinates: SUMO uses meters with y pointing up; the canvas uses
+  // CSS pixels with y pointing down.
+  // ---------------------------------------------------------------------
+
+  function toScreen(x, y) {
+    const { scale, cx, cy } = state.view;
+    return [width / 2 + (x - cx) * scale, height / 2 - (y - cy) * scale];
+  }
+
+  function toWorld(px, py) {
+    const { scale, cx, cy } = state.view;
+    return [cx + (px - width / 2) / scale, cy - (py - height / 2) / scale];
+  }
+
+  function useWorldTransform() {
+    const { scale, cx, cy } = state.view;
+    ctx.setTransform(
+      dpr * scale, 0, 0, -dpr * scale,
+      dpr * (width / 2 - cx * scale), dpr * (height / 2 + cy * scale),
+    );
+  }
+
+  function useScreenTransform() {
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  function fitView() {
+    if (!state.net || width === 0 || height === 0) return;
+    const [x0, y0, x1, y1] = state.net.boundary;
+    const margin = 40;
+    state.fitScale = Math.min(width / (x1 - x0 + 2 * margin), height / (y1 - y0 + 2 * margin));
+    state.view = { scale: state.fitScale, cx: (x0 + x1) / 2, cy: (y0 + y1) / 2 };
+  }
+
+  function zoomAt(px, py, factor) {
+    const [wx, wy] = toWorld(px, py);
+    const scale = clamp(state.view.scale * factor, state.fitScale * 0.5, MAX_SCALE);
+    state.view = { scale, cx: wx - (px - width / 2) / scale, cy: wy + (py - height / 2) / scale };
+    state.autoFit = false;
+  }
+
+  function resize() {
+    const rect = stage.getBoundingClientRect();
+    dpr = window.devicePixelRatio || 1;
+    width = rect.width;
+    height = rect.height;
+    canvas.width = Math.max(1, Math.round(width * dpr));
+    canvas.height = Math.max(1, Math.round(height * dpr));
+    if (state.autoFit) fitView();
+  }
+
+  // ---------------------------------------------------------------------
+  // Network
+  // ---------------------------------------------------------------------
+
+  function prepareNetwork(raw) {
+    const lanes = new Map();
+    for (const lane of raw.lanes) {
+      const points = lane.shape;
+      const [x1, y1] = points[points.length - 2];
+      const [x2, y2] = points[points.length - 1];
+      const length = Math.hypot(x2 - x1, y2 - y1) || 1;
+      lanes.set(lane.id, {
+        ...lane,
+        end: points[points.length - 1],
+        dir: [(x2 - x1) / length, (y2 - y1) / length],
+        centerLine: offsetPolyline(points, lane.width_m / 2 - 0.15),
+        edgeLine: offsetPolyline(points, -(lane.width_m / 2 - 0.25)),
+        links: [],
+        signal: null,
+      });
+    }
+
+    const signals = new Map();
+    for (const signal of raw.signals) {
+      signals.set(signal.id, signal);
+      for (const link of signal.links) {
+        const lane = lanes.get(link.from_lane);
+        if (lane) lane.links.push({ ...link, signal: signal.id });
+      }
+    }
+
+    for (const lane of lanes.values()) {
+      lane.links.sort((a, b) => (DIRECTION_ORDER[a.direction] ?? 3) - (DIRECTION_ORDER[b.direction] ?? 3));
+      lane.signal = lane.links.length ? lane.links[0].signal : null;
+    }
+
+    // netgenerate names each signal after its junction.
+    const junctions = raw.junctions
+      .filter((junction) => junction.shape.length >= 3)
+      .map((junction) => ({
+        ...junction,
+        center: centroid(junction.shape),
+        signal: signals.has(junction.id) ? junction.id : null,
+      }));
+
+    return { boundary: raw.boundary, lanes, signals, junctions };
+  }
+
+  async function loadNetwork(runId) {
+    const response = await fetch("api/network", { cache: "no-store" });
+    if (!response.ok) throw new Error(`network ${response.status}`);
+
+    state.net = prepareNetwork(await response.json());
+    state.runId = runId;
+    state.snapshot = null;
+    state.cars = new Map();
+    state.history = new Map();
+    state.historyTime = -1;
+    state.routeColors = new Map();
+    state.hover = null;
+    state.selected = null;
+    state.autoFit = true;
+    fitView();
+    buildSignalCards();
+    renderLegend();
+    renderInspector();
+  }
+
+  // ---------------------------------------------------------------------
+  // Snapshots
+  // ---------------------------------------------------------------------
+
+  function stepProgress(now) {
+    return clamp((now - state.stepStart) / state.stepMs, 0, 1);
+  }
+
+  function carPose(car, t) {
+    const turn = ((car.a - car.pa + 540) % 360) - 180;
+    return {
+      x: car.px + (car.x - car.px) * t,
+      y: car.py + (car.y - car.py) * t,
+      a: car.pa + turn * t,
+    };
+  }
+
+  function applySnapshot(snapshot) {
+    const now = performance.now();
+    const t = stepProgress(now);
+    const cars = new Map();
+
+    // Animate each car from where it is drawn now to its new position.
+    for (const vehicle of snapshot.vehicles) {
+      const old = state.cars.get(vehicle.id);
+      if (old) {
+        const pose = carPose(old, t);
+        cars.set(vehicle.id, {
+          px: pose.x, py: pose.y, pa: pose.a,
+          x: vehicle.x, y: vehicle.y, a: vehicle.angle_deg,
+          data: vehicle, born: old.born,
+        });
+      } else {
+        cars.set(vehicle.id, {
+          px: vehicle.x, py: vehicle.y, pa: vehicle.angle_deg,
+          x: vehicle.x, y: vehicle.y, a: vehicle.angle_deg,
+          data: vehicle, born: now,
+        });
+      }
+      if (!state.routeColors.has(vehicle.route)) {
+        state.routeColors.set(vehicle.route, ROUTE_PALETTE[state.routeColors.size % ROUTE_PALETTE.length]);
+        if (state.colorMode === "route") renderLegend();
+      }
+    }
+
+    state.cars = cars;
+    state.stepStart = now;
+    state.stepMs = Math.max(50, (snapshot.real_seconds_per_step || 0.2) * 1000);
+    state.snapshot = snapshot;
+    state.signalStates = new Map(snapshot.signals.map((signal) => [signal.id, signal.state]));
+
+    if (snapshot.sim_time_s > state.historyTime) {
+      state.historyTime = snapshot.sim_time_s;
+      for (const signal of snapshot.signals) {
+        const values = state.history.get(signal.id) || [];
+        values.push(signal.queue_count);
+        if (values.length > HISTORY_LENGTH) values.shift();
+        state.history.set(signal.id, values);
+      }
+    }
+
+    updatePanel();
+    if (state.pointer) updateHover(...state.pointer);
+  }
+
+  async function poll() {
+    try {
+      const response = await fetch("api/snapshot", { cache: "no-store" });
+      const snapshot = await response.json();
+      setConnected(true);
+
+      if (snapshot.status === "starting") {
+        showBanner("Starting the simulation...");
+      } else {
+        if (snapshot.run_id !== state.runId) await loadNetwork(snapshot.run_id);
+        const previous = state.snapshot;
+        if (!previous || snapshot.sim_time_s !== previous.sim_time_s || snapshot.status !== previous.status) {
+          applySnapshot(snapshot);
+        }
+        showBanner(snapshot.status === "finished" ? "Scenario finished · showing the final state" : null);
+      }
+    } catch (error) {
+      setConnected(false);
+      showBanner(state.snapshot
+        ? "Connection lost · showing the last received state"
+        : "Waiting for the simulation backend...");
+    }
+    setTimeout(poll, POLL_MS);
+  }
+
+  function setConnected(connected) {
+    state.connected = connected;
+    const dot = document.getElementById("live-dot");
+    const status = state.snapshot ? state.snapshot.status : null;
+    dot.className = "dot " + (!connected ? "offline" : status === "running" ? "running" : "");
+  }
+
+  function showBanner(text) {
+    banner.hidden = !text;
+    if (text) banner.textContent = text;
+  }
+
+  // ---------------------------------------------------------------------
+  // Drawing
+  // ---------------------------------------------------------------------
+
+  function tracePath(points) {
+    ctx.beginPath();
+    ctx.moveTo(points[0][0], points[0][1]);
+    for (let i = 1; i < points.length; i++) ctx.lineTo(points[i][0], points[i][1]);
+  }
+
+  function tracePolygon(points) {
+    tracePath(points);
+    ctx.closePath();
+  }
+
+  function traceRoundedRect(x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + w, y, x + w, y + h, r);
+    ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r);
+    ctx.arcTo(x, y, x + w, y, r);
+    ctx.closePath();
+  }
+
+  function drawGround() {
+    useScreenTransform();
+    const radius = Math.max(width, height) * 0.75;
+    const gradient = ctx.createRadialGradient(width / 2, height / 2, 0, width / 2, height / 2, radius);
+    gradient.addColorStop(0, COLORS.groundCenter);
+    gradient.addColorStop(1, COLORS.ground);
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, width, height);
+  }
+
+  function drawGrid() {
+    const [x0, y1] = toWorld(0, 0);
+    const [x1, y0] = toWorld(width, height);
+    const step = 50;
+    ctx.strokeStyle = COLORS.grid;
+    ctx.lineWidth = 1 / state.view.scale;
+    ctx.beginPath();
+    for (let x = Math.floor(x0 / step) * step; x <= x1; x += step) { ctx.moveTo(x, y0); ctx.lineTo(x, y1); }
+    for (let y = Math.floor(y0 / step) * step; y <= y1; y += step) { ctx.moveTo(x0, y); ctx.lineTo(x1, y); }
+    ctx.stroke();
+  }
+
+  function drawRoads() {
+    const { lanes, junctions } = state.net;
+    ctx.lineJoin = "round";
+    ctx.lineCap = "butt";
+
+    // Dark curb outline under the asphalt.
+    ctx.strokeStyle = COLORS.curb;
+    for (const lane of lanes.values()) {
+      ctx.lineWidth = lane.width_m + 0.9;
+      tracePath(lane.shape);
+      ctx.stroke();
+    }
+    ctx.fillStyle = COLORS.curb;
+    ctx.lineWidth = 0.9;
+    for (const junction of junctions) {
+      tracePolygon(junction.shape);
+      ctx.fill();
+      ctx.stroke();
+    }
+
+    ctx.strokeStyle = COLORS.asphalt;
+    for (const lane of lanes.values()) {
+      ctx.lineWidth = lane.width_m;
+      tracePath(lane.shape);
+      ctx.stroke();
+    }
+    ctx.fillStyle = COLORS.junction;
+    for (const junction of junctions) {
+      tracePolygon(junction.shape);
+      ctx.fill();
+    }
+
+    // Each lane draws one line of the double center line and its own edge line.
+    ctx.lineWidth = 0.12;
+    ctx.strokeStyle = COLORS.centerLine;
+    for (const lane of lanes.values()) { tracePath(lane.centerLine); ctx.stroke(); }
+    ctx.strokeStyle = COLORS.edgeLine;
+    for (const lane of lanes.values()) { tracePath(lane.edgeLine); ctx.stroke(); }
+  }
+
+  // Stop bar split into one glowing segment per movement (left, straight, right).
+  function drawSignalBars() {
+    ctx.lineCap = "butt";
+    ctx.lineWidth = 0.9;
+    for (const lane of state.net.lanes.values()) {
+      if (!lane.links.length) continue;
+      const [dx, dy] = lane.dir;
+      const nx = -dy;
+      const ny = dx;
+      const bx = lane.end[0] - dx * 0.6;
+      const by = lane.end[1] - dy * 0.6;
+      const half = lane.width_m / 2;
+      const segment = lane.width_m / lane.links.length;
+
+      lane.links.forEach((link, i) => {
+        const ch = (state.signalStates.get(link.signal) || "")[link.index] || "o";
+        const color = SIGNAL_COLORS[ch] || SIGNAL_COLORS.o;
+        const a = half - i * segment - 0.1;
+        const b = half - (i + 1) * segment + 0.1;
+        ctx.strokeStyle = color;
+        ctx.shadowColor = color;
+        ctx.shadowBlur = ch === "o" || ch === "O" ? 0 : 14 * dpr;
+        ctx.beginPath();
+        ctx.moveTo(bx + nx * a, by + ny * a);
+        ctx.lineTo(bx + nx * b, by + ny * b);
+        ctx.stroke();
+      });
+    }
+    ctx.shadowBlur = 0;
+  }
+
+  function carColor(vehicle) {
+    if (state.colorMode === "route") {
+      return state.routeColors.get(vehicle.route) || COLORS.moving;
+    }
+    if (state.colorMode === "speed") {
+      const lane = state.net.lanes.get(vehicle.lane);
+      const ratio = clamp(vehicle.speed_mps / (lane ? lane.speed_limit_mps : 13.89), 0, 1);
+      return ratio < 0.5 ? mix(COLORS.slow, COLORS.mid, ratio * 2) : mix(COLORS.mid, COLORS.fast, (ratio - 0.5) * 2);
+    }
+    if (vehicle.waiting_s <= 0) return COLORS.moving;
+    return mix(COLORS.waitShort, COLORS.waitLong, clamp(vehicle.waiting_s / LONG_WAIT_S, 0, 1));
+  }
+
+  function drawCars(now) {
+    const t = stepProgress(now);
+    const L = CAR_LENGTH;
+    const W = CAR_WIDTH;
+
+    for (const car of state.cars.values()) {
+      const pose = carPose(car, t);
+      const vehicle = car.data;
+      const color = carColor(vehicle);
+      const stopped = vehicle.speed_mps < 0.1;
+
+      ctx.save();
+      ctx.globalAlpha = clamp((now - car.born) / 300, 0, 1);
+      ctx.translate(pose.x, pose.y);
+      // SUMO angles run clockwise from north; the car is drawn facing +y.
+      ctx.rotate((-pose.a * Math.PI) / 180);
+
+      // Body with a soft drop shadow, or a glow for long waits.
+      if (state.colorMode === "waiting" && vehicle.waiting_s > LONG_WAIT_S / 2) {
+        ctx.shadowColor = color;
+        ctx.shadowBlur = 16 * dpr;
+      } else {
+        ctx.shadowColor = "rgba(0, 0, 0, 0.55)";
+        ctx.shadowBlur = 6 * dpr;
+        ctx.shadowOffsetX = 2 * dpr;
+        ctx.shadowOffsetY = 3 * dpr;
+      }
+      ctx.fillStyle = color;
+      traceRoundedRect(-W / 2, -L, W, L, 0.55);
+      ctx.fill();
+      ctx.shadowColor = "transparent";
+      ctx.shadowBlur = 0;
+      ctx.shadowOffsetX = 0;
+      ctx.shadowOffsetY = 0;
+
+      // Windows and roof.
+      ctx.fillStyle = "rgba(8, 12, 17, 0.72)";
+      traceRoundedRect(-W / 2 + 0.25, -1.75, W - 0.5, 0.8, 0.2);
+      ctx.fill();
+      traceRoundedRect(-W / 2 + 0.3, -L + 0.45, W - 0.6, 0.55, 0.2);
+      ctx.fill();
+      ctx.fillStyle = "rgba(255, 255, 255, 0.14)";
+      traceRoundedRect(-W / 2 + 0.32, -L + 1.15, W - 0.64, 1.55, 0.25);
+      ctx.fill();
+
+      // Headlights at the front, brake lights that glow when stopped.
+      ctx.fillStyle = "rgba(255, 244, 214, 0.95)";
+      ctx.fillRect(-W / 2 + 0.18, -0.24, 0.42, 0.18);
+      ctx.fillRect(W / 2 - 0.6, -0.24, 0.42, 0.18);
+      ctx.fillStyle = stopped ? "#ff3b3b" : "rgba(150, 28, 28, 0.9)";
+      if (stopped) {
+        ctx.shadowColor = "#ff3b3b";
+        ctx.shadowBlur = 10 * dpr;
+      }
+      ctx.fillRect(-W / 2 + 0.18, -L + 0.06, 0.42, 0.18);
+      ctx.fillRect(W / 2 - 0.6, -L + 0.06, 0.42, 0.18);
+      ctx.restore();
+    }
+  }
+
+  function carCenter(car, t) {
+    const pose = carPose(car, t);
+    const a = (pose.a * Math.PI) / 180;
+    return [pose.x - Math.sin(a) * CAR_LENGTH / 2, pose.y - Math.cos(a) * CAR_LENGTH / 2];
+  }
+
+  function drawHighlight(target, strong, now) {
+    if (!target || !state.net) return;
+    const color = strong ? COLORS.accent : "rgba(255, 255, 255, 0.55)";
+    const pixel = 1 / state.view.scale;
+    ctx.strokeStyle = color;
+    ctx.lineWidth = (strong ? 2 : 1.5) * pixel;
+
+    if (target.type === "vehicle") {
+      const car = state.cars.get(target.id);
+      if (!car) return;
+      const [x, y] = carCenter(car, stepProgress(now));
+      const pulse = strong ? Math.sin(now / 250) * 0.35 : 0;
+      ctx.beginPath();
+      ctx.arc(x, y, 3.6 + pulse + 4 * pixel, 0, Math.PI * 2);
+      ctx.stroke();
+    } else if (target.type === "lane") {
+      const lane = state.net.lanes.get(target.id);
+      if (!lane) return;
+      ctx.lineWidth = lane.width_m;
+      ctx.strokeStyle = strong ? "rgba(76, 201, 240, 0.28)" : "rgba(255, 255, 255, 0.12)";
+      tracePath(lane.shape);
+      ctx.stroke();
+    } else if (target.type === "signal") {
+      const junction = state.net.junctions.find((item) => item.signal === target.id);
+      if (!junction) return;
+      ctx.fillStyle = strong ? "rgba(76, 201, 240, 0.12)" : "rgba(255, 255, 255, 0.06)";
+      tracePolygon(junction.shape);
+      ctx.fill();
+      ctx.stroke();
+    }
+  }
+
+  function drawLabels() {
+    useScreenTransform();
+    ctx.font = "600 11px ui-sans-serif, system-ui, 'Segoe UI', sans-serif";
+    ctx.textBaseline = "middle";
+    for (const junction of state.net.junctions) {
+      if (!junction.signal) continue;
+      const [sx, sy] = toScreen(junction.center[0], junction.center[1]);
+      const signal = state.snapshot && state.snapshot.signals.find((item) => item.id === junction.signal);
+      const text = signal ? `${junction.id}  ·  ${signal.queue_count} queued` : junction.id;
+      const x = sx + 18;
+      const y = sy - 20;
+      const w = ctx.measureText(text).width + 16;
+      ctx.fillStyle = "rgba(16, 21, 28, 0.88)";
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.12)";
+      ctx.lineWidth = 1;
+      traceRoundedRect(x, y - 10, w, 20, 10);
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = "#e6edf3";
+      ctx.fillText(text, x + 8, y + 0.5);
+    }
+  }
+
+  function frame(now) {
+    drawGround();
+    if (state.net) {
+      useWorldTransform();
+      drawGrid();
+      drawRoads();
+      drawSignalBars();
+      drawHighlight(state.hover, false, now);
+      drawCars(now);
+      drawHighlight(state.selected, true, now);
+      drawLabels();
+    }
+    requestAnimationFrame(frame);
+  }
+
+  // ---------------------------------------------------------------------
+  // Picking, tooltip, inspector
+  // ---------------------------------------------------------------------
+
+  function pick(px, py) {
+    if (!state.net) return null;
+    const [x, y] = toWorld(px, py);
+    const t = stepProgress(performance.now());
+    const pad = Math.max(0.6, 6 / state.view.scale);
+
+    let best = null;
+    let bestDistance = Infinity;
+    for (const [id, car] of state.cars) {
+      const pose = carPose(car, t);
+      const a = (pose.a * Math.PI) / 180;
+      const dx = x - pose.x;
+      const dy = y - pose.y;
+      // Rotate the point into the car's frame (front at 0, body along -y).
+      const lx = Math.cos(a) * dx - Math.sin(a) * dy;
+      const ly = Math.sin(a) * dx + Math.cos(a) * dy;
+      if (Math.abs(lx) <= CAR_WIDTH / 2 + pad && ly <= pad && ly >= -CAR_LENGTH - pad) {
+        const distance = Math.hypot(lx, ly + CAR_LENGTH / 2);
+        if (distance < bestDistance) { best = { type: "vehicle", id }; bestDistance = distance; }
+      }
+    }
+    if (best) return best;
+
+    for (const lane of state.net.lanes.values()) {
+      if (lane.signal && Math.hypot(x - lane.end[0], y - lane.end[1]) < Math.max(1.8, 8 / state.view.scale)) {
+        return { type: "signal", id: lane.signal };
+      }
+    }
+
+    for (const junction of state.net.junctions) {
+      if (junction.signal && pointInPolygon(x, y, junction.shape)) return { type: "signal", id: junction.signal };
+    }
+
+    for (const lane of state.net.lanes.values()) {
+      const distance = distanceToPolyline(x, y, lane.shape);
+      if (distance < lane.width_m / 2 + 2 / state.view.scale && distance < bestDistance) {
+        best = { type: "lane", id: lane.id };
+        bestDistance = distance;
+      }
+    }
+    return best;
+  }
+
+  const sameTarget = (a, b) => (a && b ? a.type === b.type && a.id === b.id : a === b);
+
+  function lightsHtml(signalId) {
+    const signal = state.net.signals.get(signalId);
+    const stateString = state.signalStates.get(signalId) || "";
+    if (!signal) return "";
+    let html = "";
+    let previousLane = null;
+    for (const link of signal.links) {
+      if (previousLane !== null && link.from_lane !== previousLane) html += '<span class="light-gap"></span>';
+      previousLane = link.from_lane;
+      const ch = stateString[link.index] || "o";
+      const title = `#${link.index} ${link.from_lane} → ${link.to_lane} (${DIRECTION_NAMES[link.direction] || link.direction}): ${SIGNAL_NAMES[ch] || ch}`;
+      html += `<span class="light" style="background:${SIGNAL_COLORS[ch] || SIGNAL_COLORS.o}" title="${escapeHtml(title)}"></span>`;
+    }
+    return html;
+  }
+
+  function describe(target) {
+    const snapshot = state.snapshot;
+    if (!target || !snapshot || !state.net) return null;
+
+    if (target.type === "vehicle") {
+      const car = state.cars.get(target.id);
+      if (!car) return { kind: "Vehicle", title: target.id, rows: [["Status", "Left the network"]] };
+      const v = car.data;
+      return {
+        kind: "Vehicle",
+        title: v.id,
+        rows: [
+          ["Speed", `${v.speed_mps.toFixed(1)} m/s · ${Math.round(v.speed_mps * 3.6)} km/h`],
+          ["Waiting now", `${v.waiting_s.toFixed(0)} s`],
+          ["Waiting in total", `${v.accumulated_waiting_s.toFixed(0)} s`],
+          ["Lane", v.lane],
+          ["Route", v.route],
+          ["Type", v.type],
+          ["Heading", `${v.angle_deg.toFixed(0)}°`],
+        ],
+      };
+    }
+
+    if (target.type === "lane") {
+      const lane = state.net.lanes.get(target.id);
+      const live = snapshot.lanes[target.id];
+      if (!lane || !live) return null;
+      return {
+        kind: "Lane",
+        title: lane.id,
+        rows: [
+          ["Vehicles", live.vehicle_count],
+          ["Halting (< 0.1 m/s)", live.halting_count],
+          ["Occupancy", `${(live.occupancy * 100).toFixed(1)} %`],
+          ["Mean speed", `${live.mean_speed_mps.toFixed(1)} m/s`],
+          ["Length", `${lane.length_m.toFixed(1)} m`],
+          ["Speed limit", `${lane.speed_limit_mps.toFixed(2)} m/s`],
+          ["Edge", lane.edge],
+          ["Signal", lane.signal || "none"],
+        ],
+      };
+    }
+
+    if (target.type === "signal") {
+      const signal = snapshot.signals.find((item) => item.id === target.id);
+      if (!signal) return null;
+      return {
+        kind: "Traffic light",
+        title: signal.id,
+        rows: [
+          ["Phase index", signal.phase],
+          ["Next switch in", `${Math.max(0, signal.next_switch_s).toFixed(0)} s`],
+          ["Queued on approaches", signal.queue_count],
+          ["Vehicles on approaches", signal.vehicle_count],
+          ["State", signal.state],
+        ],
+        extra: `<div class="lights">${lightsHtml(signal.id)}</div>`,
+      };
+    }
+    return null;
+  }
+
+  function detailHtml(detail) {
+    const rows = detail.rows
+      .map(([label, value]) => `<dt>${escapeHtml(label)}</dt><dd>${escapeHtml(value)}</dd>`)
+      .join("");
+    return `<div class="detail-kind">${escapeHtml(detail.kind)}</div>`
+      + `<div class="detail-title">${escapeHtml(detail.title)}</div>`
+      + (detail.extra || "")
+      + `<dl class="rows" style="margin:8px 0 0">${rows}</dl>`;
+  }
+
+  function updateHover(px, py) {
+    const target = pick(px, py);
+    state.hover = target;
+    canvas.classList.toggle("pointing", Boolean(target));
+
+    const detail = describe(target);
+    if (!detail) {
+      tooltip.hidden = true;
+      return;
+    }
+    tooltip.innerHTML = detailHtml(detail);
+    tooltip.hidden = false;
+    const tipWidth = tooltip.offsetWidth;
+    const tipHeight = tooltip.offsetHeight;
+    const left = px + 16 + tipWidth > width ? px - 16 - tipWidth : px + 16;
+    const top = py + 16 + tipHeight > height ? py - 16 - tipHeight : py + 16;
+    tooltip.style.left = `${Math.max(4, left)}px`;
+    tooltip.style.top = `${Math.max(4, top)}px`;
+  }
+
+  function select(target) {
+    state.selected = target;
+    renderInspector();
+    for (const card of document.querySelectorAll(".signal-card")) {
+      card.classList.toggle("selected", sameTarget(target, { type: "signal", id: card.dataset.id }));
+    }
+  }
+
+  function renderInspector() {
+    const detail = describe(state.selected);
+    document.getElementById("inspector").innerHTML = detail ? detailHtml(detail) : "";
+  }
+
+  // ---------------------------------------------------------------------
+  // Side panel
+  // ---------------------------------------------------------------------
+
+  function buildSignalCards() {
+    const container = document.getElementById("signals");
+    container.innerHTML = "";
+    for (const id of state.net.signals.keys()) {
+      const card = document.createElement("div");
+      card.className = "signal-card";
+      card.dataset.id = id;
+      card.innerHTML = `
+        <div class="signal-head">
+          <span class="signal-name">${escapeHtml(id)}</span>
+          <span class="signal-phase muted num"></span>
+        </div>
+        <div class="lights"></div>
+        <div class="signal-stats">
+          <div><span class="big num" data-field="queue">0</span> <span class="muted">queued</span></div>
+          <div><span class="num" data-field="vehicles">0</span> <span class="muted">approaching</span></div>
+        </div>
+        <canvas class="spark" aria-label="Queue over the last ${HISTORY_LENGTH} seconds"></canvas>`;
+      card.addEventListener("click", () => select({ type: "signal", id }));
+      container.appendChild(card);
+    }
+  }
+
+  function drawSparkline(canvasElement, values) {
+    const w = canvasElement.clientWidth;
+    const h = canvasElement.clientHeight;
+    if (w === 0 || h === 0) return;
+    canvasElement.width = Math.round(w * dpr);
+    canvasElement.height = Math.round(h * dpr);
+    const c = canvasElement.getContext("2d");
+    c.setTransform(dpr, 0, 0, dpr, 0, 0);
+    c.clearRect(0, 0, w, h);
+    if (values.length < 2) return;
+
+    const max = Math.max(5, ...values);
+    const step = w / (HISTORY_LENGTH - 1);
+    const x0 = w - (values.length - 1) * step;
+    const yOf = (value) => h - 2 - (value / max) * (h - 12);
+
+    c.beginPath();
+    values.forEach((value, i) => (i ? c.lineTo(x0 + i * step, yOf(value)) : c.moveTo(x0, yOf(value))));
+    c.strokeStyle = COLORS.accent;
+    c.lineWidth = 1.5;
+    c.stroke();
+    c.lineTo(w, h);
+    c.lineTo(x0, h);
+    c.closePath();
+    c.fillStyle = "rgba(76, 201, 240, 0.12)";
+    c.fill();
+
+    c.fillStyle = "#8a97a8";
+    c.font = "10px ui-sans-serif, system-ui, sans-serif";
+    c.textAlign = "right";
+    c.textBaseline = "top";
+    c.fillText(`peak ${max}`, w, 0);
+  }
+
+  function updatePanel() {
+    const s = state.snapshot;
+    document.getElementById("run-meta").textContent = `${s.scenario} · ${s.controller}`;
+    document.getElementById("clock").textContent = `${Math.round(s.sim_time_s)} s`;
+    document.getElementById("clock-end").textContent = s.end_time_s > 0 ? `of ${Math.round(s.end_time_s)} s` : "";
+    document.getElementById("progress-fill").style.width = s.end_time_s > 0
+      ? `${clamp((s.sim_time_s / s.end_time_s) * 100, 0, 100)}%` : "0";
+
+    document.getElementById("kpi-running").textContent = s.totals.running;
+    document.getElementById("kpi-arrived").textContent = s.totals.arrived;
+    document.getElementById("kpi-pending").textContent = s.totals.waiting_to_insert;
+    document.getElementById("kpi-wait").textContent = `${s.totals.mean_waiting_s.toFixed(1)} s`;
+
+    for (const signal of s.signals) {
+      const card = document.querySelector(`.signal-card[data-id="${CSS.escape(signal.id)}"]`);
+      if (!card) continue;
+      card.querySelector(".signal-phase").textContent =
+        `phase ${signal.phase} · switch in ${Math.max(0, signal.next_switch_s).toFixed(0)} s`;
+      card.querySelector(".lights").innerHTML = lightsHtml(signal.id);
+      card.querySelector('[data-field="queue"]').textContent = signal.queue_count;
+      card.querySelector('[data-field="vehicles"]').textContent = signal.vehicle_count;
+      drawSparkline(card.querySelector(".spark"), state.history.get(signal.id) || []);
+    }
+
+    setConnected(state.connected);
+    renderInspector();
+  }
+
+  function renderLegend() {
+    const body = document.getElementById("legend-body");
+    if (state.colorMode === "waiting") {
+      body.innerHTML = `
+        <div class="legend-row">
+          <span><span class="swatch" style="background:${COLORS.moving}"></span>moving</span>
+          <div style="flex:1">
+            <div class="gradient" style="background:linear-gradient(90deg, ${COLORS.waitShort}, ${COLORS.waitLong})"></div>
+            <div class="scale-labels"><span>waiting 0 s</span><span>${LONG_WAIT_S} s+</span></div>
+          </div>
+        </div>`;
+    } else if (state.colorMode === "speed") {
+      body.innerHTML = `
+        <div class="gradient" style="background:linear-gradient(90deg, ${COLORS.slow}, ${COLORS.mid}, ${COLORS.fast})"></div>
+        <div class="scale-labels"><span>stopped</span><span>speed limit</span></div>`;
+    } else {
+      const routes = [...state.routeColors.entries()].sort(([a], [b]) => a.localeCompare(b));
+      body.innerHTML = routes.length
+        ? `<div class="route-grid">${routes.map(([route, color]) =>
+            `<span><span class="swatch" style="background:${color}"></span>${escapeHtml(route)}</span>`).join("")}</div>`
+        : "No vehicles yet";
+    }
+  }
+
+  // ---------------------------------------------------------------------
+  // Input
+  // ---------------------------------------------------------------------
+
+  let drag = null;
+
+  function localPoint(event) {
+    const rect = canvas.getBoundingClientRect();
+    return [event.clientX - rect.left, event.clientY - rect.top];
+  }
+
+  canvas.addEventListener("pointerdown", (event) => {
+    drag = { x: event.clientX, y: event.clientY, cx: state.view.cx, cy: state.view.cy, moved: false };
+    canvas.setPointerCapture(event.pointerId);
+  });
+
+  canvas.addEventListener("pointermove", (event) => {
+    const point = localPoint(event);
+    state.pointer = point;
+    if (drag) {
+      const dx = event.clientX - drag.x;
+      const dy = event.clientY - drag.y;
+      if (Math.hypot(dx, dy) > 3) drag.moved = true;
+      if (drag.moved) {
+        state.view.cx = drag.cx - dx / state.view.scale;
+        state.view.cy = drag.cy + dy / state.view.scale;
+        state.autoFit = false;
+        canvas.classList.add("dragging");
+        tooltip.hidden = true;
+        return;
+      }
+    }
+    updateHover(...point);
+  });
+
+  canvas.addEventListener("pointerup", (event) => {
+    if (drag && !drag.moved) select(pick(...localPoint(event)));
+    drag = null;
+    canvas.classList.remove("dragging");
+  });
+
+  canvas.addEventListener("pointerleave", () => {
+    state.pointer = null;
+    state.hover = null;
+    tooltip.hidden = true;
+  });
+
+  canvas.addEventListener("wheel", (event) => {
+    event.preventDefault();
+    zoomAt(...localPoint(event), Math.exp(-event.deltaY * 0.0015));
+  }, { passive: false });
+
+  canvas.addEventListener("dblclick", () => {
+    state.autoFit = true;
+    fitView();
+  });
+
+  document.getElementById("zoom-in").addEventListener("click", () => zoomAt(width / 2, height / 2, 1.4));
+  document.getElementById("zoom-out").addEventListener("click", () => zoomAt(width / 2, height / 2, 1 / 1.4));
+  document.getElementById("zoom-fit").addEventListener("click", () => { state.autoFit = true; fitView(); });
+
+  for (const button of document.querySelectorAll("#legend button")) {
+    button.addEventListener("click", () => {
+      state.colorMode = button.dataset.mode;
+      for (const other of document.querySelectorAll("#legend button")) {
+        other.setAttribute("aria-pressed", String(other === button));
+      }
+      renderLegend();
+    });
+  }
+
+  // ---------------------------------------------------------------------
+  // Start
+  // ---------------------------------------------------------------------
+
+  new ResizeObserver(resize).observe(stage);
+  resize();
+  renderLegend();
+  requestAnimationFrame(frame);
+  poll();
+})();
+</script>
+</body>
+</html>

@@ -36,7 +36,7 @@ Use JSON initially. Keep adjustable settings outside algorithm code.
 | --- | --- |
 | scripts/generate_network.py | Generate the SUMO network and verify signal IDs |
 | scripts/generate_demand.py | Generate vehicle routes and traffic flows |
-| scripts/run_simulation.py | Run a scenario using a selected controller |
+| scripts/run_simulation.py | Run a scenario using a selected controller and serve the live viewer |
 | scripts/train.py | Train and save the shared PPO policy |
 | scripts/evaluate.py | Compare the learned policy against baselines |
 | scripts/run_perception.py | Run detection and tracking on real footage |
@@ -59,7 +59,7 @@ default.
 | src/baselines.py | Fixed-time and actuated controller integration |
 | src/metrics.py | Common evaluation metrics |
 | src/congestion_detector.py | Persistent-congestion detection |
-| src/telemetry.py | Monitoring snapshots and events |
+| src/telemetry.py | Monitoring snapshots, events, and the viewer's local HTTP endpoint |
 | src/perception.py | Separate pretrained detection/tracking pipeline |
 
 Keep simulator access, observation construction, signal execution, and learning
@@ -100,13 +100,22 @@ as completed capabilities.
 
 ## Monitoring Interface
 
-The interface is developed separately by the interface team.
+The interface is developed separately by the interface team. The AI side
+delivers the live map visualization; the interface embeds it rather than
+rendering traffic itself.
 
-The AI backend exposes telemetry through `src/telemetry.py`. The interface
-displays backend measurements, requested actions, applied signals, metrics,
-and congestion events.
+| Path | Purpose |
+| --- | --- |
+| viewer/index.html | Browser map viewer: network, vehicles, signals, and object details |
 
-Do not duplicate traffic-control logic in the interface.
+- `scripts/run_simulation.py` runs a scenario and serves the viewer through
+  `src/telemetry.py`, by default at `http://127.0.0.1:8000/`.
+- The interface embeds the viewer page in an `<iframe>`.
+- `/api/network` and `/api/snapshot` expose the same data as JSON for any
+  interface panels.
+
+The viewer and interface display backend state only. Do not duplicate
+traffic-control logic in either.
 
 ## Current Implementation Step
 
