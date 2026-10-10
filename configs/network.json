@@ -1,0 +1,17 @@
+{
+  "output_file": "simulation/networks/corridor.net.xml",
+  "expected_signal_ids": ["A0", "B0", "C0"],
+  "netgenerate_args": [
+    "--grid",
+    "--grid.x-number", "3",
+    "--grid.y-number", "1",
+    "--grid.x-length", "300",
+    "--grid.attach-length", "200",
+    "--default.lanenumber", "1",
+    "--default.speed", "13.89",
+    "--tls.set", "A0,B0,C0",
+    "--no-turnarounds",
+    "--tls.yellow.time", "3",
+    "--tls.allred.time", "1"
+  ]
+}
